@@ -1,217 +1,269 @@
+#Module      : LABEL
+#Description : Terraform label module variables.
 variable "name" {
-  description = "Name given resources"
+  type        = string
+  description = "Name  (e.g. `app` or `cluster`)."
 }
 
-variable "subnets" {
-  description = "List of subnet IDs to use"
-  type        = "list"
-}
-
-variable "identifier_prefix" {
-  description = "Prefix for cluster and instance identifier"
+variable "application" {
+  type        = string
   default     = ""
+  description = "Application (e.g. `cd` or `clouddrove`)."
+}
+
+variable "environment" {
+  type        = string
+  default     = ""
+  description = "Environment (e.g. `prod`, `dev`, `staging`)."
+}
+
+variable "label_order" {
+  type        = list
+  default     = []
+  description = "Label order, e.g. `name`,`application`."
+}
+
+#Module      : RDS AURORA CLUSTER
+#Description : Manages a RDS Aurora Cluster.
+variable "subnets" {
+  type        = list(string)
+  default     = []
+  description = "List of subnet IDs to use."
 }
 
 variable "replica_count" {
+  type        = number
+  default     = 1
   description = "Number of reader nodes to create.  If `replica_scale_enable` is `true`, the value of `replica_scale_min` is used instead."
-  default     = ""
 }
 
+variable "identifier_prefix" {
+  type        = string
+  default     = ""
+  description = "Prefix for cluster and instance identifier."
+}
 
 variable "instance_type" {
-  description = "Instance type to use"
+  type        = string
+  description = "Instance type to use."
 }
 
 variable "publicly_accessible" {
-  description = "Whether the DB should have a public IP address"
-  default     = ""
+  type        = bool
+  default     = false
+  description = "Whether the DB should have a public IP address."
 }
 
 variable "database_name" {
-  description = "Name for an automatically created database on cluster creation"
+  type        = string
   default     = ""
+  description = "Name for an automatically created database on cluster creation."
 }
 
 variable "username" {
-  description = "Master DB username"
-  default     = ""
+  type        = string
+  description = "Master DB username."
 }
 
 variable "password" {
-  description = "Master DB password"
+  type        = string
   default     = ""
+  description = "Master DB password."
 }
 
 variable "final_snapshot_identifier_prefix" {
-  description = "The prefix name to use when creating a final snapshot on cluster destroy, appends a random 8 digits to name to ensure it's unique too."
+  type        = string
   default     = "final"
+  description = "The prefix name to use when creating a final snapshot on cluster destroy, appends a random 8 digits to name to ensure it's unique too."
 }
 
 variable "skip_final_snapshot" {
-  description = "Should a final snapshot be created on cluster destroy"
-  default     = "false"
+  type        = bool
+  default     = false
+  description = "Should a final snapshot be created on cluster destroy."
 }
 
 variable "deletion_protection" {
-  description = "If the DB instance should have deletion protection enabled"
-  default     = "false"
+  type        = bool
+  default     = false
+  description = "If the DB instance should have deletion protection enabled."
 }
 
 variable "backup_retention_period" {
-  description = "How long to keep backups for (in days)"
-  default     = "7"
+  type        = number
+  default     = 7
+  description = "How long to keep backups for (in days)."
 }
 
 variable "preferred_backup_window" {
-  description = "When to perform DB backups"
+  type        = string
   default     = "02:00-03:00"
+  description = "When to perform DB backups."
 }
 
 variable "preferred_maintenance_window" {
-  description = "When to perform DB maintenance"
+  type        = string
   default     = "sun:05:00-sun:06:00"
+  description = "When to perform DB maintenance."
 }
 
 variable "port" {
-  description = "The port on which to accept connections"
+  type        = string
   default     = ""
+  description = "The port on which to accept connections."
 }
 
 variable "apply_immediately" {
-  description = "Determines whether or not any DB modifications are applied immediately, or during the maintenance window"
-  default     = "false"
+  type        = bool
+  default     = false
+  description = "Determines whether or not any DB modifications are applied immediately, or during the maintenance window."
 }
 
 variable "monitoring_interval" {
-  description = "The interval (seconds) between points when Enhanced Monitoring metrics are collected"
+  type        = number
   default     = 0
+  description = "The interval (seconds) between points when Enhanced Monitoring metrics are collected."
 }
 
 variable "auto_minor_version_upgrade" {
-  description = "Determines whether minor engine upgrades will be performed automatically in the maintenance window"
-  default     = "true"
+  type        = bool
+  default     = true
+  description = "Determines whether minor engine upgrades will be performed automatically in the maintenance window."
 }
 
 variable "db_parameter_group_name" {
-  description = "The name of a DB parameter group to use"
+  type        = string
   default     = "default.aurora5.6"
+  description = "The name of a DB parameter group to use."
 }
 
 variable "db_cluster_parameter_group_name" {
-  description = "The name of a DB Cluster parameter group to use"
+  type        = string
   default     = "default.aurora5.6"
+  description = "The name of a DB Cluster parameter group to use."
 }
 
 variable "snapshot_identifier" {
-  description = "DB snapshot to create this database from"
+  type        = string
   default     = ""
+  description = "DB snapshot to create this database from."
 }
 
 variable "storage_encrypted" {
-  description = "Specifies whether the underlying storage layer should be encrypted"
-  default     = "true"
+  type        = bool
+  default     = true
+  description = "Specifies whether the underlying storage layer should be encrypted."
 }
 
 variable "kms_key_id" {
-  description = "The ARN for the KMS encryption key if one is set to the cluster."
+  type        = string
   default     = ""
+  description = "The ARN for the KMS encryption key if one is set to the cluster."
 }
 
 variable "engine" {
-  description = "Aurora database engine type, currently aurora, aurora-mysql or aurora-postgresql"
-  default     = "aurora"
+  type        = string
+  default     = "aurora-mysql"
+  description = "Aurora database engine type, currently aurora, aurora-mysql or aurora-postgresql."
 }
 
 variable "engine_version" {
-  description = "Aurora database engine version."
+  type        = string
   default     = "5.6.10a"
+  description = "Aurora database engine version."
 }
 
 variable "replica_scale_enabled" {
-  type        = "string"
+  type        = bool
   default     = false
-  description = "Whether to enable autoscaling for RDS Aurora (MySQL) read replicas"
+  description = "Whether to enable autoscaling for RDS Aurora (MySQL) read replicas."
 }
 
 variable "replica_scale_max" {
-  type        = "string"
-  default     = "0"
-  description = "Maximum number of replicas to allow scaling for"
+  type        = number
+  default     = 0
+  description = "Maximum number of replicas to allow scaling."
 }
 
 variable "replica_scale_min" {
-  type        = "string"
-  default     = "2"
-  description = "Maximum number of replicas to allow scaling for"
+  type        = number
+  default     = 2
+  description = "Minimum number of replicas to allow scaling."
 }
 
 variable "replica_scale_cpu" {
-  type        = "string"
-  default     = "70"
-  description = "CPU usage to trigger autoscaling at"
+  type        = number
+  default     = 70
+  description = "CPU usage to trigger autoscaling."
 }
 
 variable "replica_scale_in_cooldown" {
-  type        = "string"
-  default     = "300"
-  description = "Cooldown in seconds before allowing further scaling operations after a scale in"
+  type        = number
+  default     = 300
+  description = "Cooldown in seconds before allowing further scaling operations after a scale in."
 }
 
 variable "replica_scale_out_cooldown" {
-  type        = "string"
-  default     = "300"
-  description = "Cooldown in seconds before allowing further scaling operations after a scale out"
-}
-
-variable "tags" {
-  description = "A map of tags to add to all resources."
-  type        = "map"
-  default     = {}
+  type        = number
+  default     = 300
+  description = "Cooldown in seconds before allowing further scaling operations after a scale out."
 }
 
 variable "performance_insights_enabled" {
-  type        = "string"
-  default     = "false"
+  type        = bool
+  default     = false
   description = "Specifies whether Performance Insights is enabled or not."
 }
 
 variable "performance_insights_kms_key_id" {
-  type        = "string"
+  type        = string
   default     = ""
   description = "The ARN for the KMS key to encrypt Performance Insights data."
 }
 
 variable "iam_database_authentication_enabled" {
-  type        = "string"
-  default     = "false"
+  type        = bool
+  default     = false
   description = "Specifies whether IAM Database authentication should be enabled or not. Not all versions and instances are supported. Refer to the AWS documentation to see which versions are supported."
 }
 
 variable "aws_security_group" {
-  type        = "list"
+  type        = list(string)
   default     = []
   description = "Specifies whether IAM Database authentication should be enabled or not. Not all versions and instances are supported. Refer to the AWS documentation to see which versions are supported."
 }
 
-variable "application" {
-  type        = "string"
-  description = "Application (e.g. `cp` or `anmolnagpal`)"
+variable "availability_zone" {
+  type        = string
+  default     = ""
+  description = "The Availability Zone of the RDS instance."
 }
 
-variable "environment" {
-  type        = "string"
-  description = "Environment (e.g. `prod`, `dev`, `staging`)"
+variable "copy_tags_to_snapshot" {
+  default     = false
+  description = "On delete, copy all Instance tags to the final snapshot (if final_snapshot_identifier is specified)."
 }
 
-
-variable "delimiter" {
-  type        = "string"
-  default     = "-"
-  description = "Delimiter to be used between `namespace`, `stage`, `name` and `attributes`"
+variable "enabled_subnet_group" {
+  type        = bool
+  default     = true
+  description = "Set to false to prevent the module from creating any resources."
 }
 
-variable "attributes" {
-  type        = "list"
-  default     = []
-  description = "Additional attributes (e.g. `1`)"
+variable "enabled_rds_cluster" {
+  type        = bool
+  default     = true
+  description = "Set to false to prevent the module from creating any resources."
+}
+
+variable "postgresql_family" {
+  type        = string
+  default     = "aurora-postgresql9.6"
+  description = "The family of the DB parameter group."
+}
+
+variable "mysql_family" {
+  type        = string
+  default     = "aurora-mysql5.7"
+  description = "The family of the DB parameter group."
 }

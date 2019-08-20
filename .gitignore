@@ -1,5 +1,6 @@
+# ignored files
+*.tfstate
+*.tfstate.backup
 .terraform
-*.tfstate*
-terraform.tfvars
-*terraform.tfstate*
 .idea
+*.iml
