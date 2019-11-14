@@ -71,7 +71,7 @@ Here are some examples of how you can use this module in your inventory structur
 ### Aurora MySQL
 ```hcl
   module "aurora" {
-    source                          = "git::https://github.com/clouddrove/terraform-aws-aurora.git"
+    source                          = "git::https://github.com/clouddrove/terraform-aws-aurora.git?ref=tags/0.12.1"
 
     name                            = "backend"
     application                     = "clouddrove"
@@ -93,7 +93,7 @@ Here are some examples of how you can use this module in your inventory structur
 ### Aurora Postgres
 ```hcl
     module "postgres" {
-      source              = "git::https://github.com/clouddrove/terraform-aws-aurora.git"
+      source              = "git::https://github.com/clouddrove/terraform-aws-aurora.git?ref=tags/0.12.1"
 
       name                = "backend"
       application         = "clouddrove"
