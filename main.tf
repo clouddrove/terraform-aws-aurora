@@ -14,6 +14,7 @@ module "labels" {
   environment = var.environment
   label_order = var.label_order
 }
+
 locals {
   port            = var.port == "" ? var.engine == "aurora-postgresql" ? "5432" : "3306" : var.port
   master_password = var.password == "" ? random_id.master_password.b64 : var.password
@@ -29,16 +30,10 @@ resource "random_id" "master_password" {
 resource "aws_db_subnet_group" "default" {
   count = var.enabled_subnet_group == true ? 1 : 0
 
-  name        = format("%s-db-subnet", module.labels.id)
+  name        = module.labels.id
   description = format("For Aurora cluster %s", module.labels.id)
   subnet_ids  = var.subnets
-  tags = merge(
-    module.labels.tags,
-    {
-
-      "Name" = format("%s-db-subnet", module.labels.id)
-    },
-  )
+  tags        = module.labels.tags
 }
 
 #Module      : RDS AURORA CLUSTER
@@ -47,7 +42,7 @@ resource "aws_db_subnet_group" "default" {
 resource "aws_rds_cluster" "default" {
   count = var.enabled_rds_cluster == true ? 1 : 0
 
-  cluster_identifier                  = format("%s-cluster", module.labels.id)
+  cluster_identifier                  = module.labels.id
   engine                              = var.engine
   engine_version                      = var.engine_version
   kms_key_id                          = var.kms_key_id
@@ -70,13 +65,7 @@ resource "aws_rds_cluster" "default" {
   db_cluster_parameter_group_name     = var.engine == "aurora-postgresql" ? aws_rds_cluster_parameter_group.postgresql.*.id[0] : aws_rds_cluster_parameter_group.aurora.*.id[0]
   iam_database_authentication_enabled = var.iam_database_authentication_enabled
 
-  tags = merge(
-    module.labels.tags,
-    {
-
-      "Name" = format("%s-cluster", module.labels.id)
-    },
-  )
+  tags = module.labels.tags
 }
 
 #Module      : RDS CLUSTER INSTANCE
@@ -85,7 +74,7 @@ resource "aws_rds_cluster" "default" {
 resource "aws_rds_cluster_instance" "default" {
   count = var.replica_scale_enabled ? var.replica_scale_min : var.replica_count
 
-  identifier                      = format("%s-cluster-instance-%s", module.labels.id, (count.index))
+  identifier                      = format("%s-%s", module.labels.id, (count.index + 1))
   cluster_identifier              = element(aws_rds_cluster.default.*.id, count.index)
   engine                          = var.engine
   engine_version                  = var.engine_version
@@ -101,13 +90,7 @@ resource "aws_rds_cluster_instance" "default" {
   performance_insights_enabled    = var.performance_insights_enabled
   performance_insights_kms_key_id = var.performance_insights_kms_key_id
 
-  tags = merge(
-    module.labels.tags,
-    {
-
-      "Name" = format("%s-cluster-instance-%s", module.labels.id, (count.index))
-    },
-  )
+  tags = module.labels.tags
 }
 
 resource "random_id" "snapshot_identifier" {

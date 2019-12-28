@@ -8,18 +8,18 @@ module "vpc" {
   name        = "vpc"
   application = "clouddrove"
   environment = "test"
-  label_order = ["environment", "name", "application"]
+  label_order = ["environment", "application", "name"]
 
   cidr_block = "172.16.0.0/16"
 }
 
 module "public_subnets" {
-  source = "git::https://github.com/clouddrove/terraform-aws-subnet.git?ref=tags/0.12.3"
+  source = "git::https://github.com/clouddrove/terraform-aws-subnet.git?ref=tags/0.12.4"
 
   name        = "public-subnet"
   application = "clouddrove"
   environment = "test"
-  label_order = ["environment", "name", "application"]
+  label_order = ["environment", "application", "name"]
 
   availability_zones = ["eu-west-1b", "eu-west-1c"]
   vpc_id             = module.vpc.vpc_id
@@ -28,13 +28,14 @@ module "public_subnets" {
   igw_id             = module.vpc.igw_id
 }
 
+
 module "security-group" {
-  source = "git::https://github.com/clouddrove/terraform-aws-security-group.git?ref=tags/0.12.2"
+  source = "git::https://github.com/clouddrove/terraform-aws-security-group.git?ref=tags/0.12.3"
 
   name        = "aurora-sg"
   application = "clouddrove"
   environment = "test"
-  label_order = ["environment", "name", "application"]
+  label_order = ["environment", "application", "name"]
 
   vpc_id        = module.vpc.vpc_id
   allowed_ip    = ["172.16.0.0/16", "10.0.0.0/16", "115.160.246.74/32"]
@@ -42,12 +43,12 @@ module "security-group" {
 }
 
 module "aurora" {
-  source = "git::https://github.com/clouddrove/terraform-aws-aurora.git?ref=tags/0.12.1"
+  source = "./../../"
 
-  name        = "backend"
+  name        = "aurora"
   application = "clouddrove"
   environment = "test"
-  label_order = ["environment", "name", "application"]
+  label_order = ["environment", "application", "name"]
 
   username            = "root"
   database_name       = "test_db"
