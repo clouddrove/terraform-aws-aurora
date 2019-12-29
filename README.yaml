@@ -37,14 +37,14 @@ usage : |-
   ### Aurora MySQL
   ```hcl
     module "aurora" {
-      source                          = "git::https://github.com/clouddrove/terraform-aws-aurora.git?ref=tags/0.12.1"
+      source                          = "git::https://github.com/clouddrove/terraform-aws-aurora.git?ref=tags/0.12.2"
 
       name                            = "backend"
       application                     = "clouddrove"
       environment                     = "test"
-      label_order                     = ["environment", "name", "application"]
+      label_order                     = ["environment", "application", "name"]
       username                        = "admin"
-      database_name                   = "test_db"
+      database_name                   = "dt"
       engine                          = "aurora-mysql"
       engine_version                  = "5.7.12"
       subnets                         = "subnet-xxxxxxxxx"
@@ -59,12 +59,12 @@ usage : |-
   ### Aurora Postgres
   ```hcl
       module "postgres" {
-        source              = "git::https://github.com/clouddrove/terraform-aws-aurora.git?ref=tags/0.12.1"
+        source              = "git::https://github.com/clouddrove/terraform-aws-aurora.git?ref=tags/0.12.2"
 
         name                = "backend"
         application         = "clouddrove"
         environment         = "test"
-        label_order         = ["environment", "name", "application"]
+        label_order         = ["environment", "application", "name"]
 
         username            = "root"
         database_name       = "test_db"
