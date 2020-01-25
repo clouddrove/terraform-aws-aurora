@@ -28,7 +28,7 @@ resource "random_id" "master_password" {
 #Module      : DB SUBNET GROUP
 #Description : Provides an RDS DB subnet group resource.
 resource "aws_db_subnet_group" "default" {
-  count = var.enabled_subnet_group == true ? 1 : 0
+  count = var.enable && var.enabled_subnet_group == true ? 1 : 0
 
   name        = module.labels.id
   description = format("For Aurora cluster %s", module.labels.id)
@@ -40,7 +40,7 @@ resource "aws_db_subnet_group" "default" {
 #Description : Terraform module which creates RDS Aurora database resources on AWS and can
 #              create different type of databases. Currently it supports Postgres and MySQL.
 resource "aws_rds_cluster" "default" {
-  count = var.enabled_rds_cluster == true ? 1 : 0
+  count = var.enable && var.enabled_rds_cluster == true ? 1 : 0
 
   cluster_identifier                  = module.labels.id
   engine                              = var.engine
@@ -72,7 +72,7 @@ resource "aws_rds_cluster" "default" {
 #Description : Terraform module which creates RDS Aurora database resources on AWS and can
 #              create different type of databases. Currently it supports Postgres and MySQL.
 resource "aws_rds_cluster_instance" "default" {
-  count = var.replica_scale_enabled ? var.replica_scale_min : var.replica_count
+  count = var.enable && var.replica_scale_enabled ? var.replica_scale_min : var.replica_count
 
   identifier                      = format("%s-%s", module.labels.id, (count.index + 1))
   cluster_identifier              = element(aws_rds_cluster.default.*.id, count.index)
@@ -101,7 +101,7 @@ resource "random_id" "snapshot_identifier" {
 }
 
 resource "aws_db_parameter_group" "postgresql" {
-  count = var.engine == "aurora-postgresql" ? 1 : 0
+  count = var.enable && var.engine == "aurora-postgresql" ? 1 : 0
 
   name        = module.labels.id
   family      = var.postgresql_family
@@ -109,7 +109,7 @@ resource "aws_db_parameter_group" "postgresql" {
 }
 
 resource "aws_rds_cluster_parameter_group" "postgresql" {
-  count = var.engine == "aurora-postgresql" ? 1 : 0
+  count = var.enable && var.engine == "aurora-postgresql" ? 1 : 0
 
   name        = format("%s-cluster", module.labels.id)
   family      = var.postgresql_family
@@ -117,7 +117,7 @@ resource "aws_rds_cluster_parameter_group" "postgresql" {
 }
 
 resource "aws_db_parameter_group" "aurora" {
-  count = var.engine == "aurora-mysql" ? 1 : 0
+  count = var.enable && var.engine == "aurora-mysql" ? 1 : 0
 
   name        = module.labels.id
   family      = var.mysql_family
@@ -125,7 +125,7 @@ resource "aws_db_parameter_group" "aurora" {
 }
 
 resource "aws_rds_cluster_parameter_group" "aurora" {
-  count = var.engine == "aurora-mysql" ? 1 : 0
+  count = var.enable && var.engine == "aurora-mysql" ? 1 : 0
 
   name        = format("%s-cluster", module.labels.id)
   family      = var.mysql_family

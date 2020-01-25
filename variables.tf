@@ -267,3 +267,9 @@ variable "mysql_family" {
   default     = "aurora-mysql5.7"
   description = "The family of the DB parameter group."
 }
+
+variable "enable" {
+  type        = bool
+  default     = true
+  description = "Set to false to prevent the module from creating any resources."
+}
