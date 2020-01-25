@@ -50,6 +50,7 @@ module "aurora" {
   environment = "test"
   label_order = ["environment", "application", "name"]
 
+  enable = false
   username            = "root"
   database_name       = "test_db"
   engine              = "aurora-mysql"
