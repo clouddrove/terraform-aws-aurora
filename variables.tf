@@ -23,6 +23,12 @@ variable "label_order" {
   description = "Label order, e.g. `name`,`application`."
 }
 
+variable "managedby" {
+  type        = string
+  default     = "anmol@clouddrove.com"
+  description = "ManagedBy, eg 'CloudDrove' or 'AnmolNagpal'."
+}
+
 #Module      : RDS AURORA CLUSTER
 #Description : Manages a RDS Aurora Cluster.
 variable "subnets" {
