@@ -137,6 +137,7 @@ Here are some examples of how you can use this module in your inventory structur
 | db\_parameter\_group\_name | The name of a DB parameter group to use. | string | `"default.aurora5.6"` | no |
 | deletion\_protection | If the DB instance should have deletion protection enabled. | bool | `"false"` | no |
 | enable | Set to false to prevent the module from creating any resources. | bool | `"true"` | no |
+| enabled\_cloudwatch\_logs\_exports | List of log types to export to cloudwatch. If omitted, no logs will be exported. The following log types are supported: audit, error, general, slowquery, postgresql \(PostgreSQL\). | list(string) | `<list>` | no |
 | enabled\_rds\_cluster | Set to false to prevent the module from creating any resources. | bool | `"true"` | no |
 | enabled\_subnet\_group | Set to false to prevent the module from creating any resources. | bool | `"true"` | no |
 | engine | Aurora database engine type, currently aurora, aurora-mysql or aurora-postgresql. | string | `"aurora-mysql"` | no |
