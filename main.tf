@@ -63,6 +63,7 @@ resource "aws_rds_cluster" "default" {
   storage_encrypted                   = var.storage_encrypted
   apply_immediately                   = var.apply_immediately
   copy_tags_to_snapshot               = var.copy_tags_to_snapshot
+  enabled_cloudwatch_logs_exports     = var.enabled_cloudwatch_logs_exports
   db_cluster_parameter_group_name     = var.engine == "aurora-postgresql" ? aws_rds_cluster_parameter_group.postgresql.*.id[0] : aws_rds_cluster_parameter_group.aurora.*.id[0]
   iam_database_authentication_enabled = var.iam_database_authentication_enabled
 
