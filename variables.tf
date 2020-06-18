@@ -51,6 +51,7 @@ variable "identifier_prefix" {
 
 variable "instance_type" {
   type        = string
+  default     = ""
   description = "Instance type to use."
 }
 
@@ -68,6 +69,7 @@ variable "database_name" {
 
 variable "username" {
   type        = string
+  default     = ""
   description = "Master DB username."
 }
 
@@ -179,6 +181,12 @@ variable "engine_version" {
   description = "Aurora database engine version."
 }
 
+variable "engine_mode" {
+  type        = string
+  default     = "serverless"
+  description = "The database engine mode."
+}
+
 variable "replica_scale_enabled" {
   type        = bool
   default     = false
@@ -284,4 +292,88 @@ variable "enable" {
   type        = bool
   default     = true
   description = "Set to false to prevent the module from creating any resources."
+}
+
+variable "postgresql_family_serverless" {
+  type        = string
+  default     = "aurora-postgresql10"
+  description = "The family of the DB parameter group."
+}
+
+variable "mysql_family_serverless" {
+  type        = string
+  default     = "aurora5.6"
+  description = "The family of the DB parameter group."
+}
+
+variable "serverless_enabled" {
+  type        = bool
+  default     = false
+  description = "Whether serverless is enabled or not."
+}
+
+variable "backtrack_window" {
+  type        = number
+  default     = 0
+  description = "The target backtrack window, in seconds. Only available for aurora engine currently.Must be between 0 and 259200 (72 hours)"
+}
+
+variable "replication_source_identifier" {
+  type        = string
+  default     = ""
+  description = "ARN of a source DB cluster or DB instance if this DB cluster is to be created as a Read Replica."
+}
+
+variable "iam_roles" {
+  type        = list(string)
+  default     = []
+  description = "A List of ARNs for the IAM roles to associate to the RDS Cluster."
+}
+
+variable "source_region" {
+  type        = string
+  default     = ""
+  description = "The source region for an encrypted replica DB cluster."
+}
+
+variable "availability_zones" {
+  type        = list
+  default     = []
+  description = "The Availability Zone of the RDS cluster."
+}
+
+variable "enable_http_endpoint" {
+  type        = bool
+  default     = true
+  description = "Enable HTTP endpoint (data API). Only valid when engine_mode is set to serverless."
+}
+
+variable "auto_pause" {
+  type        = bool
+  default     = false
+  description = "Whether to enable automatic pause. A DB cluster can be paused only when it's idle (it has no connections)."
+}
+
+variable "max_capacity" {
+  type        = number
+  default     = 4 
+  description = "The maximum capacity. Valid capacity values are 1, 2, 4, 8, 16, 32, 64, 128, and 256."  
+}
+
+variable "min_capacity" {
+  type        = number
+  default     = 2
+  description = "The minimum capacity. Valid capacity values are 1, 2, 4, 8, 16, 32, 64, 128, and 256."  
+}
+
+variable "seconds_until_auto_pause" {
+  type        = number
+  default     = 300
+  description = "The time, in seconds, before an Aurora DB cluster in serverless mode is paused. Valid values are 300 through 86400."
+}
+
+variable "timeout_action" {
+  type        = string
+  default     = "RollbackCapacityChange"
+  description = "The action to take when the timeout is reached. Valid values: ForceApplyCapacityChange, RollbackCapacityChange."
 }
