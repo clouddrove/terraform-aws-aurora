@@ -356,14 +356,14 @@ variable "auto_pause" {
 
 variable "max_capacity" {
   type        = number
-  default     = 4 
-  description = "The maximum capacity. Valid capacity values are 1, 2, 4, 8, 16, 32, 64, 128, and 256."  
+  default     = 4
+  description = "The maximum capacity. Valid capacity values are 1, 2, 4, 8, 16, 32, 64, 128, and 256."
 }
 
 variable "min_capacity" {
   type        = number
   default     = 2
-  description = "The minimum capacity. Valid capacity values are 1, 2, 4, 8, 16, 32, 64, 128, and 256."  
+  description = "The minimum capacity. Valid capacity values are 1, 2, 4, 8, 16, 32, 64, 128, and 256."
 }
 
 variable "seconds_until_auto_pause" {

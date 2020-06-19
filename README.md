@@ -73,7 +73,7 @@ Here are some examples of how you can use this module in your inventory structur
 ### Aurora MySQL
 ```hcl
   module "aurora" {
-    source                          = "git::https://github.com/clouddrove/terraform-aws-aurora.git?ref=tags/0.12.4"
+    source                          = "git::https://github.com/clouddrove/terraform-aws-aurora.git?ref=tags/0.12.6"
 
     name                            = "backend"
     application                     = "clouddrove"
@@ -95,7 +95,7 @@ Here are some examples of how you can use this module in your inventory structur
 ### Aurora Postgres
 ```hcl
     module "postgres" {
-      source              = "git::https://github.com/clouddrove/terraform-aws-aurora.git?ref=tags/0.12.4"
+      source              = "git::https://github.com/clouddrove/terraform-aws-aurora.git?ref=tags/0.12.6"
 
       name                = "backend"
       application         = "clouddrove"
@@ -115,6 +115,54 @@ Here are some examples of how you can use this module in your inventory structur
       publicly_accessible = false
     }
 ```
+### Aurora Serverless MySQL
+```hcl
+  module "aurora" {
+    source                          = "git::https://github.com/clouddrove/terraform-aws-aurora.git?ref=tags/0.12.6"
+    name                            = "aurora-mysql-serverless"
+    application                     = "clouddrove"
+    environment                     = "test"
+    label_order                     = ["environment", "application", "name"]
+    enable                          = true
+    serverless_enabled              = true
+    min_capacity                    = 1
+    max_capacity                    = 4
+    username                        = "root"
+    database_name                   = "test_db"
+    engine                          = "aurora"
+    engine_version                  = "5.6.10a"
+    kms_key_id                      = module.kms_key.key_arn
+    subnets                         = "subnet-xxxxxxxxx"
+    aws_security_group              = [sg-xxxxxxxxxxx]
+    apply_immediately               = true
+    skip_final_snapshot             = true
+    availability_zones              = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
+  }
+```
+### Aurora Postgres
+```hcl
+    module "postgres" {
+      source                          = "git::https://github.com/clouddrove/terraform-aws-aurora.git?ref=tags/0.12.6"
+      name                            = "aurora-postgresql-serverless"
+      application                     = "clouddrove"
+      environment                     = "test"
+      label_order                     = ["environment", "application", "name"]
+      enable                          = true
+      serverless_enabled              = true
+      min_capacity                    = 2
+      max_capacity                    = 4
+      username                        = "root"
+      database_name                   = "test_db"
+      engine                          = "aurora-postgresql"
+      engine_version                  = "10.7"
+      kms_key_id                      = module.kms_key.key_arn
+      subnets                         = "subnet-xxxxxxxxx"
+      aws_security_group              = [sg-xxxxxxxxxxx]
+      apply_immediately               = true
+      skip_final_snapshot             = true
+      availability_zones              = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
+    }
+```
 
 
 
@@ -128,8 +176,11 @@ Here are some examples of how you can use this module in your inventory structur
 | application | Application \(e.g. `cd` or `clouddrove`\). | string | `""` | no |
 | apply\_immediately | Determines whether or not any DB modifications are applied immediately, or during the maintenance window. | bool | `"false"` | no |
 | auto\_minor\_version\_upgrade | Determines whether minor engine upgrades will be performed automatically in the maintenance window. | bool | `"true"` | no |
+| auto\_pause | Whether to enable automatic pause. A DB cluster can be paused only when it's idle \(it has no connections\). | bool | `"false"` | no |
 | availability\_zone | The Availability Zone of the RDS instance. | string | `""` | no |
+| availability\_zones | The Availability Zone of the RDS cluster. | list | `<list>` | no |
 | aws\_security\_group | Specifies whether IAM Database authentication should be enabled or not. Not all versions and instances are supported. Refer to the AWS documentation to see which versions are supported. | list(string) | `<list>` | no |
+| backtrack\_window | The target backtrack window, in seconds. Only available for aurora engine currently.Must be between 0 and 259200 \(72 hours\) | number | `"0"` | no |
 | backup\_retention\_period | How long to keep backups for \(in days\). | number | `"7"` | no |
 | copy\_tags\_to\_snapshot | On delete, copy all Instance tags to the final snapshot \(if final\_snapshot\_identifier is specified\). | string | `"false"` | no |
 | database\_name | Name for an automatically created database on cluster creation. | string | `""` | no |
@@ -137,27 +188,34 @@ Here are some examples of how you can use this module in your inventory structur
 | db\_parameter\_group\_name | The name of a DB parameter group to use. | string | `"default.aurora5.6"` | no |
 | deletion\_protection | If the DB instance should have deletion protection enabled. | bool | `"false"` | no |
 | enable | Set to false to prevent the module from creating any resources. | bool | `"true"` | no |
+| enable\_http\_endpoint | Enable HTTP endpoint \(data API\). Only valid when engine\_mode is set to serverless. | bool | `"true"` | no |
 | enabled\_cloudwatch\_logs\_exports | List of log types to export to cloudwatch. If omitted, no logs will be exported. The following log types are supported: audit, error, general, slowquery, postgresql \(PostgreSQL\). | list(string) | `<list>` | no |
 | enabled\_rds\_cluster | Set to false to prevent the module from creating any resources. | bool | `"true"` | no |
 | enabled\_subnet\_group | Set to false to prevent the module from creating any resources. | bool | `"true"` | no |
 | engine | Aurora database engine type, currently aurora, aurora-mysql or aurora-postgresql. | string | `"aurora-mysql"` | no |
+| engine\_mode | The database engine mode. | string | `"serverless"` | no |
 | engine\_version | Aurora database engine version. | string | `"5.6.10a"` | no |
 | environment | Environment \(e.g. `prod`, `dev`, `staging`\). | string | `""` | no |
 | final\_snapshot\_identifier\_prefix | The prefix name to use when creating a final snapshot on cluster destroy, appends a random 8 digits to name to ensure it's unique too. | string | `"final"` | no |
 | iam\_database\_authentication\_enabled | Specifies whether IAM Database authentication should be enabled or not. Not all versions and instances are supported. Refer to the AWS documentation to see which versions are supported. | bool | `"false"` | no |
+| iam\_roles | A List of ARNs for the IAM roles to associate to the RDS Cluster. | list(string) | `<list>` | no |
 | identifier\_prefix | Prefix for cluster and instance identifier. | string | `""` | no |
-| instance\_type | Instance type to use. | string | n/a | yes |
+| instance\_type | Instance type to use. | string | `""` | no |
 | kms\_key\_id | The ARN for the KMS encryption key if one is set to the cluster. | string | `""` | no |
 | label\_order | Label order, e.g. `name`,`application`. | list | `<list>` | no |
 | managedby | ManagedBy, eg 'CloudDrove' or 'AnmolNagpal'. | string | `"anmol@clouddrove.com"` | no |
+| max\_capacity | The maximum capacity. Valid capacity values are 1, 2, 4, 8, 16, 32, 64, 128, and 256. | number | `"4"` | no |
+| min\_capacity | The minimum capacity. Valid capacity values are 1, 2, 4, 8, 16, 32, 64, 128, and 256. | number | `"2"` | no |
 | monitoring\_interval | The interval \(seconds\) between points when Enhanced Monitoring metrics are collected. | number | `"0"` | no |
 | mysql\_family | The family of the DB parameter group. | string | `"aurora-mysql5.7"` | no |
+| mysql\_family\_serverless | The family of the DB parameter group. | string | `"aurora5.6"` | no |
 | name | Name  \(e.g. `app` or `cluster`\). | string | n/a | yes |
 | password | Master DB password. | string | `""` | no |
 | performance\_insights\_enabled | Specifies whether Performance Insights is enabled or not. | bool | `"false"` | no |
 | performance\_insights\_kms\_key\_id | The ARN for the KMS key to encrypt Performance Insights data. | string | `""` | no |
 | port | The port on which to accept connections. | string | `""` | no |
 | postgresql\_family | The family of the DB parameter group. | string | `"aurora-postgresql9.6"` | no |
+| postgresql\_family\_serverless | The family of the DB parameter group. | string | `"aurora-postgresql10"` | no |
 | preferred\_backup\_window | When to perform DB backups. | string | `"02:00-03:00"` | no |
 | preferred\_maintenance\_window | When to perform DB maintenance. | string | `"sun:05:00-sun:06:00"` | no |
 | publicly\_accessible | Whether the DB should have a public IP address. | bool | `"false"` | no |
@@ -168,11 +226,16 @@ Here are some examples of how you can use this module in your inventory structur
 | replica\_scale\_max | Maximum number of replicas to allow scaling. | number | `"0"` | no |
 | replica\_scale\_min | Minimum number of replicas to allow scaling. | number | `"2"` | no |
 | replica\_scale\_out\_cooldown | Cooldown in seconds before allowing further scaling operations after a scale out. | number | `"300"` | no |
+| replication\_source\_identifier | ARN of a source DB cluster or DB instance if this DB cluster is to be created as a Read Replica. | string | `""` | no |
+| seconds\_until\_auto\_pause | The time, in seconds, before an Aurora DB cluster in serverless mode is paused. Valid values are 300 through 86400. | number | `"300"` | no |
+| serverless\_enabled | Whether serverless is enabled or not. | bool | `"false"` | no |
 | skip\_final\_snapshot | Should a final snapshot be created on cluster destroy. | bool | `"false"` | no |
 | snapshot\_identifier | DB snapshot to create this database from. | string | `""` | no |
+| source\_region | The source region for an encrypted replica DB cluster. | string | `""` | no |
 | storage\_encrypted | Specifies whether the underlying storage layer should be encrypted. | bool | `"true"` | no |
 | subnets | List of subnet IDs to use. | list(string) | `<list>` | no |
-| username | Master DB username. | string | n/a | yes |
+| timeout\_action | The action to take when the timeout is reached. Valid values: ForceApplyCapacityChange, RollbackCapacityChange. | string | `"RollbackCapacityChange"` | no |
+| username | Master DB username. | string | `""` | no |
 
 ## Outputs
 
@@ -186,6 +249,13 @@ Here are some examples of how you can use this module in your inventory structur
 | rds\_cluster\_master\_username | The master username. |
 | rds\_cluster\_port | The port of Cluster. |
 | rds\_cluster\_reader\_endpoint | The cluster reader endpoint. |
+| serverless\_rds\_cluster\_database\_name | Name for an automatically created database on cluster creation. |
+| serverless\_rds\_cluster\_endpoint | The cluster endpoint. |
+| serverless\_rds\_cluster\_id | The ID of the cluster. |
+| serverless\_rds\_cluster\_master\_password | The master password. |
+| serverless\_rds\_cluster\_master\_username | The master username. |
+| serverless\_rds\_cluster\_port | The port of Cluster. |
+| serverless\_rds\_cluster\_reader\_endpoint | The cluster reader endpoint. |
 | tags | A mapping of tags to assign to the resource. |
 
 

@@ -37,7 +37,7 @@ usage : |-
   ### Aurora MySQL
   ```hcl
     module "aurora" {
-      source                          = "git::https://github.com/clouddrove/terraform-aws-aurora.git?ref=tags/0.12.4"
+      source                          = "git::https://github.com/clouddrove/terraform-aws-aurora.git?ref=tags/0.12.6"
 
       name                            = "backend"
       application                     = "clouddrove"
@@ -59,7 +59,7 @@ usage : |-
   ### Aurora Postgres
   ```hcl
       module "postgres" {
-        source              = "git::https://github.com/clouddrove/terraform-aws-aurora.git?ref=tags/0.12.4"
+        source              = "git::https://github.com/clouddrove/terraform-aws-aurora.git?ref=tags/0.12.6"
 
         name                = "backend"
         application         = "clouddrove"
@@ -77,5 +77,53 @@ usage : |-
         apply_immediately   = true
         skip_final_snapshot = true
         publicly_accessible = false
+      }
+  ```
+  ### Aurora Serverless MySQL
+  ```hcl
+    module "aurora" {
+      source                          = "git::https://github.com/clouddrove/terraform-aws-aurora.git?ref=tags/0.12.6"
+      name                            = "aurora-mysql-serverless"
+      application                     = "clouddrove"
+      environment                     = "test"
+      label_order                     = ["environment", "application", "name"]
+      enable                          = true
+      serverless_enabled              = true
+      min_capacity                    = 1
+      max_capacity                    = 4
+      username                        = "root"
+      database_name                   = "test_db"
+      engine                          = "aurora"
+      engine_version                  = "5.6.10a"
+      kms_key_id                      = module.kms_key.key_arn
+      subnets                         = "subnet-xxxxxxxxx"
+      aws_security_group              = [sg-xxxxxxxxxxx]
+      apply_immediately               = true
+      skip_final_snapshot             = true
+      availability_zones              = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
+    }
+  ```
+  ### Aurora Postgres
+  ```hcl
+      module "postgres" {
+        source                          = "git::https://github.com/clouddrove/terraform-aws-aurora.git?ref=tags/0.12.6"
+        name                            = "aurora-postgresql-serverless"
+        application                     = "clouddrove"
+        environment                     = "test"
+        label_order                     = ["environment", "application", "name"]
+        enable                          = true
+        serverless_enabled              = true
+        min_capacity                    = 2
+        max_capacity                    = 4
+        username                        = "root"
+        database_name                   = "test_db"
+        engine                          = "aurora-postgresql"
+        engine_version                  = "10.7"
+        kms_key_id                      = module.kms_key.key_arn
+        subnets                         = "subnet-xxxxxxxxx"
+        aws_security_group              = [sg-xxxxxxxxxxx]
+        apply_immediately               = true
+        skip_final_snapshot             = true
+        availability_zones              = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
       }
   ```
