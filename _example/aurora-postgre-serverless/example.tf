@@ -5,7 +5,7 @@ provider "aws" {
 }
 
 module "vpc" {
-  source = "git::https://github.com/clouddrove/terraform-aws-vpc.git?ref=tags/0.12.5"
+  source = "git::https://github.com/clouddrove/terraform-aws-vpc.git?ref=tags/0.13.0"
 
   name        = "vpc"
   application = "clouddrove"
@@ -16,7 +16,7 @@ module "vpc" {
 }
 
 module "subnets" {
-  source = "git::https://github.com/clouddrove/terraform-aws-subnet.git?ref=tags/0.12.6"
+  source = "git::https://github.com/clouddrove/terraform-aws-subnet.git"
 
   name        = "subnet"
   application = "clouddrove"
@@ -26,13 +26,14 @@ module "subnets" {
   availability_zones  = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
   vpc_id              = module.vpc.vpc_id
   cidr_block          = module.vpc.vpc_cidr_block
+  ipv6_cidr_block     = module.vpc.ipv6_cidr_block
   type                = "public-private"
   nat_gateway_enabled = true
   igw_id              = module.vpc.igw_id
 }
 
 module "security_group" {
-  source = "git::https://github.com/clouddrove/terraform-aws-security-group.git?ref=tags/0.12.4"
+  source = "git::https://github.com/clouddrove/terraform-aws-security-group.git"
 
   name        = "aurora-postgresql-sg"
   application = "clouddrove"
