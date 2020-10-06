@@ -7,7 +7,7 @@
 #              tags for resources. You can use terraform-labels to implement a strict
 #              naming convention.
 module "labels" {
-  source = "git::https://github.com/clouddrove/terraform-labels.git?ref=tags/0.12.0"
+  source = "git::https://github.com/clouddrove/terraform-labels.git?ref=tags/0.13.0"
 
   name        = var.name
   application = var.application
@@ -66,6 +66,7 @@ resource "aws_rds_cluster" "default" {
   enabled_cloudwatch_logs_exports     = var.enabled_cloudwatch_logs_exports
   db_cluster_parameter_group_name     = var.engine == "aurora-postgresql" ? aws_rds_cluster_parameter_group.postgresql.*.id[0] : aws_rds_cluster_parameter_group.aurora.*.id[0]
   iam_database_authentication_enabled = var.iam_database_authentication_enabled
+  iam_roles                           = var.iam_roles
 
   tags = module.labels.tags
 }
@@ -91,6 +92,7 @@ resource "aws_rds_cluster_instance" "default" {
   promotion_tier                  = count.index + 1
   performance_insights_enabled    = var.performance_insights_enabled
   performance_insights_kms_key_id = var.performance_insights_kms_key_id
+  monitoring_role_arn             = ""
 
   tags = module.labels.tags
 }
@@ -108,6 +110,7 @@ resource "aws_db_parameter_group" "postgresql" {
   name        = module.labels.id
   family      = var.postgresql_family
   description = format("Parameter group for %s", module.labels.id)
+  tags        = module.labels.tags
 }
 
 resource "aws_rds_cluster_parameter_group" "postgresql" {
@@ -116,6 +119,7 @@ resource "aws_rds_cluster_parameter_group" "postgresql" {
   name        = format("%s-cluster", module.labels.id)
   family      = var.postgresql_family
   description = format("Cluster parameter group for %s", module.labels.id)
+  tags        = module.labels.tags
 }
 
 resource "aws_db_parameter_group" "aurora" {
@@ -124,6 +128,7 @@ resource "aws_db_parameter_group" "aurora" {
   name        = module.labels.id
   family      = var.mysql_family
   description = format("Parameter group for %s", module.labels.id)
+  tags        = module.labels.tags
 }
 
 resource "aws_rds_cluster_parameter_group" "aurora" {
@@ -132,14 +137,16 @@ resource "aws_rds_cluster_parameter_group" "aurora" {
   name        = format("%s-cluster", module.labels.id)
   family      = var.mysql_family
   description = format("Cluster parameter group for %s", module.labels.id)
+  tags        = module.labels.tags
 }
 
 resource "aws_rds_cluster_parameter_group" "postgresql_serverless" {
-  count = var.enable && var.engine == "aurora-postgresql" ? 1 : 0
+  count = var.enable && var.serverless_enabled == true && var.engine == "aurora-postgresql" ? 1 : 0
 
   name        = format("%s-cluster", module.labels.id)
   family      = var.postgresql_family_serverless
   description = format("Cluster parameter group for %s Postgresql", module.labels.id)
+  tags        = module.labels.tags
 }
 
 resource "aws_rds_cluster_parameter_group" "aurora_serverless" {
@@ -148,6 +155,7 @@ resource "aws_rds_cluster_parameter_group" "aurora_serverless" {
   name        = format("%s-cluster", module.labels.id)
   family      = var.mysql_family_serverless
   description = format("Cluster parameter group for %s MySQL", module.labels.id)
+  tags        = module.labels.tags
 }
 
 #Module      : RDS SERVERLESS CLUSTER
@@ -185,6 +193,7 @@ resource "aws_rds_cluster" "serverless" {
   iam_database_authentication_enabled = var.iam_database_authentication_enabled
   availability_zones                  = var.availability_zones
   enable_http_endpoint                = var.enable_http_endpoint
+
 
   scaling_configuration {
     auto_pause               = var.auto_pause
