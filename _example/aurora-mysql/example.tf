@@ -3,18 +3,18 @@ provider "aws" {
 }
 
 module "vpc" {
-  source = "git::https://github.com/clouddrove/terraform-aws-vpc.git?ref=tags/0.13.0"
-
+  source      = "clouddrove/vpc/aws"
+  version     = "0.13.0"
   name        = "vpc"
   application = "clouddrove"
   environment = "test"
   label_order = ["environment", "application", "name"]
-  cidr_block = "172.16.0.0/16"
+  cidr_block  = "172.16.0.0/16"
 }
 
 module "public_subnets" {
-  source = "git::https://github.com/clouddrove/terraform-aws-subnet.git"
-
+  source      = "clouddrove/subnet/aws"
+  version     = "0.13.0"
   name        = "public-subnet"
   application = "clouddrove"
   environment = "test"
@@ -30,8 +30,8 @@ module "public_subnets" {
 
 
 module "security-group" {
-  source = "git::https://github.com/clouddrove/terraform-aws-security-group.git"
-
+  source      = "clouddrove/security-group/aws"
+  version     = "0.13.0"
   name        = "aurora-sg"
   application = "clouddrove"
   environment = "test"

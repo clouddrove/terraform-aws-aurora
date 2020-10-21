@@ -37,8 +37,8 @@ usage : |-
   ### Aurora MySQL
   ```hcl
     module "aurora" {
-      source                          = "git::https://github.com/clouddrove/terraform-aws-aurora.git?ref=tags/0.13.0"
-
+      source                          = "clouddrove/aurora/aws"
+      version                         = "0.13.0"
       name                            = "backend"
       application                     = "clouddrove"
       environment                     = "test"
@@ -59,8 +59,8 @@ usage : |-
   ### Aurora Postgres
   ```hcl
       module "postgres" {
-        source              = "git::https://github.com/clouddrove/terraform-aws-aurora.git?ref=tags/0.13.0"
-
+        source              = "clouddrove/aurora/aws"
+        version             = "0.13.0"
         name                = "backend"
         application         = "clouddrove"
         environment         = "test"
@@ -82,7 +82,8 @@ usage : |-
   ### Aurora Serverless MySQL
   ```hcl
     module "aurora" {
-      source                          = "git::https://github.com/clouddrove/terraform-aws-aurora.git?ref=tags/0.13.0"
+      source                          = "clouddrove/aurora/aws"
+      version                         = "0.13.0"
       name                            = "aurora-mysql-serverless"
       application                     = "clouddrove"
       environment                     = "test"
@@ -106,7 +107,8 @@ usage : |-
   ### Aurora Postgres
   ```hcl
       module "postgres" {
-        source                          = "git::https://github.com/clouddrove/terraform-aws-aurora.git?ref=tags/0.13.0"
+        source                          = "clouddrove/aurora/aws"
+        version                         = "0.13.0"
         name                            = "aurora-postgresql-serverless"
         application                     = "clouddrove"
         environment                     = "test"
