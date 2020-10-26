@@ -16,7 +16,7 @@ github_repo: clouddrove/terraform-aws-aurora
 # Badges to display
 badges:
   - name: "Terraform"
-    image: "https://img.shields.io/badge/Terraform-v0.12-green"
+    image: "https://img.shields.io/badge/terraform-v0.13-green"
     url: "https://www.terraform.io"
   - name: "Licence"
     image: "https://img.shields.io/badge/License-MIT-blue.svg"
@@ -37,8 +37,8 @@ usage : |-
   ### Aurora MySQL
   ```hcl
     module "aurora" {
-      source                          = "git::https://github.com/clouddrove/terraform-aws-aurora.git?ref=tags/0.12.6"
-
+      source                          = "clouddrove/aurora/aws"
+      version                         = "0.13.0"
       name                            = "backend"
       application                     = "clouddrove"
       environment                     = "test"
@@ -59,8 +59,8 @@ usage : |-
   ### Aurora Postgres
   ```hcl
       module "postgres" {
-        source              = "git::https://github.com/clouddrove/terraform-aws-aurora.git?ref=tags/0.12.6"
-
+        source              = "clouddrove/aurora/aws"
+        version             = "0.13.0"
         name                = "backend"
         application         = "clouddrove"
         environment         = "test"
@@ -82,7 +82,8 @@ usage : |-
   ### Aurora Serverless MySQL
   ```hcl
     module "aurora" {
-      source                          = "git::https://github.com/clouddrove/terraform-aws-aurora.git?ref=tags/0.12.6"
+      source                          = "clouddrove/aurora/aws"
+      version                         = "0.13.0"
       name                            = "aurora-mysql-serverless"
       application                     = "clouddrove"
       environment                     = "test"
@@ -106,7 +107,8 @@ usage : |-
   ### Aurora Postgres
   ```hcl
       module "postgres" {
-        source                          = "git::https://github.com/clouddrove/terraform-aws-aurora.git?ref=tags/0.12.6"
+        source                          = "clouddrove/aurora/aws"
+        version                         = "0.13.0"
         name                            = "aurora-postgresql-serverless"
         application                     = "clouddrove"
         environment                     = "test"

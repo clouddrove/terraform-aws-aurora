@@ -3,19 +3,18 @@ provider "aws" {
 }
 
 module "vpc" {
-  source = "git::https://github.com/clouddrove/terraform-aws-vpc.git?ref=tags/0.12.4"
-
+  source      = "clouddrove/vpc/aws"
+  version     = "0.13.0"
   name        = "vpc"
   application = "clouddrove"
   environment = "test"
   label_order = ["environment", "application", "name"]
-
-  cidr_block = "172.16.0.0/16"
+  cidr_block  = "172.16.0.0/16"
 }
 
 module "public_subnets" {
-  source = "git::https://github.com/clouddrove/terraform-aws-subnet.git?ref=tags/0.12.4"
-
+  source      = "clouddrove/subnet/aws"
+  version     = "0.13.0"
   name        = "public-subnet"
   application = "clouddrove"
   environment = "test"
@@ -24,14 +23,15 @@ module "public_subnets" {
   availability_zones = ["eu-west-1b", "eu-west-1c"]
   vpc_id             = module.vpc.vpc_id
   cidr_block         = module.vpc.vpc_cidr_block
+  ipv6_cidr_block    = module.vpc.ipv6_cidr_block
   type               = "public"
   igw_id             = module.vpc.igw_id
 }
 
 
 module "security-group" {
-  source = "git::https://github.com/clouddrove/terraform-aws-security-group.git?ref=tags/0.12.3"
-
+  source      = "clouddrove/security-group/aws"
+  version     = "0.13.0"
   name        = "aurora-sg"
   application = "clouddrove"
   environment = "test"
@@ -41,6 +41,8 @@ module "security-group" {
   allowed_ip    = ["172.16.0.0/16", "10.0.0.0/16", "115.160.246.74/32"]
   allowed_ports = [3306]
 }
+
+
 
 module "aurora" {
   source = "./../../"
