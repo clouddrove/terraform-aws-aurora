@@ -137,17 +137,17 @@ resource "aws_rds_cluster_parameter_group" "aurora" {
 resource "aws_rds_cluster_parameter_group" "postgresql_serverless" {
   count = var.enable && var.engine == "aurora-postgresql" ? 1 : 0
 
-  name        = format("%s-cluster", module.labels.id)
+  name        = format("%s-serverless-cluster", module.labels.id)
   family      = var.postgresql_family_serverless
-  description = format("Cluster parameter group for %s Postgresql", module.labels.id)
+  description = format("Cluster parameter group for %s Postgresql Serverless", module.labels.id)
 }
 
 resource "aws_rds_cluster_parameter_group" "aurora_serverless" {
   count = var.enable && var.engine == "aurora" ? 1 : 0
 
-  name        = format("%s-cluster", module.labels.id)
+  name        = format("%s-serverless-cluster", module.labels.id)
   family      = var.mysql_family_serverless
-  description = format("Cluster parameter group for %s MySQL", module.labels.id)
+  description = format("Cluster parameter group for %s MySQL ", module.labels.id)
 }
 
 #Module      : RDS SERVERLESS CLUSTER
