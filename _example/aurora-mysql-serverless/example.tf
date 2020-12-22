@@ -8,9 +8,9 @@ module "vpc" {
   source      = "clouddrove/vpc/aws"
   version     = "0.13.0"
   name        = "vpc"
-  repository               = "https://registry.terraform.io/modules/clouddrove/vpc/aws"
-  environment              = "test"
-  label_order              = ["name", "environment"]
+  repository  = "https://registry.terraform.io/modules/clouddrove/vpc/aws"
+  environment = "test"
+  label_order = ["name", "environment"]
 
   cidr_block = "172.16.0.0/16"
 }
@@ -19,9 +19,9 @@ module "subnets" {
   source      = "clouddrove/subnet/aws"
   version     = "0.13.0"
   name        = "public-subnet"
-  repository         = "https://registry.terraform.io/modules/clouddrove/subnet/aws"
-  environment        = "test"
-  label_order        = ["name", "environment"]
+  repository  = "https://registry.terraform.io/modules/clouddrove/subnet/aws"
+  environment = "test"
+  label_order = ["name", "environment"]
 
 
   availability_zones  = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
@@ -34,13 +34,13 @@ module "subnets" {
 }
 
 module "security_group" {
-  source      = "clouddrove/security-group/aws"
-  version     = "0.13.0"
-  name        = "aurora-mysql-sg"
-  
-  repository                = "https://registry.terraform.io/modules/clouddrove/security-group/aws"
-  environment                     = "test"
-  label_order                     = ["name", "environment"]
+  source  = "clouddrove/security-group/aws"
+  version = "0.13.0"
+  name    = "aurora-mysql-sg"
+
+  repository  = "https://registry.terraform.io/modules/clouddrove/security-group/aws"
+  environment = "test"
+  label_order = ["name", "environment"]
 
   vpc_id        = module.vpc.vpc_id
   allowed_ip    = ["172.16.0.0/16"]
@@ -51,11 +51,11 @@ module "kms_key" {
   source      = "clouddrove/kms/aws"
   version     = "0.13.0"
   name        = "kms"
-  repository                      = "https://registry.terraform.io/modules/clouddrove/kms/aws"
-  environment                     = "test"
-  label_order                     = ["name", "environment"]
+  repository  = "https://registry.terraform.io/modules/clouddrove/kms/aws"
+  environment = "test"
+  label_order = ["name", "environment"]
 
-  enabled     = true
+  enabled = true
 
   description              = "KMS key for aurora"
   alias                    = "alias/aurora"
@@ -86,9 +86,9 @@ module "aurora_mysql" {
   source = "./../../"
 
   name        = "aurora-mysql-serverless"
-  repository                      = "https://registry.terraform.io/modules/clouddrove/aurora/aws"
-  environment                     = "test"
-  label_order                     = ["name", "environment"]
+  repository  = "https://registry.terraform.io/modules/clouddrove/aurora/aws"
+  environment = "test"
+  label_order = ["name", "environment"]
 
 
   enable              = true
