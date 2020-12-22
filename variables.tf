@@ -5,10 +5,16 @@ variable "name" {
   description = "Name  (e.g. `app` or `cluster`)."
 }
 
-variable "application" {
+variable "repository" {
   type        = string
   default     = ""
-  description = "Application (e.g. `cd` or `clouddrove`)."
+  description = "Terraform current module repo"
+
+  validation {
+    # regex(...) fails if it cannot find a match
+    condition     = can(regex("^https://", var.repository))
+    error_message = "The module-repo value must be a valid Git repo link."
+  }
 }
 
 variable "environment" {
@@ -25,8 +31,8 @@ variable "label_order" {
 
 variable "managedby" {
   type        = string
-  default     = "anmol@clouddrove.com"
-  description = "ManagedBy, eg 'CloudDrove' or 'AnmolNagpal'."
+  default     = "hello@clouddrove.com"
+  description = "ManagedBy, eg 'CloudDrove'."
 }
 
 #Module      : RDS AURORA CLUSTER
@@ -71,12 +77,14 @@ variable "username" {
   type        = string
   default     = ""
   description = "Master DB username."
+  sensitive   = true
 }
 
 variable "password" {
   type        = string
   default     = ""
   description = "Master DB password."
+  sensitive   = true
 }
 
 variable "final_snapshot_identifier_prefix" {
@@ -119,6 +127,7 @@ variable "port" {
   type        = string
   default     = ""
   description = "The port on which to accept connections."
+  sensitive   = true
 }
 
 variable "apply_immediately" {
@@ -143,12 +152,14 @@ variable "db_parameter_group_name" {
   type        = string
   default     = "default.aurora5.6"
   description = "The name of a DB parameter group to use."
+  sensitive   = true
 }
 
 variable "db_cluster_parameter_group_name" {
   type        = string
   default     = "default.aurora5.6"
   description = "The name of a DB Cluster parameter group to use."
+  sensitive   = true
 }
 
 variable "snapshot_identifier" {
