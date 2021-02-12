@@ -140,7 +140,7 @@ Here are some examples of how you can use this module in your inventory structur
     availability_zones              = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
   }
 ```
-### Aurora Postgres
+### Aurora Serverless Postgres
 ```hcl
     module "postgres" {
       source                          = "clouddrove/aurora/aws"
