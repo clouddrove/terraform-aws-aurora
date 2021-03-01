@@ -50,6 +50,7 @@ resource "aws_rds_cluster" "default" {
   database_name                       = var.database_name
   master_username                     = var.username
   master_password                     = local.master_password
+  backtrack_window                    = var.backtrack_window
   final_snapshot_identifier           = format("%s-%s-%s", var.final_snapshot_identifier_prefix, module.labels.id, random_id.snapshot_identifier.hex)
   skip_final_snapshot                 = var.skip_final_snapshot
   deletion_protection                 = var.deletion_protection
