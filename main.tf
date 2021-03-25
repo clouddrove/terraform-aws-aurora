@@ -135,7 +135,7 @@ resource "aws_rds_cluster_parameter_group" "aurora" {
 }
 
 resource "aws_rds_cluster_parameter_group" "postgresql_serverless" {
-  count = var.enable && var.engine == "aurora-postgresql" ? 1 : 0
+  count = var.enable && var.engine == "aurora-postgresql" && var.serverless_enabled ? 1 : 0
 
   name        = format("%s-cluster", module.labels.id)
   family      = var.postgresql_family_serverless
