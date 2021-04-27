@@ -6,22 +6,21 @@ provider "aws" {
 
 module "vpc" {
   source      = "clouddrove/vpc/aws"
-  version     = "0.13.0"
+  version     = "0.14.0"
   name        = "vpc"
-  application = "clouddrove"
   environment = "test"
-  label_order = ["environment", "application", "name"]
+  label_order = ["environment", "name"]
 
   cidr_block = "172.16.0.0/16"
 }
 
 module "subnets" {
   source      = "clouddrove/subnet/aws"
-  version     = "0.13.0"
+  repository  = "https://registry.terraform.io/modules/clouddrove/subnet/aws"
+  version     = "0.14.0"
   name        = "subnet"
-  application = "clouddrove"
   environment = "test"
-  label_order = ["environment", "application", "name"]
+  label_order = ["environment", "name"]
 
   availability_zones  = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
   vpc_id              = module.vpc.vpc_id
@@ -34,11 +33,10 @@ module "subnets" {
 
 module "security_group" {
   source      = "clouddrove/security-group/aws"
-  version     = "0.13.0"
+  version     = "0.14.0"
   name        = "aurora-postgresql-sg"
-  application = "clouddrove"
   environment = "test"
-  label_order = ["environment", "application", "name"]
+  label_order = ["environment", "name"]
 
   vpc_id        = module.vpc.vpc_id
   allowed_ip    = ["172.16.0.0/16"]
@@ -47,11 +45,10 @@ module "security_group" {
 
 module "kms_key" {
   source      = "clouddrove/kms/aws"
-  version     = "0.13.0"
+  version     = "0.14.0"
   name        = "kms"
-  application = "clouddrove"
   environment = "test"
-  label_order = ["environment", "application", "name"]
+  label_order = ["environment", "name"]
   enabled     = true
 
   description              = "KMS key for aurora"
@@ -83,9 +80,9 @@ module "aurora_postgresql" {
   source = "./../../"
 
   name        = "aurora-postgresql-serverless"
-  application = "clouddrove"
+  repository  = "https://registry.terraform.io/modules/clouddrove/aurora/aws"
   environment = "test"
-  label_order = ["environment", "application", "name"]
+  label_order = ["environment", "name"]
 
   enable              = true
   serverless_enabled  = true

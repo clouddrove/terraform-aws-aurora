@@ -4,21 +4,21 @@ provider "aws" {
 
 module "vpc" {
   source      = "clouddrove/vpc/aws"
-  version     = "0.13.0"
-  name        = "vpc"
-  application = "clouddrove"
+  version     = "0.14.0"
+  name        = "aurora-mysql"
+  repository  = "https://registry.terraform.io/modules/clouddrove/vpc/aws"
   environment = "test"
-  label_order = ["environment", "application", "name"]
+  label_order = ["name", "environment"]
   cidr_block  = "172.16.0.0/16"
 }
 
 module "public_subnets" {
   source      = "clouddrove/subnet/aws"
-  version     = "0.13.0"
+  version     = "0.14.0"
   name        = "public-subnet"
-  application = "clouddrove"
+  repository  = "https://registry.terraform.io/modules/clouddrove/subnet/aws"
   environment = "test"
-  label_order = ["environment", "application", "name"]
+  label_order = ["name", "environment"]
 
   availability_zones = ["eu-west-1b", "eu-west-1c"]
   vpc_id             = module.vpc.vpc_id
@@ -30,13 +30,13 @@ module "public_subnets" {
 
 
 module "security-group" {
-  source      = "clouddrove/security-group/aws"
-  version     = "0.13.0"
-  name        = "aurora-sg"
-  application = "clouddrove"
-  environment = "test"
-  label_order = ["environment", "application", "name"]
+  source  = "clouddrove/security-group/aws"
+  version = "0.14.0"
+  name    = "aurora-sg"
 
+  repository    = "https://registry.terraform.io/modules/clouddrove/security-group/aws"
+  environment   = "test"
+  label_order   = ["name", "environment"]
   vpc_id        = module.vpc.vpc_id
   allowed_ip    = ["172.16.0.0/16", "10.0.0.0/16", "115.160.246.74/32"]
   allowed_ports = [3306]
@@ -48,9 +48,9 @@ module "aurora" {
   source = "./../../"
 
   name        = "aurora"
-  application = "clouddrove"
+  repository  = "https://registry.terraform.io/modules/clouddrove/aurora/aws"
   environment = "test"
-  label_order = ["environment", "application", "name"]
+  label_order = ["name", "environment"]
 
   enable                          = true
   username                        = "root"
@@ -59,7 +59,7 @@ module "aurora" {
   engine_version                  = "5.7.12"
   subnets                         = tolist(module.public_subnets.public_subnet_id)
   aws_security_group              = [module.security-group.security_group_ids]
-  replica_count                   = 2
+  replica_count                   = 1
   instance_type                   = "db.t2.small"
   apply_immediately               = true
   skip_final_snapshot             = true
