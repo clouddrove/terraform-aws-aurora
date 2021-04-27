@@ -14,7 +14,7 @@
 <p align="center">
 
 <a href="https://www.terraform.io">
-  <img src="https://img.shields.io/badge/terraform-v0.13-green" alt="Terraform">
+  <img src="https://img.shields.io/badge/terraform-v0.14-green" alt="Terraform">
 </a>
 <a href="LICENSE.md">
   <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="Licence">
@@ -74,11 +74,12 @@ Here are some examples of how you can use this module in your inventory structur
 ```hcl
   module "aurora" {
     source                          = "clouddrove/aurora/aws"
-    version                         = "0.13.0"
+    version                         = "0.14.0"
+
     name                            = "backend"
-    application                     = "clouddrove"
+    repository                      = "https://registry.terraform.io/modules/clouddrove/aurora/aws"
     environment                     = "test"
-    label_order                     = ["environment", "application", "name"]
+    label_order                     = ["name", "environment"]
     username                        = "admin"
     database_name                   = "dt"
     engine                          = "aurora-mysql"
@@ -86,7 +87,7 @@ Here are some examples of how you can use this module in your inventory structur
     subnets                         = "subnet-xxxxxxxxx"
     aws_security_group              = [sg-xxxxxxxxxxx]
     replica_count                   = 1
-    instance_type                   = "db.t2.medium"
+    instance_type                   = "db.t2.small"
     apply_immediately               = true
     skip_final_snapshot             = true
     publicly_accessible             = false
@@ -96,11 +97,11 @@ Here are some examples of how you can use this module in your inventory structur
 ```hcl
     module "postgres" {
       source              = "clouddrove/aurora/aws"
-      version             = "0.13.0"
+      version             = "0.14.0"
       name                = "backend"
-      application         = "clouddrove"
+      repository          = "https://registry.terraform.io/modules/clouddrove/aurora/aws"
       environment         = "test"
-      label_order         = ["environment", "application", "name"]
+      label_order         = ["name", "environment"]
 
       username            = "root"
       database_name       = "test_db"
@@ -119,12 +120,11 @@ Here are some examples of how you can use this module in your inventory structur
 ```hcl
   module "aurora" {
     source                          = "clouddrove/aurora/aws"
-    version                         = "0.13.0"
+    version                         = "0.14.0"
     name                            = "aurora-mysql-serverless"
-    application                     = "clouddrove"
+    repository                      = "https://registry.terraform.io/modules/clouddrove/aurora/aws"
     environment                     = "test"
-    label_order                     = ["environment", "application", "name"]
-    enable                          = true
+    label_order                     = ["name", "environment"]
     serverless_enabled              = true
     min_capacity                    = 1
     max_capacity                    = 4
@@ -144,11 +144,11 @@ Here are some examples of how you can use this module in your inventory structur
 ```hcl
     module "postgres" {
       source                          = "clouddrove/aurora/aws"
-      version                         = "0.13.0"
-      name                            = "aurora-postgresql-serverless"
-      application                     = "clouddrove"
+      version                         = "0.14.0"
+      name                            = "aurora-Postgres"
+      repository                      = "https://registry.terraform.io/modules/clouddrove/aurora/aws"
       environment                     = "test"
-      label_order                     = ["environment", "application", "name"]
+      label_order                     = ["name", "environment"]
       enable                          = true
       serverless_enabled              = true
       min_capacity                    = 2
@@ -175,12 +175,11 @@ Here are some examples of how you can use this module in your inventory structur
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| application | Application (e.g. `cd` or `clouddrove`). | `string` | `""` | no |
 | apply\_immediately | Determines whether or not any DB modifications are applied immediately, or during the maintenance window. | `bool` | `false` | no |
 | auto\_minor\_version\_upgrade | Determines whether minor engine upgrades will be performed automatically in the maintenance window. | `bool` | `true` | no |
 | auto\_pause | Whether to enable automatic pause. A DB cluster can be paused only when it's idle (it has no connections). | `bool` | `false` | no |
 | availability\_zone | The Availability Zone of the RDS instance. | `string` | `""` | no |
-| availability\_zones | The Availability Zone of the RDS cluster. | `list` | `[]` | no |
+| availability\_zones | The Availability Zone of the RDS cluster. | `list(any)` | `[]` | no |
 | aws\_security\_group | Specifies whether IAM Database authentication should be enabled or not. Not all versions and instances are supported. Refer to the AWS documentation to see which versions are supported. | `list(string)` | `[]` | no |
 | backtrack\_window | The target backtrack window, in seconds. Only available for aurora engine currently.Must be between 0 and 259200 (72 hours) | `number` | `0` | no |
 | backup\_retention\_period | How long to keep backups for (in days). | `number` | `7` | no |
@@ -204,8 +203,8 @@ Here are some examples of how you can use this module in your inventory structur
 | identifier\_prefix | Prefix for cluster and instance identifier. | `string` | `""` | no |
 | instance\_type | Instance type to use. | `string` | `""` | no |
 | kms\_key\_id | The ARN for the KMS encryption key if one is set to the cluster. | `string` | `""` | no |
-| label\_order | Label order, e.g. `name`,`application`. | `list` | `[]` | no |
-| managedby | ManagedBy, eg 'CloudDrove' or 'AnmolNagpal'. | `string` | `"anmol@clouddrove.com"` | no |
+| label\_order | Label order, e.g. `name`,`application`. | `list(any)` | `[]` | no |
+| managedby | ManagedBy, eg 'CloudDrove'. | `string` | `"hello@clouddrove.com"` | no |
 | max\_capacity | The maximum capacity. Valid capacity values are 1, 2, 4, 8, 16, 32, 64, 128, and 256. | `number` | `4` | no |
 | min\_capacity | The minimum capacity. Valid capacity values are 1, 2, 4, 8, 16, 32, 64, 128, and 256. | `number` | `2` | no |
 | monitoring\_interval | The interval (seconds) between points when Enhanced Monitoring metrics are collected. | `number` | `0` | no |
@@ -229,6 +228,7 @@ Here are some examples of how you can use this module in your inventory structur
 | replica\_scale\_min | Minimum number of replicas to allow scaling. | `number` | `2` | no |
 | replica\_scale\_out\_cooldown | Cooldown in seconds before allowing further scaling operations after a scale out. | `number` | `300` | no |
 | replication\_source\_identifier | ARN of a source DB cluster or DB instance if this DB cluster is to be created as a Read Replica. | `string` | `""` | no |
+| repository | Terraform current module repo | `string` | `""` | no |
 | seconds\_until\_auto\_pause | The time, in seconds, before an Aurora DB cluster in serverless mode is paused. Valid values are 300 through 86400. | `number` | `300` | no |
 | serverless\_enabled | Whether serverless is enabled or not. | `bool` | `false` | no |
 | skip\_final\_snapshot | Should a final snapshot be created on cluster destroy. | `bool` | `false` | no |
