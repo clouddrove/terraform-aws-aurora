@@ -14,6 +14,7 @@ output "rds_cluster_database_name" {
 }
 
 output "rds_cluster_master_username" {
+  sensitive   = true
   value       = module.aurora_postgresql.serverless_rds_cluster_master_username
   description = "The username of the rds cluster."
 }

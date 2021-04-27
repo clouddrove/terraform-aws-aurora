@@ -6,7 +6,7 @@ provider "aws" {
 
 module "vpc" {
   source      = "clouddrove/vpc/aws"
-  version     = "0.13.0"
+  version     = "0.14.0"
   name        = "vpc"
   repository  = "https://registry.terraform.io/modules/clouddrove/vpc/aws"
   environment = "test"
@@ -17,7 +17,7 @@ module "vpc" {
 
 module "subnets" {
   source      = "clouddrove/subnet/aws"
-  version     = "0.13.0"
+  version     = "0.14.0"
   name        = "public-subnet"
   repository  = "https://registry.terraform.io/modules/clouddrove/subnet/aws"
   environment = "test"
@@ -35,7 +35,7 @@ module "subnets" {
 
 module "security_group" {
   source  = "clouddrove/security-group/aws"
-  version = "0.13.0"
+  version = "0.14.0"
   name    = "aurora-mysql-sg"
 
   repository  = "https://registry.terraform.io/modules/clouddrove/security-group/aws"
@@ -49,7 +49,7 @@ module "security_group" {
 
 module "kms_key" {
   source      = "clouddrove/kms/aws"
-  version     = "0.13.0"
+  version     = "0.14.0"
   name        = "kms"
   repository  = "https://registry.terraform.io/modules/clouddrove/kms/aws"
   environment = "test"

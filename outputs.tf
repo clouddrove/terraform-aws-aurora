@@ -33,6 +33,7 @@ output "rds_cluster_port" {
 
 output "rds_cluster_master_username" {
   value       = aws_rds_cluster.default.*.master_username
+  sensitive   = true
   description = "The master username."
 }
 
@@ -75,6 +76,7 @@ output "serverless_rds_cluster_master_password" {
 }
 
 output "serverless_rds_cluster_master_username" {
+  sensitive   = true
   value       = aws_rds_cluster.serverless.*.master_username
   description = "The master username."
 }

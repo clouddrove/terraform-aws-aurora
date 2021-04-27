@@ -38,7 +38,7 @@ usage : |-
   ```hcl
     module "aurora" {
       source                          = "clouddrove/aurora/aws"
-      version                         = "0.13.0"
+      version                         = "0.14.0"
 
       name                            = "backend"
       repository                      = "https://registry.terraform.io/modules/clouddrove/aurora/aws"
@@ -51,7 +51,7 @@ usage : |-
       subnets                         = "subnet-xxxxxxxxx"
       aws_security_group              = [sg-xxxxxxxxxxx]
       replica_count                   = 1
-      instance_type                   = "db.t2.medium"
+      instance_type                   = "db.t2.small"
       apply_immediately               = true
       skip_final_snapshot             = true
       publicly_accessible             = false
@@ -61,7 +61,7 @@ usage : |-
   ```hcl
       module "postgres" {
         source              = "clouddrove/aurora/aws"
-        version             = "0.13.0"
+        version             = "0.14.0"
         name                = "backend"
         repository          = "https://registry.terraform.io/modules/clouddrove/aurora/aws"
         environment         = "test"
@@ -84,7 +84,7 @@ usage : |-
   ```hcl
     module "aurora" {
       source                          = "clouddrove/aurora/aws"
-      version                         = "0.13.0"
+      version                         = "0.14.0"
       name                            = "aurora-mysql-serverless"
       repository                      = "https://registry.terraform.io/modules/clouddrove/aurora/aws"
       environment                     = "test"
@@ -108,7 +108,7 @@ usage : |-
   ```hcl
       module "postgres" {
         source                          = "clouddrove/aurora/aws"
-        version                         = "0.13.0"
+        version                         = "0.14.0"
         name                            = "aurora-Postgres"
         repository                      = "https://registry.terraform.io/modules/clouddrove/aurora/aws"
         environment                     = "test"

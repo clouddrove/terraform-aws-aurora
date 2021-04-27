@@ -24,7 +24,7 @@ variable "environment" {
 }
 
 variable "label_order" {
-  type        = list
+  type        = list(any)
   default     = []
   description = "Label order, e.g. `name`,`application`."
 }
@@ -348,7 +348,7 @@ variable "source_region" {
 }
 
 variable "availability_zones" {
-  type        = list
+  type        = list(any)
   default     = []
   description = "The Availability Zone of the RDS cluster."
 }

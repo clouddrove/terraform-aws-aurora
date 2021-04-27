@@ -4,7 +4,7 @@ provider "aws" {
 
 module "vpc" {
   source      = "clouddrove/vpc/aws"
-  version     = "0.13.0"
+  version     = "0.14.0"
   name        = "aurora-mysql"
   repository  = "https://registry.terraform.io/modules/clouddrove/vpc/aws"
   environment = "test"
@@ -14,7 +14,7 @@ module "vpc" {
 
 module "public_subnets" {
   source      = "clouddrove/subnet/aws"
-  version     = "0.13.0"
+  version     = "0.14.0"
   name        = "public-subnet"
   repository  = "https://registry.terraform.io/modules/clouddrove/subnet/aws"
   environment = "test"
@@ -31,7 +31,7 @@ module "public_subnets" {
 
 module "security-group" {
   source  = "clouddrove/security-group/aws"
-  version = "0.13.0"
+  version = "0.14.0"
   name    = "aurora-sg"
 
   repository    = "https://registry.terraform.io/modules/clouddrove/security-group/aws"
@@ -59,7 +59,7 @@ module "aurora" {
   engine_version                  = "5.7.12"
   subnets                         = tolist(module.public_subnets.public_subnet_id)
   aws_security_group              = [module.security-group.security_group_ids]
-  replica_count                   = 2
+  replica_count                   = 1
   instance_type                   = "db.t2.small"
   apply_immediately               = true
   skip_final_snapshot             = true
