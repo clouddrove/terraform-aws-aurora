@@ -101,7 +101,7 @@ variable "skip_final_snapshot" {
 
 variable "deletion_protection" {
   type        = bool
-  default     = false
+  default     = true
   description = "If the DB instance should have deletion protection enabled."
 }
 
