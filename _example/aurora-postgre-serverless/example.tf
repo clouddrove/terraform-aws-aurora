@@ -98,4 +98,5 @@ module "aurora_postgresql" {
   apply_immediately   = true
   skip_final_snapshot = true
   availability_zones  = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
+  iam_database_authentication_enabled = false
 }

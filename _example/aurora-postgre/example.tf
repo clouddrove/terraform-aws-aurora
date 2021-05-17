@@ -60,4 +60,5 @@ module "postgres" {
   apply_immediately   = true
   skip_final_snapshot = true
   publicly_accessible = false
+  iam_database_authentication_enabled = false
 }
