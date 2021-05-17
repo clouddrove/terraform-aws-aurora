@@ -49,16 +49,16 @@ module "postgres" {
   environment = "test"
   label_order = ["name", "environment"]
 
-  username            = "root"
-  database_name       = "test_db"
-  engine              = "aurora-postgresql"
-  engine_version      = "9.6.9"
-  subnets             = tolist(module.public_subnets.public_subnet_id)
-  aws_security_group  = [module.security-group.security_group_ids]
-  replica_count       = 1
-  instance_type       = "db.r4.large"
-  apply_immediately   = true
-  skip_final_snapshot = true
-  publicly_accessible = false
+  username                            = "root"
+  database_name                       = "test_db"
+  engine                              = "aurora-postgresql"
+  engine_version                      = "9.6.9"
+  subnets                             = tolist(module.public_subnets.public_subnet_id)
+  aws_security_group                  = [module.security-group.security_group_ids]
+  replica_count                       = 1
+  instance_type                       = "db.r4.large"
+  apply_immediately                   = true
+  skip_final_snapshot                 = true
+  publicly_accessible                 = false
   iam_database_authentication_enabled = false
 }

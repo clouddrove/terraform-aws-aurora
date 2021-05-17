@@ -91,19 +91,19 @@ module "aurora_mysql" {
   label_order = ["name", "environment"]
 
 
-  enable              = true
-  serverless_enabled  = true
-  min_capacity        = 1
-  max_capacity        = 4
-  username            = "root"
-  database_name       = "test_db"
-  engine              = "aurora"
-  engine_version      = "5.6.10a"
-  kms_key_id          = module.kms_key.key_arn
-  subnets             = module.subnets.private_subnet_id
-  aws_security_group  = [module.security_group.security_group_ids]
-  apply_immediately   = true
-  skip_final_snapshot = true
-  availability_zones  = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
+  enable                              = true
+  serverless_enabled                  = true
+  min_capacity                        = 1
+  max_capacity                        = 4
+  username                            = "root"
+  database_name                       = "test_db"
+  engine                              = "aurora"
+  engine_version                      = "5.6.10a"
+  kms_key_id                          = module.kms_key.key_arn
+  subnets                             = module.subnets.private_subnet_id
+  aws_security_group                  = [module.security_group.security_group_ids]
+  apply_immediately                   = true
+  skip_final_snapshot                 = true
+  availability_zones                  = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
   iam_database_authentication_enabled = false
 }

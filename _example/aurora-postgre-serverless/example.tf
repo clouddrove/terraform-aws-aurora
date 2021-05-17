@@ -84,19 +84,19 @@ module "aurora_postgresql" {
   environment = "test"
   label_order = ["environment", "name"]
 
-  enable              = true
-  serverless_enabled  = true
-  min_capacity        = 2
-  max_capacity        = 4
-  username            = "root"
-  database_name       = "test_db"
-  engine              = "aurora-postgresql"
-  engine_version      = "10.7"
-  kms_key_id          = module.kms_key.key_arn
-  subnets             = module.subnets.private_subnet_id
-  aws_security_group  = [module.security_group.security_group_ids]
-  apply_immediately   = true
-  skip_final_snapshot = true
-  availability_zones  = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
+  enable                              = true
+  serverless_enabled                  = true
+  min_capacity                        = 2
+  max_capacity                        = 4
+  username                            = "root"
+  database_name                       = "test_db"
+  engine                              = "aurora-postgresql"
+  engine_version                      = "10.7"
+  kms_key_id                          = module.kms_key.key_arn
+  subnets                             = module.subnets.private_subnet_id
+  aws_security_group                  = [module.security_group.security_group_ids]
+  apply_immediately                   = true
+  skip_final_snapshot                 = true
+  availability_zones                  = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
   iam_database_authentication_enabled = false
 }
