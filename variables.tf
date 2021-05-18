@@ -248,7 +248,7 @@ variable "performance_insights_kms_key_id" {
 
 variable "iam_database_authentication_enabled" {
   type        = bool
-  default     = false
+  default     = true
   description = "Specifies whether IAM Database authentication should be enabled or not. Not all versions and instances are supported. Refer to the AWS documentation to see which versions are supported."
 }
 
