@@ -138,7 +138,7 @@ variable "apply_immediately" {
 
 variable "monitoring_interval" {
   type        = number
-  default     = 0
+  default     = 5
   description = "The interval (seconds) between points when Enhanced Monitoring metrics are collected."
 }
 

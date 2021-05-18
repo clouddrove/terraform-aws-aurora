@@ -61,4 +61,5 @@ module "postgres" {
   skip_final_snapshot                 = true
   publicly_accessible                 = false
   iam_database_authentication_enabled = false
+  monitoring_interval                 = "0"
 }
