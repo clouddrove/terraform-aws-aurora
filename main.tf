@@ -153,7 +153,7 @@ resource "aws_rds_cluster_parameter_group" "aurora_serverless" {
   name        = format("%s-serverless-cluster", module.labels.id)
   family      = var.mysql_family_serverless
   description = format("Cluster parameter group for %s MySQL ", module.labels.id)
-  tags = module.labels.tags
+  tags        = module.labels.tags
 }
 
 #Module      : RDS SERVERLESS CLUSTER
