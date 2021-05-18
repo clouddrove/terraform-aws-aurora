@@ -108,6 +108,7 @@ resource "aws_db_parameter_group" "postgresql" {
   name        = module.labels.id
   family      = var.postgresql_family
   description = format("Parameter group for %s", module.labels.id)
+  tags        = module.labels.tags
 }
 
 resource "aws_rds_cluster_parameter_group" "postgresql" {
@@ -116,6 +117,7 @@ resource "aws_rds_cluster_parameter_group" "postgresql" {
   name        = format("%s-cluster", module.labels.id)
   family      = var.postgresql_family
   description = format("Cluster parameter group for %s", module.labels.id)
+  tags        = module.labels.tags
 }
 
 resource "aws_db_parameter_group" "aurora" {
@@ -124,6 +126,7 @@ resource "aws_db_parameter_group" "aurora" {
   name        = module.labels.id
   family      = var.mysql_family
   description = format("Parameter group for %s", module.labels.id)
+  tags        = module.labels.tags
 }
 
 resource "aws_rds_cluster_parameter_group" "aurora" {
@@ -132,6 +135,7 @@ resource "aws_rds_cluster_parameter_group" "aurora" {
   name        = format("%s-cluster", module.labels.id)
   family      = var.mysql_family
   description = format("Cluster parameter group for %s", module.labels.id)
+  tags        = module.labels.tags
 }
 
 resource "aws_rds_cluster_parameter_group" "postgresql_serverless" {
@@ -140,6 +144,7 @@ resource "aws_rds_cluster_parameter_group" "postgresql_serverless" {
   name        = format("%s-serverless-cluster", module.labels.id)
   family      = var.postgresql_family_serverless
   description = format("Cluster parameter group for %s Postgresql Serverless", module.labels.id)
+  tags        = module.labels.tags
 }
 
 resource "aws_rds_cluster_parameter_group" "aurora_serverless" {
@@ -148,6 +153,7 @@ resource "aws_rds_cluster_parameter_group" "aurora_serverless" {
   name        = format("%s-serverless-cluster", module.labels.id)
   family      = var.mysql_family_serverless
   description = format("Cluster parameter group for %s MySQL ", module.labels.id)
+  tags = module.labels.tags
 }
 
 #Module      : RDS SERVERLESS CLUSTER
