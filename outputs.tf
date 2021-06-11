@@ -21,10 +21,6 @@ output "rds_cluster_database_name" {
   description = "Name for an automatically created database on cluster creation."
 }
 
-output "rds_cluster_master_password" {
-  value       = aws_rds_cluster.default.*.master_password
-  description = "The master password."
-}
 
 output "rds_cluster_port" {
   value       = aws_rds_cluster.default.*.port
@@ -45,41 +41,11 @@ output "rds_cluster_instance_endpoints" {
 #Module      : RDS AURORA SERVERLESS CLUSTER
 #Description : Terraform module which creates RDS Aurora database resources on AWS and can
 #              create different type of databases. Currently it supports Postgres and MySQL.
-output "serverless_rds_cluster_id" {
-  value       = aws_rds_cluster.serverless.*.id
-  description = "The ID of the cluster."
-}
-
-output "serverless_rds_cluster_endpoint" {
-  value       = aws_rds_cluster.serverless.*.endpoint
-  description = "The cluster endpoint."
-}
-
-output "serverless_rds_cluster_reader_endpoint" {
-  value       = aws_rds_cluster.serverless.*.reader_endpoint
-  description = "The cluster reader endpoint."
-}
-
-output "serverless_rds_cluster_database_name" {
-  value       = aws_rds_cluster.serverless.*.database_name
-  description = "Name for an automatically created database on cluster creation."
-}
-
-output "serverless_rds_cluster_port" {
-  value       = aws_rds_cluster.serverless.*.port
-  description = "The port of Cluster."
-}
-
 output "serverless_rds_cluster_master_password" {
   value       = local.master_password
   description = "The master password."
 }
 
-output "serverless_rds_cluster_master_username" {
-  sensitive   = true
-  value       = aws_rds_cluster.serverless.*.master_username
-  description = "The master username."
-}
 
 output "tags" {
   value       = module.labels.tags

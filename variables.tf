@@ -388,3 +388,15 @@ variable "timeout_action" {
   default     = "RollbackCapacityChange"
   description = "The action to take when the timeout is reached. Valid values: ForceApplyCapacityChange, RollbackCapacityChange."
 }
+
+variable "scaling_configuration" {
+  description = "Map of nested attributes with scaling properties. Only valid when engine_mode is set to `serverless`"
+  type        = map(string)
+  default     = {}
+}
+
+variable "s3_import" {
+  description = "Configuration map used to restore from a Percona Xtrabackup in S3 (only MySQL is supported)"
+  type        = map(string)
+  default     = null
+}

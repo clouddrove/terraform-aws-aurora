@@ -7,7 +7,7 @@
 #              tags for resources. You can use terraform-labels to implement a strict
 #              naming convention.
 module "labels" {
-  source = "git::https://github.com/clouddrove/terraform-labels.git?ref=tags/0.14.0"
+  source = "git::https://github.com/clouddrove/terraform-labels.git?ref=0.15"
 
   name        = var.name
   repository  = var.repository
@@ -66,6 +66,29 @@ resource "aws_rds_cluster" "default" {
   enabled_cloudwatch_logs_exports     = var.enabled_cloudwatch_logs_exports
   db_cluster_parameter_group_name     = var.engine == "aurora-postgresql" ? aws_rds_cluster_parameter_group.postgresql.*.id[0] : aws_rds_cluster_parameter_group.aurora.*.id[0]
   iam_database_authentication_enabled = var.iam_database_authentication_enabled
+
+  dynamic "scaling_configuration" {
+    for_each = length(keys(var.scaling_configuration)) == 0 ? [] : [var.scaling_configuration]
+
+    content {
+      auto_pause               = lookup(scaling_configuration.value, "auto_pause", null)
+      max_capacity             = lookup(scaling_configuration.value, "max_capacity", null)
+      min_capacity             = lookup(scaling_configuration.value, "min_capacity", null)
+      seconds_until_auto_pause = lookup(scaling_configuration.value, "seconds_until_auto_pause", null)
+      timeout_action           = lookup(scaling_configuration.value, "timeout_action", null)
+    }
+  }
+
+  dynamic "s3_import" {
+    for_each = var.s3_import != null ? [var.s3_import] : []
+    content {
+      source_engine         = var.engine
+      source_engine_version = s3_import.value.source_engine_version
+      bucket_name           = s3_import.value.bucket_name
+      bucket_prefix         = lookup(s3_import.value, "bucket_prefix", null)
+      ingestion_role        = s3_import.value.ingestion_role
+    }
+  }
 
   tags = module.labels.tags
 }
@@ -159,46 +182,46 @@ resource "aws_rds_cluster_parameter_group" "aurora_serverless" {
 #Module      : RDS SERVERLESS CLUSTER
 #Description : Terraform module which creates RDS Aurora serverless database resources on AWS and can
 #              create different type of databases. Currently it supports Postgres and MySQL.
-resource "aws_rds_cluster" "serverless" {
-  count = var.enable && var.enabled_rds_cluster && var.serverless_enabled ? 1 : 0
-
-  cluster_identifier                  = module.labels.id
-  engine                              = var.engine
-  engine_version                      = var.engine_version
-  engine_mode                         = var.engine_mode
-  kms_key_id                          = var.kms_key_id
-  database_name                       = var.database_name
-  master_username                     = var.username
-  master_password                     = local.master_password
-  backtrack_window                    = var.backtrack_window
-  replication_source_identifier       = var.replication_source_identifier
-  final_snapshot_identifier           = format("%s-%s-%s", var.final_snapshot_identifier_prefix, module.labels.id, random_id.snapshot_identifier.hex)
-  skip_final_snapshot                 = var.skip_final_snapshot
-  deletion_protection                 = var.deletion_protection
-  backup_retention_period             = var.backup_retention_period
-  preferred_backup_window             = var.preferred_backup_window
-  preferred_maintenance_window        = var.preferred_maintenance_window
-  port                                = local.port
-  iam_roles                           = var.iam_roles
-  source_region                       = var.source_region
-  db_subnet_group_name                = join("", aws_db_subnet_group.default.*.name)
-  vpc_security_group_ids              = var.aws_security_group
-  snapshot_identifier                 = var.snapshot_identifier
-  storage_encrypted                   = var.storage_encrypted
-  apply_immediately                   = var.apply_immediately
-  copy_tags_to_snapshot               = var.copy_tags_to_snapshot
-  db_cluster_parameter_group_name     = var.engine == "aurora-postgresql" ? aws_rds_cluster_parameter_group.postgresql_serverless.*.id[0] : aws_rds_cluster_parameter_group.aurora_serverless.*.id[0]
-  iam_database_authentication_enabled = var.iam_database_authentication_enabled
-  availability_zones                  = var.availability_zones
-  enable_http_endpoint                = var.enable_http_endpoint
-
-  scaling_configuration {
-    auto_pause               = var.auto_pause
-    max_capacity             = var.max_capacity
-    min_capacity             = var.min_capacity
-    seconds_until_auto_pause = var.seconds_until_auto_pause
-    timeout_action           = var.timeout_action
-  }
-
-  tags = module.labels.tags
-}
+//resource "aws_rds_cluster" "serverless" {
+//  count = var.enable && var.enabled_rds_cluster && var.serverless_enabled ? 1 : 0
+//
+//  cluster_identifier                  = module.labels.id
+//  engine                              = var.engine
+//  engine_version                      = var.engine_version
+//  engine_mode                         = var.engine_mode
+//  kms_key_id                          = var.kms_key_id
+//  database_name                       = var.database_name
+//  master_username                     = var.username
+//  master_password                     = local.master_password
+//  backtrack_window                    = var.backtrack_window
+//  replication_source_identifier       = var.replication_source_identifier
+//  final_snapshot_identifier           = format("%s-%s-%s", var.final_snapshot_identifier_prefix, module.labels.id, random_id.snapshot_identifier.hex)
+//  skip_final_snapshot                 = true
+//  deletion_protection                 = var.deletion_protection
+//  backup_retention_period             = var.backup_retention_period
+//  preferred_backup_window             = var.preferred_backup_window
+//  preferred_maintenance_window        = var.preferred_maintenance_window
+//  port                                = local.port
+//  iam_roles                           = var.iam_roles
+//  source_region                       = var.source_region
+//  db_subnet_group_name                = join("", aws_db_subnet_group.default.*.name)
+//  vpc_security_group_ids              = var.aws_security_group
+//  snapshot_identifier                 = var.snapshot_identifier
+//  storage_encrypted                   = true
+//  apply_immediately                   = var.apply_immediately
+//  copy_tags_to_snapshot               = var.copy_tags_to_snapshot
+//  db_cluster_parameter_group_name     = var.engine == "aurora-postgresql" ? aws_rds_cluster_parameter_group.postgresql_serverless.*.id[0] : aws_rds_cluster_parameter_group.aurora_serverless.*.id[0]
+//  iam_database_authentication_enabled = var.iam_database_authentication_enabled
+//  availability_zones                  = var.availability_zones
+//  enable_http_endpoint                = var.enable_http_endpoint
+//
+//  scaling_configuration {
+//    auto_pause               = var.auto_pause
+//    max_capacity             = var.max_capacity
+//    min_capacity             = var.min_capacity
+//    seconds_until_auto_pause = var.seconds_until_auto_pause
+//    timeout_action           = var.timeout_action
+//  }
+//
+//  tags = module.labels.tags
+//}

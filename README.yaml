@@ -38,7 +38,7 @@ usage : |-
   ```hcl
     module "aurora" {
       source                          = "clouddrove/aurora/aws"
-      version                         = "0.14.0"
+      version                         = "0.15.0"
 
       name                            = "backend"
       repository                      = "https://registry.terraform.io/modules/clouddrove/aurora/aws"
@@ -61,7 +61,7 @@ usage : |-
   ```hcl
       module "postgres" {
         source              = "clouddrove/aurora/aws"
-        version             = "0.14.0"
+        version             = "0.15.0"
         name                = "backend"
         repository          = "https://registry.terraform.io/modules/clouddrove/aurora/aws"
         environment         = "test"
@@ -84,7 +84,7 @@ usage : |-
   ```hcl
     module "aurora" {
       source                          = "clouddrove/aurora/aws"
-      version                         = "0.14.0"
+      version                         = "0.15.0"
       name                            = "aurora-mysql-serverless"
       repository                      = "https://registry.terraform.io/modules/clouddrove/aurora/aws"
       environment                     = "test"
@@ -108,7 +108,7 @@ usage : |-
   ```hcl
       module "postgres" {
         source                          = "clouddrove/aurora/aws"
-        version                         = "0.14.0"
+        version                         = "0.15.0"
         name                            = "aurora-Postgres"
         repository                      = "https://registry.terraform.io/modules/clouddrove/aurora/aws"
         environment                     = "test"

@@ -13,8 +13,7 @@ module "vpc" {
 }
 
 module "public_subnets" {
-  source      = "clouddrove/subnet/aws"
-  version     = "0.14.0"
+  source      = "git::https://github.com/clouddrove/terraform-aws-subnet.git?ref=0.15"
   name        = "public-subnet"
   repository  = "https://registry.terraform.io/modules/clouddrove/subnet/aws"
   environment = "test"
@@ -62,7 +61,6 @@ module "aurora" {
   replica_count                       = 1
   instance_type                       = "db.t2.small"
   apply_immediately                   = true
-  skip_final_snapshot                 = true
   publicly_accessible                 = false
   enabled_cloudwatch_logs_exports     = ["audit", "error", "general", "slowquery"]
   iam_database_authentication_enabled = false
