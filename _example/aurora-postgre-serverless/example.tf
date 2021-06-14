@@ -5,8 +5,7 @@ provider "aws" {
 }
 
 module "vpc" {
-  source      = "clouddrove/vpc/aws"
-  version     = "0.14.0"
+  source = "git::https://github.com/clouddrove/terraform-aws-subnet.git?ref=0.15"
   name        = "vpc"
   environment = "test"
   label_order = ["environment", "name"]
@@ -32,8 +31,7 @@ module "subnets" {
 }
 
 module "security_group" {
-  source      = "clouddrove/security-group/aws"
-  version     = "0.14.0"
+  source = "git::https://github.com/clouddrove/terraform-aws-security-group.git"
   name        = "aurora-postgresql-sg"
   environment = "test"
   label_order = ["environment", "name"]
@@ -44,8 +42,8 @@ module "security_group" {
 }
 
 module "kms_key" {
-  source      = "clouddrove/kms/aws"
-  version     = "0.14.0"
+  source = "git::https://github.com/clouddrove/terraform-aws-kms.git"
+
   name        = "kms"
   environment = "test"
   label_order = ["environment", "name"]

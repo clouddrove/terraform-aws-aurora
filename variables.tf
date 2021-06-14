@@ -168,11 +168,6 @@ variable "snapshot_identifier" {
   description = "DB snapshot to create this database from."
 }
 
-variable "storage_encrypted" {
-  type        = bool
-  default     = true
-  description = "Specifies whether the underlying storage layer should be encrypted."
-}
 
 variable "kms_key_id" {
   type        = string
@@ -270,10 +265,6 @@ variable "availability_zone" {
   description = "The Availability Zone of the RDS instance."
 }
 
-variable "copy_tags_to_snapshot" {
-  default     = false
-  description = "On delete, copy all Instance tags to the final snapshot (if final_snapshot_identifier is specified)."
-}
 
 variable "enabled_subnet_group" {
   type        = bool

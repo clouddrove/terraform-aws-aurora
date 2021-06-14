@@ -3,8 +3,8 @@ provider "aws" {
 }
 
 module "vpc" {
-  source      = "clouddrove/vpc/aws"
-  version     = "0.14.0"
+  source = "git::https://github.com/clouddrove/terraform-aws-vpc.git?ref=0.15"
+
   name        = "vpc"
   repository  = "https://registry.terraform.io/modules/clouddrove/vpc/aws"
   environment = "test"
@@ -30,8 +30,7 @@ module "public_subnets" {
 }
 
 module "security-group" {
-  source        = "clouddrove/security-group/aws"
-  version       = "0.14.0"
+  source = "git::https://github.com/clouddrove/terraform-aws-security-group.git"
   name          = "postgres-sg"
   repository    = "https://registry.terraform.io/modules/clouddrove/security-group/aws"
   environment   = "test"
