@@ -3,7 +3,9 @@ provider "aws" {
 }
 
 module "vpc" {
-  source = "git::https://github.com/clouddrove/terraform-aws-vpc.git?ref=0.15"
+  source  = "clouddrove/vpc/aws"
+  version = "0.15.0"
+
   name        = "aurora-mysql"
   repository  = "https://registry.terraform.io/modules/clouddrove/vpc/aws"
   environment = "test"
@@ -12,7 +14,8 @@ module "vpc" {
 }
 
 module "public_subnets" {
-  source      = "git::https://github.com/clouddrove/terraform-aws-subnet.git?ref=0.15"
+  source      = "clouddrove/subnets/aws"
+  version     = "0.15.0"
   name        = "public-subnet"
   repository  = "https://registry.terraform.io/modules/clouddrove/subnet/aws"
   environment = "test"
@@ -28,7 +31,8 @@ module "public_subnets" {
 
 
 module "security-group" {
-  source = "git::https://github.com/clouddrove/terraform-aws-security-group.git"
+  source  = "clouddrove/security-group/aws"
+  version = "0.15.0"
   name    = "aurora-sg"
 
   repository    = "https://registry.terraform.io/modules/clouddrove/security-group/aws"
