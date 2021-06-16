@@ -391,3 +391,15 @@ variable "s3_import" {
   type        = map(string)
   default     = null
 }
+
+variable "storage_encrypted" {
+  type        = bool
+  default     = true
+  description = "Specifies whether the underlying storage layer should be encrypted."
+}
+
+variable "copy_tags_to_snapshot" {
+  type        = bool
+  default     = true
+  description = "Copy all Cluster tags to snapshots."
+}

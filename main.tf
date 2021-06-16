@@ -61,9 +61,9 @@ resource "aws_rds_cluster" "default" {
   db_subnet_group_name                = join("", aws_db_subnet_group.default.*.name)
   vpc_security_group_ids              = var.aws_security_group
   snapshot_identifier                 = var.snapshot_identifier
-  storage_encrypted                   = true
+  storage_encrypted                   = var.storage_encrypted
   apply_immediately                   = var.apply_immediately
-  copy_tags_to_snapshot               = true
+  copy_tags_to_snapshot               = var.copy_tags_to_snapshot
   enabled_cloudwatch_logs_exports     = var.enabled_cloudwatch_logs_exports
   db_cluster_parameter_group_name     = var.engine == "aurora-postgresql" ? aws_rds_cluster_parameter_group.postgresql.*.id[0] : aws_rds_cluster_parameter_group.aurora.*.id[0]
   iam_database_authentication_enabled = var.iam_database_authentication_enabled
@@ -84,10 +84,10 @@ resource "aws_rds_cluster" "default" {
     for_each = var.s3_import != null ? [var.s3_import] : []
     content {
       source_engine         = var.engine
-      source_engine_version = s3_import.value.source_engine_version
-      bucket_name           = s3_import.value.bucket_name
+      source_engine_version = lookup(s3_import.value.source_engine_version)
+      bucket_name           = lookup(s3_import.value.bucket_name)
       bucket_prefix         = lookup(s3_import.value, "bucket_prefix", null)
-      ingestion_role        = s3_import.value.ingestion_role
+      ingestion_role        = lookup(s3_import.value.ingestion_role)
     }
   }
 
