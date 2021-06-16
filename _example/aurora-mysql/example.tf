@@ -14,7 +14,7 @@ module "vpc" {
 }
 
 module "public_subnets" {
-  source      = "clouddrove/subnets/aws"
+  source      = "clouddrove/subnet/aws"
   version     = "0.15.0"
   name        = "public-subnet"
   repository  = "https://registry.terraform.io/modules/clouddrove/subnet/aws"
