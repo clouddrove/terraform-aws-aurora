@@ -7,7 +7,7 @@
     Terraform AWS Aurora
 </h1>
 
-<p align="center" style="font-size: 1.2rem;">
+<p align="center" style="font-size: 1.2rem;"> 
     Terraform module which creates RDS Aurora database resources on AWS and can create different type of databases. Currently it supports Postgres and MySQL.
      </p>
 
@@ -38,7 +38,7 @@
 <hr>
 
 
-We eat, drink, sleep and most importantly love **DevOps**. We are working towards strategies for standardizing architecture while ensuring security for the infrastructure. We are strong believer of the philosophy <b>Bigger problems are always solved by breaking them into smaller manageable problems</b>. Resonating with microservices architecture, it is considered best-practice to run database, cluster, storage in smaller <b>connected yet manageable pieces</b> within the infrastructure.
+We eat, drink, sleep and most importantly love **DevOps**. We are working towards strategies for standardizing architecture while ensuring security for the infrastructure. We are strong believer of the philosophy <b>Bigger problems are always solved by breaking them into smaller manageable problems</b>. Resonating with microservices architecture, it is considered best-practice to run database, cluster, storage in smaller <b>connected yet manageable pieces</b> within the infrastructure. 
 
 This module is basically combination of [Terraform open source](https://www.terraform.io/) and includes automatation tests and examples. It also helps to create and improve your infrastructure with minimalistic code instead of maintaining the whole infrastructure code yourself.
 
@@ -49,7 +49,7 @@ We have [*fifty plus terraform modules*][terraform_modules]. A few of them are c
 
 ## Prerequisites
 
-This module has a few dependencies:
+This module has a few dependencies: 
 
 - [Terraform 0.13](https://learn.hashicorp.com/terraform/getting-started/install.html)
 - [Go](https://golang.org/doc/install)
@@ -74,7 +74,7 @@ Here are some examples of how you can use this module in your inventory structur
 ```hcl
   module "aurora" {
     source                          = "clouddrove/aurora/aws"
-    version                         = "0.14.0"
+    version                         = "0.15.0"
 
     name                            = "backend"
     repository                      = "https://registry.terraform.io/modules/clouddrove/aurora/aws"
@@ -97,7 +97,7 @@ Here are some examples of how you can use this module in your inventory structur
 ```hcl
     module "postgres" {
       source              = "clouddrove/aurora/aws"
-      version             = "0.14.0"
+      version             = "0.15.0"
       name                = "backend"
       repository          = "https://registry.terraform.io/modules/clouddrove/aurora/aws"
       environment         = "test"
@@ -120,7 +120,7 @@ Here are some examples of how you can use this module in your inventory structur
 ```hcl
   module "aurora" {
     source                          = "clouddrove/aurora/aws"
-    version                         = "0.14.0"
+    version                         = "0.15.0"
     name                            = "aurora-mysql-serverless"
     repository                      = "https://registry.terraform.io/modules/clouddrove/aurora/aws"
     environment                     = "test"
@@ -144,7 +144,7 @@ Here are some examples of how you can use this module in your inventory structur
 ```hcl
     module "postgres" {
       source                          = "clouddrove/aurora/aws"
-      version                         = "0.14.0"
+      version                         = "0.15.0"
       name                            = "aurora-Postgres"
       repository                      = "https://registry.terraform.io/modules/clouddrove/aurora/aws"
       environment                     = "test"
@@ -229,6 +229,8 @@ Here are some examples of how you can use this module in your inventory structur
 | replica\_scale\_out\_cooldown | Cooldown in seconds before allowing further scaling operations after a scale out. | `number` | `300` | no |
 | replication\_source\_identifier | ARN of a source DB cluster or DB instance if this DB cluster is to be created as a Read Replica. | `string` | `""` | no |
 | repository | Terraform current module repo | `string` | `""` | no |
+| s3\_import | Configuration map used to restore from a Percona Xtrabackup in S3 (only MySQL is supported) | `map(string)` | `null` | no |
+| scaling\_configuration | Map of nested attributes with scaling properties. Only valid when engine\_mode is set to `serverless` | `map(string)` | `{}` | no |
 | seconds\_until\_auto\_pause | The time, in seconds, before an Aurora DB cluster in serverless mode is paused. Valid values are 300 through 86400. | `number` | `300` | no |
 | serverless\_enabled | Whether serverless is enabled or not. | `bool` | `false` | no |
 | skip\_final\_snapshot | Should a final snapshot be created on cluster destroy. | `bool` | `false` | no |
@@ -247,24 +249,17 @@ Here are some examples of how you can use this module in your inventory structur
 | rds\_cluster\_endpoint | The cluster endpoint. |
 | rds\_cluster\_id | The ID of the cluster. |
 | rds\_cluster\_instance\_endpoints | A list of all cluster instance endpoints. |
-| rds\_cluster\_master\_password | The master password. |
 | rds\_cluster\_master\_username | The master username. |
 | rds\_cluster\_port | The port of Cluster. |
 | rds\_cluster\_reader\_endpoint | The cluster reader endpoint. |
-| serverless\_rds\_cluster\_database\_name | Name for an automatically created database on cluster creation. |
-| serverless\_rds\_cluster\_endpoint | The cluster endpoint. |
-| serverless\_rds\_cluster\_id | The ID of the cluster. |
 | serverless\_rds\_cluster\_master\_password | The master password. |
-| serverless\_rds\_cluster\_master\_username | The master username. |
-| serverless\_rds\_cluster\_port | The port of Cluster. |
-| serverless\_rds\_cluster\_reader\_endpoint | The cluster reader endpoint. |
 | tags | A mapping of tags to assign to the resource. |
 
 
 
 
 ## Testing
-In this module testing is performed with [terratest](https://github.com/gruntwork-io/terratest) and it creates a small piece of infrastructure, matches the output like ARN, ID and Tags name etc and destroy infrastructure in your AWS account. This testing is written in GO, so you need a [GO environment](https://golang.org/doc/install) in your system.
+In this module testing is performed with [terratest](https://github.com/gruntwork-io/terratest) and it creates a small piece of infrastructure, matches the output like ARN, ID and Tags name etc and destroy infrastructure in your AWS account. This testing is written in GO, so you need a [GO environment](https://golang.org/doc/install) in your system. 
 
 You need to run the following command in the testing folder:
 ```hcl
@@ -273,7 +268,7 @@ You need to run the following command in the testing folder:
 
 
 
-## Feedback
+## Feedback 
 If you come accross a bug or have any feedback, please log it in our [issue tracker](https://github.com/clouddrove/terraform-aws-aurora/issues), or feel free to drop us an email at [hello@clouddrove.com](mailto:hello@clouddrove.com).
 
 If you have found it worth your time, go ahead and give us a ★ on [our GitHub](https://github.com/clouddrove/terraform-aws-aurora)!
