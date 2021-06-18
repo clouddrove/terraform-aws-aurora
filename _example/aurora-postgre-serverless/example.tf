@@ -20,7 +20,6 @@ module "subnets" {
   version = "0.15.0"
 
   name        = "public-subnet"
-  repository  = "https://registry.terraform.io/modules/clouddrove/subnet/aws"
   environment = "test"
   label_order = ["name", "environment"]
 
@@ -34,7 +33,7 @@ module "subnets" {
 }
 
 module "security_group" {
-  source  = "clouddrove/security_group/aws"
+  source  = "clouddrove/security-group/aws"
   version = "0.15.0"
 
   name        = "aurora-postgresql-sg"
@@ -61,7 +60,6 @@ module "kms_key" {
   customer_master_key_spec = "SYMMETRIC_DEFAULT"
   deletion_window_in_days  = 7
   is_enabled               = true
-  enable_key_rotation      = false
   policy                   = data.aws_iam_policy_document.default.json
 }
 
@@ -84,7 +82,7 @@ module "aurora_postgresql" {
   source = "./../../"
 
   name        = "aurora-postgresql-serverless"
-  repository  = "https://registry.terraform.io/modules/clouddrove/aurora/aws"
+  repository  = "https://github.com/clouddrove/terraform-aws-aurora"
   environment = "test"
   label_order = ["environment", "name"]
 

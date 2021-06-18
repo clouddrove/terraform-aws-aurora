@@ -16,7 +16,7 @@ github_repo: clouddrove/terraform-aws-aurora
 # Badges to display
 badges:
   - name: "Terraform"
-    image: "https://img.shields.io/badge/terraform-v0.14-green"
+    image: "https://img.shields.io/badge/terraform-v0.15-green"
     url: "https://www.terraform.io"
   - name: "Licence"
     image: "https://img.shields.io/badge/License-MIT-blue.svg"
@@ -41,7 +41,6 @@ usage : |-
       version                         = "0.15.0"
 
       name                            = "backend"
-      repository                      = "https://registry.terraform.io/modules/clouddrove/aurora/aws"
       environment                     = "test"
       label_order                     = ["name", "environment"]
       username                        = "admin"
@@ -63,7 +62,6 @@ usage : |-
         source              = "clouddrove/aurora/aws"
         version             = "0.15.0"
         name                = "backend"
-        repository          = "https://registry.terraform.io/modules/clouddrove/aurora/aws"
         environment         = "test"
         label_order         = ["name", "environment"]
 
@@ -86,7 +84,6 @@ usage : |-
       source                          = "clouddrove/aurora/aws"
       version                         = "0.15.0"
       name                            = "aurora-mysql-serverless"
-      repository                      = "https://registry.terraform.io/modules/clouddrove/aurora/aws"
       environment                     = "test"
       label_order                     = ["name", "environment"]
       serverless_enabled              = true
@@ -110,7 +107,6 @@ usage : |-
         source                          = "clouddrove/aurora/aws"
         version                         = "0.15.0"
         name                            = "aurora-Postgres"
-        repository                      = "https://registry.terraform.io/modules/clouddrove/aurora/aws"
         environment                     = "test"
         label_order                     = ["name", "environment"]
         enable                          = true
