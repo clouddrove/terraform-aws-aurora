@@ -16,8 +16,8 @@ jobs:
         with:
           actions_subcommand: 'fmt'
 
-  aurrora-mysql:
-    name: 'aurrora-mysql'
+  aurora-mysql:
+    name: 'aurora-mysql'
     needs: fmt
     runs-on: ubuntu-latest
     steps:
@@ -31,25 +31,25 @@ jobs:
           aws-secret-access-key: ${{ secrets.TEST_AWS_ACCESS_SECRET_KEY }}
           aws-region: us-east-2
 
-      - name: 'Terraform init for aurrora-mysql '
+      - name: 'Terraform init for aurora-mysql '
         uses: 'clouddrove/github-actions@v7.0'
         with:
           actions_subcommand: 'init'
-          tf_actions_working_dir: ./_example/aurrora-mysql
+          tf_actions_working_dir: ./_example/aurora-mysql
 
-      - name: 'Terraform validate for aurrora-mysql '
+      - name: 'Terraform validate for aurora-mysql '
         uses: 'clouddrove/github-actions@v7.0'
         with:
           actions_subcommand: 'validate'
-          tf_actions_working_dir: ./_example/aurrora-mysql
+          tf_actions_working_dir: ./_example/aurora-mysql
 
-      - name: 'Terraform plan for aurrora-mysql'
+      - name: 'Terraform plan for aurora-mysql'
         uses: 'clouddrove/github-actions@v7.0'
         with:
           actions_subcommand: 'plan'
-          tf_actions_working_dir: ./_example/aurrora-mysql
+          tf_actions_working_dir: ./_example/aurora-mysql
 
-  aurrora-mysql-serverless:
+  aurora-mysql-serverless:
     name: 'aurrora-mysql-serverless'
     needs: fmt
     runs-on: ubuntu-latest
@@ -65,23 +65,23 @@ jobs:
           aws-secret-access-key: ${{ secrets.TEST_AWS_ACCESS_SECRET_KEY }}
           aws-region: us-east-2
 
-      - name: 'Terraform init for  aurrora-mysql-serverless'
+      - name: 'Terraform init for  aurora-mysql-serverless'
         uses: 'clouddrove/github-actions@v7.0'
         with:
           actions_subcommand: 'init'
-          tf_actions_working_dir: ./_example/aurrora-mysql-serverless
+          tf_actions_working_dir: ./_example/aurora-mysql-serverless
 
-      - name: 'Terraform validate for  aurrora-mysql-serverless'
+      - name: 'Terraform validate for  aurora-mysql-serverless'
         uses: 'clouddrove/github-actions@v7.0'
         with:
           actions_subcommand: 'validate'
-          tf_actions_working_dir: ./_example/aurrora-mysql-serverless
+          tf_actions_working_dir: ./_example/aurora-mysql-serverless
 
-      - name: 'Terraform plan for generate aurrora-mysql-serverless'
+      - name: 'Terraform plan for generate aurora-mysql-serverless'
         uses: 'clouddrove/github-actions@v7.0'
         with:
           actions_subcommand: 'plan'
-          tf_actions_working_dir: ./_example/aurrora-mysql-serverless
+          tf_actions_working_dir: ./_example/aurora-mysql-serverless
 
   aurora-postgre:
     name: 'aurora-postgre'
