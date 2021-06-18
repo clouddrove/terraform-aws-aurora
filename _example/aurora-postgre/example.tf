@@ -7,7 +7,6 @@ module "vpc" {
   version = "0.15.0"
 
   name        = "vpc"
-  repository  = "https://registry.terraform.io/modules/clouddrove/vpc/aws"
   environment = "test"
   label_order = ["name", "environment"]
 
@@ -19,7 +18,6 @@ module "public_subnets" {
   version = "0.15.0"
 
   name        = "public-subnet"
-  repository  = "https://registry.terraform.io/modules/clouddrove/subnet/aws"
   environment = "test"
   label_order = ["name", "environment"]
 
@@ -32,11 +30,10 @@ module "public_subnets" {
 }
 
 module "security-group" {
-  source  = "clouddrove/security_group/aws"
+  source  = "clouddrove/security-group/aws"
   version = "0.15.0"
 
   name          = "postgres-sg"
-  repository    = "https://registry.terraform.io/modules/clouddrove/security-group/aws"
   environment   = "test"
   label_order   = ["name", "environment"]
   vpc_id        = module.vpc.vpc_id
@@ -48,7 +45,7 @@ module "postgres" {
   source = "./../../"
 
   name        = "postgres"
-  repository  = "https://registry.terraform.io/modules/clouddrove/aurora/aws"
+  repository  = "https://github.com/clouddrove/terraform-aws-aurora"
   environment = "test"
   label_order = ["name", "environment"]
 

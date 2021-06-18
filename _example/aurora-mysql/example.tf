@@ -7,7 +7,6 @@ module "vpc" {
   version = "0.15.0"
 
   name        = "aurora-mysql"
-  repository  = "https://registry.terraform.io/modules/clouddrove/vpc/aws"
   environment = "test"
   label_order = ["name", "environment"]
   cidr_block  = "172.16.0.0/16"
@@ -17,7 +16,6 @@ module "public_subnets" {
   source      = "clouddrove/subnet/aws"
   version     = "0.15.0"
   name        = "public-subnet"
-  repository  = "https://registry.terraform.io/modules/clouddrove/subnet/aws"
   environment = "test"
   label_order = ["name", "environment"]
 
@@ -35,7 +33,6 @@ module "security-group" {
   version = "0.15.0"
   name    = "aurora-sg"
 
-  repository    = "https://registry.terraform.io/modules/clouddrove/security-group/aws"
   environment   = "test"
   label_order   = ["name", "environment"]
   vpc_id        = module.vpc.vpc_id
@@ -49,7 +46,7 @@ module "aurora" {
   source = "./../../"
 
   name        = "auror"
-  repository  = "https://registry.terraform.io/modules/clouddrove/aurora/aws"
+  repository  = "https://github.com/clouddrove/terraform-aws-aurora"
   environment = "test"
   label_order = ["name", "environment"]
 
