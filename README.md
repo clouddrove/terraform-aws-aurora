@@ -14,7 +14,7 @@
 <p align="center">
 
 <a href="https://www.terraform.io">
-  <img src="https://img.shields.io/badge/terraform-v0.14-green" alt="Terraform">
+  <img src="https://img.shields.io/badge/terraform-v0.15-green" alt="Terraform">
 </a>
 <a href="LICENSE.md">
   <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="Licence">
@@ -77,7 +77,6 @@ Here are some examples of how you can use this module in your inventory structur
     version                         = "0.15.0"
 
     name                            = "backend"
-    repository                      = "https://registry.terraform.io/modules/clouddrove/aurora/aws"
     environment                     = "test"
     label_order                     = ["name", "environment"]
     username                        = "admin"
@@ -99,7 +98,6 @@ Here are some examples of how you can use this module in your inventory structur
       source              = "clouddrove/aurora/aws"
       version             = "0.15.0"
       name                = "backend"
-      repository          = "https://registry.terraform.io/modules/clouddrove/aurora/aws"
       environment         = "test"
       label_order         = ["name", "environment"]
 
@@ -122,7 +120,6 @@ Here are some examples of how you can use this module in your inventory structur
     source                          = "clouddrove/aurora/aws"
     version                         = "0.15.0"
     name                            = "aurora-mysql-serverless"
-    repository                      = "https://registry.terraform.io/modules/clouddrove/aurora/aws"
     environment                     = "test"
     label_order                     = ["name", "environment"]
     serverless_enabled              = true
@@ -146,7 +143,6 @@ Here are some examples of how you can use this module in your inventory structur
       source                          = "clouddrove/aurora/aws"
       version                         = "0.15.0"
       name                            = "aurora-Postgres"
-      repository                      = "https://registry.terraform.io/modules/clouddrove/aurora/aws"
       environment                     = "test"
       label_order                     = ["name", "environment"]
       enable                          = true
@@ -228,7 +224,7 @@ Here are some examples of how you can use this module in your inventory structur
 | replica\_scale\_min | Minimum number of replicas to allow scaling. | `number` | `2` | no |
 | replica\_scale\_out\_cooldown | Cooldown in seconds before allowing further scaling operations after a scale out. | `number` | `300` | no |
 | replication\_source\_identifier | ARN of a source DB cluster or DB instance if this DB cluster is to be created as a Read Replica. | `string` | `""` | no |
-| repository | Terraform current module repo | `string` | `""` | no |
+| repository | Terraform current module repo | `string` | `"https://github.com/clouddrove/terraform-aws-aurora"` | no |
 | s3\_import | Configuration map used to restore from a Percona Xtrabackup in S3 (only MySQL is supported) | `map(string)` | `null` | no |
 | scaling\_configuration | Map of nested attributes with scaling properties. Only valid when engine\_mode is set to `serverless` | `map(string)` | `{}` | no |
 | seconds\_until\_auto\_pause | The time, in seconds, before an Aurora DB cluster in serverless mode is paused. Valid values are 300 through 86400. | `number` | `300` | no |
