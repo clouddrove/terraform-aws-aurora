@@ -60,7 +60,6 @@ module "kms_key" {
   customer_master_key_spec = "SYMMETRIC_DEFAULT"
   deletion_window_in_days  = 7
   is_enabled               = true
-  enable_key_rotation      = true
   policy                   = data.aws_iam_policy_document.default.json
 }
 
