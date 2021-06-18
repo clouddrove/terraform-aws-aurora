@@ -84,10 +84,10 @@ resource "aws_rds_cluster" "default" {
     for_each = var.s3_import != null ? [var.s3_import] : []
     content {
       source_engine         = var.engine
-      source_engine_version = lookup(s3_import.value.source_engine_version)
-      bucket_name           = lookup(s3_import.value.bucket_name)
+      source_engine_version = lookup(s3_import.value, "source_engine_version", null)
+      bucket_name           = lookup(s3_import.value, "bucket_name", null)
       bucket_prefix         = lookup(s3_import.value, "bucket_prefix", null)
-      ingestion_role        = lookup(s3_import.value.ingestion_role)
+      ingestion_role        = lookup(s3_import.value, "ingestion_role", null)
     }
   }
 

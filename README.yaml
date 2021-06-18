@@ -41,7 +41,6 @@ usage : |-
       version                         = "0.15.0"
 
       name                            = "backend"
-      repository                      = "https://github.com/clouddrove/terraform-aws-aurora"
       environment                     = "test"
       label_order                     = ["name", "environment"]
       username                        = "admin"
@@ -63,7 +62,6 @@ usage : |-
         source              = "clouddrove/aurora/aws"
         version             = "0.15.0"
         name                = "backend"
-        repository          = "https://github.com/clouddrove/terraform-aws-aurora"
         environment         = "test"
         label_order         = ["name", "environment"]
 
@@ -86,7 +84,6 @@ usage : |-
       source                          = "clouddrove/aurora/aws"
       version                         = "0.15.0"
       name                            = "aurora-mysql-serverless"
-      repository                      = "https://github.com/clouddrove/terraform-aws-aurora"
       environment                     = "test"
       label_order                     = ["name", "environment"]
       serverless_enabled              = true
@@ -110,7 +107,6 @@ usage : |-
         source                          = "clouddrove/aurora/aws"
         version                         = "0.15.0"
         name                            = "aurora-Postgres"
-        repository                      = "https://github.com/clouddrove/terraform-aws-aurora"
         environment                     = "test"
         label_order                     = ["name", "environment"]
         enable                          = true

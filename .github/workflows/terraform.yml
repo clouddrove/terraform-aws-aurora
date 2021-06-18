@@ -155,9 +155,10 @@ jobs:
     name: 'Pre-Commit'
     needs:
       - fmt
-      - private
-      - public
-      - public-private
+      - aurora-mysql
+      - aurora-mysql-serverless
+      - aurora-postgre
+      - aurora-postgre-serverless
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout'
