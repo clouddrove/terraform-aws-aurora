@@ -16,7 +16,7 @@ func Test(t *testing.T) {
 
 	terraformOptions := &terraform.Options{
 		// Source path of Terraform directory.
-		TerraformDir: "../../_example/aurora-mysql",
+		TerraformDir: "../../_example/aurora-postgre-serverless",
 	}
 
 	// This will run `terraform init` and `terraform apply` and fail the test if there are any errors
