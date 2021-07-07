@@ -45,7 +45,6 @@ module "postgres" {
   source = "./../../"
 
   name        = "postgres"
-  repository  = "https://github.com/clouddrove/terraform-aws-aurora"
   environment = "test"
   label_order = ["name", "environment"]
 

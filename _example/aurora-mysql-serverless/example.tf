@@ -83,7 +83,6 @@ module "aurora_mysql" {
   source = "./../../"
 
   name        = "aurora-mysql-serverless"
-  repository  = "https://github.com/clouddrove/terraform-aws-aurora"
   environment = "test"
   label_order = ["name", "environment"]
 

@@ -27,7 +27,7 @@ func TestAuroraPostgre(t *testing.T) {
 
 	clusterID := terraform.OutputList(t, terraformOptions, "rds_cluster_id")
 
-	expectedClusterID := "test-clouddrove-aurora-postgresql-serverless"
+	expectedClusterID := "test-aurora-postgresql-serverless"
 	// Verify we're getting back the outputs we expect
 	assert.Equal(t, expectedClusterID, clusterID[0])
 }

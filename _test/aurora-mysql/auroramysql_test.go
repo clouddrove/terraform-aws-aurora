@@ -24,10 +24,8 @@ func Test(t *testing.T) {
 	defer terraform.Destroy(t, terraformOptions)
 
 	// To get the value of an output variable, run 'terraform output'
-	clusterID := terraform.OutputList(t, terraformOptions, "rds_cluster_id")
 	Tags := terraform.OutputMap(t, terraformOptions, "tags")
 
 	// Check that we get back the outputs that we expect
-	assert.Equal(t, "test-clouddrove-aurora", Tags["Name"])
-	assert.Equal(t, "test-clouddrove-aurora", clusterID[0])
+	assert.Equal(t, "aurora-test", Tags["Name"])
 }
