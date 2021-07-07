@@ -11,23 +11,23 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestAuroraPostgre(t *testing.T) {
+func Test(t *testing.T) {
 	t.Parallel()
 
 	terraformOptions := &terraform.Options{
 		// Source path of Terraform directory.
-		TerraformDir: "../../_example/aurora-postgre-serverless",
+		TerraformDir: "../../_example/aurora-mysql",
 	}
 
 	// This will run `terraform init` and `terraform apply` and fail the test if there are any errors
 	terraform.InitAndApply(t, terraformOptions)
 
-	// At the end of the test, run `terraform destroy` to clean up any resources that were created
+	// To clean up any resources that have been created, run 'terraform destroy' towards the end of the test
 	defer terraform.Destroy(t, terraformOptions)
 
-	clusterID := terraform.OutputList(t, terraformOptions, "rds_cluster_id")
+	// To get the value of an output variable, run 'terraform output'
+	Tags := terraform.OutputMap(t, terraformOptions, "tags")
 
-	expectedClusterID := "test-aurora-postgresql-serverless"
-	// Verify we're getting back the outputs we expect
-	assert.Equal(t, expectedClusterID, clusterID[0])
+	// Check that we get back the outputs that we expect
+	assert.Equal(t, "test-aurora-postgresql-serverless", Tags["Name"])
 }
