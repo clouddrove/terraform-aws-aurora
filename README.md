@@ -183,7 +183,7 @@ Here are some examples of how you can use this module in your inventory structur
 | database\_name | Name for an automatically created database on cluster creation. | `string` | `""` | no |
 | db\_cluster\_parameter\_group\_name | The name of a DB Cluster parameter group to use. | `string` | `"default.aurora5.6"` | no |
 | db\_parameter\_group\_name | The name of a DB parameter group to use. | `string` | `"default.aurora5.6"` | no |
-| deletion\_protection | If the DB instance should have deletion protection enabled. | `bool` | `true` | no |
+| deletion\_protection | If the DB instance should have deletion protection enabled. | `bool` | `false` | no |
 | enable | Set to false to prevent the module from creating any resources. | `bool` | `true` | no |
 | enable\_http\_endpoint | Enable HTTP endpoint (data API). Only valid when engine\_mode is set to serverless. | `bool` | `true` | no |
 | enabled\_cloudwatch\_logs\_exports | List of log types to export to cloudwatch. If omitted, no logs will be exported. The following log types are supported: audit, error, general, slowquery, postgresql (PostgreSQL). | `list(string)` | `[]` | no |
