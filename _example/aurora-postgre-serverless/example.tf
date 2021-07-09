@@ -82,7 +82,6 @@ module "aurora_postgresql" {
   source = "./../../"
 
   name        = "aurora-postgresql-serverless"
-  repository  = "https://github.com/clouddrove/terraform-aws-aurora"
   environment = "test"
   label_order = ["environment", "name"]
 

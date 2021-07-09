@@ -45,8 +45,7 @@ module "security-group" {
 module "aurora" {
   source = "./../../"
 
-  name        = "auror"
-  repository  = "https://github.com/clouddrove/terraform-aws-aurora"
+  name        = "aurora"
   environment = "test"
   label_order = ["name", "environment"]
 
