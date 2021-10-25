@@ -98,6 +98,7 @@ module "aurora_mysql" {
   kms_key_id                          = module.kms_key.key_arn
   subnets                             = module.subnets.private_subnet_id
   aws_security_group                  = [module.security_group.security_group_ids]
+  enabled_cloudwatch_logs_exports     = ["audit", "error", "general", "slowquery"]
   apply_immediately                   = true
   skip_final_snapshot                 = true
   availability_zones                  = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]

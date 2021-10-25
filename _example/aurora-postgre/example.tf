@@ -54,6 +54,7 @@ module "postgres" {
   engine_version                      = "9.6.9"
   subnets                             = tolist(module.public_subnets.public_subnet_id)
   aws_security_group                  = [module.security-group.security_group_ids]
+  enabled_cloudwatch_logs_exports     = ["postgresql", "audit"]
   replica_count                       = 1
   instance_type                       = "db.r4.large"
   apply_immediately                   = true
