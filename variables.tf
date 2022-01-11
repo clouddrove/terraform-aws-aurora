@@ -280,7 +280,7 @@ variable "enabled_rds_cluster" {
 
 variable "postgresql_family" {
   type        = string
-  default     = "aurora-postgresql9.6"
+  default     = "aurora-postgresql13"
   description = "The family of the DB parameter group."
 }
 

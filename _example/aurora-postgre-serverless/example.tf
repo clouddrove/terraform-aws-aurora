@@ -99,6 +99,7 @@ module "aurora_postgresql" {
   apply_immediately                   = true
   skip_final_snapshot                 = true
   availability_zones                  = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
+  enabled_cloudwatch_logs_exports     = ["postgresql", "upgrade", "general", "audit"]
   iam_database_authentication_enabled = false
   monitoring_interval                 = "0"
 }
