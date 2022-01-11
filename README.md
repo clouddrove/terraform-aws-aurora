@@ -51,7 +51,7 @@ We have [*fifty plus terraform modules*][terraform_modules]. A few of them are c
 
 This module has a few dependencies: 
 
-- [Terraform 0.15](https://learn.hashicorp.com/terraform/getting-started/install.html)
+- [Terraform 1.x.x](https://learn.hashicorp.com/terraform/getting-started/install.html)
 - [Go](https://golang.org/doc/install)
 - [github.com/stretchr/testify/assert](https://github.com/stretchr/testify)
 - [github.com/gruntwork-io/terratest/modules/terraform](https://github.com/gruntwork-io/terratest)
@@ -211,7 +211,7 @@ Here are some examples of how you can use this module in your inventory structur
 | performance\_insights\_enabled | Specifies whether Performance Insights is enabled or not. | `bool` | `false` | no |
 | performance\_insights\_kms\_key\_id | The ARN for the KMS key to encrypt Performance Insights data. | `string` | `""` | no |
 | port | The port on which to accept connections. | `string` | `""` | no |
-| postgresql\_family | The family of the DB parameter group. | `string` | `"aurora-postgresql9.6"` | no |
+| postgresql\_family | The family of the DB parameter group. | `string` | `"aurora-postgresql13"` | no |
 | postgresql\_family\_serverless | The family of the DB parameter group. | `string` | `"aurora-postgresql10"` | no |
 | preferred\_backup\_window | When to perform DB backups. | `string` | `"02:00-03:00"` | no |
 | preferred\_maintenance\_window | When to perform DB maintenance. | `string` | `"sun:05:00-sun:06:00"` | no |
