@@ -8,7 +8,7 @@
 name : Terraform AWS Aurora
 
 # License of this project
-license: "MIT"
+license: "APACHE"
 
 # Canonical GitHub repo
 github_repo: clouddrove/terraform-aws-aurora
@@ -16,12 +16,17 @@ github_repo: clouddrove/terraform-aws-aurora
 # Badges to display
 badges:
   - name: "Terraform"
-    image: "https://img.shields.io/badge/terraform-v0.15-green"
+    image: "https://img.shields.io/badge/Terraform-v1.1.7-green"
     url: "https://www.terraform.io"
   - name: "Licence"
-    image: "https://img.shields.io/badge/License-MIT-blue.svg"
+    image: "https://img.shields.io/badge/License-APACHE-blue.svg"
     url: "LICENSE.md"
-
+  - name: "tfsec"
+    image: "https://github.com/clouddrove/terraform-aws-aurora/actions/workflows/tfsec.yml/badge.svg"
+    url: "https://github.com/clouddrove/terraform-aws-aurora/actions/workflows/tfsec.yml"
+  - name: "static-checks"
+    image: "https://github.com/clouddrove/terraform-aws-aurora/actions/workflows/terraform.yml/badge.svg"
+    url: "https://github.com/clouddrove/terraform-aws-aurora/actions/workflows/terraform.yml"
 #  description of this project
 description: |-
   Terraform module which creates RDS Aurora database resources on AWS and can create different type of databases. Currently it supports Postgres and MySQL.
@@ -38,7 +43,7 @@ usage : |-
   ```hcl
     module "aurora" {
       source                          = "clouddrove/aurora/aws"
-      version                         = "0.15.0"
+      version                         = "1.0.1"
 
       name                            = "backend"
       environment                     = "test"
@@ -60,7 +65,7 @@ usage : |-
   ```hcl
       module "postgres" {
         source              = "clouddrove/aurora/aws"
-        version             = "0.15.0"
+        version             = "1.0.1"
         name                = "backend"
         environment         = "test"
         label_order         = ["name", "environment"]
@@ -82,7 +87,7 @@ usage : |-
   ```hcl
     module "aurora" {
       source                          = "clouddrove/aurora/aws"
-      version                         = "0.15.0"
+      version                         = "1.0.1"
       name                            = "aurora-mysql-serverless"
       environment                     = "test"
       label_order                     = ["name", "environment"]
@@ -105,7 +110,7 @@ usage : |-
   ```hcl
       module "postgres" {
         source                          = "clouddrove/aurora/aws"
-        version                         = "0.15.0"
+        version                         = "1.0.1"
         name                            = "aurora-Postgres"
         environment                     = "test"
         label_order                     = ["name", "environment"]
