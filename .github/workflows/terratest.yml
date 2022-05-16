@@ -23,7 +23,7 @@ jobs:
 
       - name: 'Terratest for aurora mysql'
         if: ${{ github.event.label.name == 'terratest' }}
-        uses: 'clouddrove/github-actions@v9.0.1'
+        uses: 'clouddrove/github-actions@v9.0.2'
         with:
           actions_subcommand: 'terratest'
           tf_actions_working_dir: '_test/aurora-mysql'
@@ -32,7 +32,7 @@ jobs:
 
       - name: 'Terratest for aurora mysql serverless'
         if: ${{ github.event.label.name == 'terratest' }}
-        uses: 'clouddrove/github-actions@v9.0.1'
+        uses: 'clouddrove/github-actions@v9.0.2'
         with:
           actions_subcommand: 'terratest'
           tf_actions_working_dir: '_test/aurora-mysql-serverless'
@@ -41,7 +41,7 @@ jobs:
 
       - name: 'Terratest for aurora postgre'
         if: ${{ github.event.label.name == 'terratest' }}
-        uses: 'clouddrove/github-actions@v9.0.1'
+        uses: 'clouddrove/github-actions@v9.0.2'
         with:
           actions_subcommand: 'terratest'
           tf_actions_working_dir: '_test/aurora-postgre'
@@ -50,7 +50,7 @@ jobs:
 
       - name: 'Terratest for aurora postgre serverless'
         if: ${{ github.event.label.name == 'terratest' }}
-        uses: 'clouddrove/github-actions@v9.0.1'
+        uses: 'clouddrove/github-actions@v9.0.2'
         with:
           actions_subcommand: 'terratest'
           tf_actions_working_dir: '_test/aurora-postgre-serverless'
