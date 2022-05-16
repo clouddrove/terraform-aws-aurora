@@ -56,7 +56,7 @@ module "postgres" {
   aws_security_group                  = [module.security-group.security_group_ids]
   enabled_cloudwatch_logs_exports     = ["postgresql"]
   replica_count                       = 1
-  instance_type                       = "db.r4.large"
+  instance_type                       = "db.r5.large"
   apply_immediately                   = true
   skip_final_snapshot                 = true
   publicly_accessible                 = false

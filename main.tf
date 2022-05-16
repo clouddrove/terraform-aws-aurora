@@ -41,6 +41,7 @@ resource "aws_db_subnet_group" "default" {
 #Module      : RDS AURORA CLUSTER
 #Description : Terraform module which creates RDS Aurora database resources on AWS and can
 #              create different type of databases. Currently it supports Postgres and MySQL.
+#tfsec:ignore:aws-rds-encrypt-cluster-storage-data
 resource "aws_rds_cluster" "default" {
   count = var.enable == true && var.enabled_rds_cluster == true && var.serverless_enabled == false ? 1 : 0
 

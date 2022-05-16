@@ -403,3 +403,9 @@ variable "copy_tags_to_snapshot" {
   default     = true
   description = "Copy all Cluster tags to snapshots."
 }
+
+variable "allow_major_version_upgrade" {
+  description = "Enable to allow major engine version upgrades when changing engine versions. Defaults to `false`"
+  type        = bool
+  default     = false
+}
