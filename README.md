@@ -14,10 +14,16 @@
 <p align="center">
 
 <a href="https://www.terraform.io">
-  <img src="https://img.shields.io/badge/terraform-v0.15-green" alt="Terraform">
+  <img src="https://img.shields.io/badge/Terraform-v1.1.7-green" alt="Terraform">
 </a>
 <a href="LICENSE.md">
-  <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="Licence">
+  <img src="https://img.shields.io/badge/License-APACHE-blue.svg" alt="Licence">
+</a>
+<a href="https://github.com/clouddrove/terraform-aws-aurora/actions/workflows/tfsec.yml">
+  <img src="https://github.com/clouddrove/terraform-aws-aurora/actions/workflows/tfsec.yml/badge.svg" alt="tfsec">
+</a>
+<a href="https://github.com/clouddrove/terraform-aws-aurora/actions/workflows/terraform.yml">
+  <img src="https://github.com/clouddrove/terraform-aws-aurora/actions/workflows/terraform.yml/badge.svg" alt="static-checks">
 </a>
 
 
@@ -74,7 +80,7 @@ Here are some examples of how you can use this module in your inventory structur
 ```hcl
   module "aurora" {
     source                          = "clouddrove/aurora/aws"
-    version                         = "0.15.0"
+    version                         = "1.0.1"
 
     name                            = "backend"
     environment                     = "test"
@@ -96,7 +102,7 @@ Here are some examples of how you can use this module in your inventory structur
 ```hcl
     module "postgres" {
       source              = "clouddrove/aurora/aws"
-      version             = "0.15.0"
+      version             = "1.0.1"
       name                = "backend"
       environment         = "test"
       label_order         = ["name", "environment"]
@@ -118,7 +124,7 @@ Here are some examples of how you can use this module in your inventory structur
 ```hcl
   module "aurora" {
     source                          = "clouddrove/aurora/aws"
-    version                         = "0.15.0"
+    version                         = "1.0.1"
     name                            = "aurora-mysql-serverless"
     environment                     = "test"
     label_order                     = ["name", "environment"]
@@ -141,7 +147,7 @@ Here are some examples of how you can use this module in your inventory structur
 ```hcl
     module "postgres" {
       source                          = "clouddrove/aurora/aws"
-      version                         = "0.15.0"
+      version                         = "1.0.1"
       name                            = "aurora-Postgres"
       environment                     = "test"
       label_order                     = ["name", "environment"]
@@ -171,6 +177,7 @@ Here are some examples of how you can use this module in your inventory structur
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| allow\_major\_version\_upgrade | Enable to allow major engine version upgrades when changing engine versions. Defaults to `false` | `bool` | `false` | no |
 | apply\_immediately | Determines whether or not any DB modifications are applied immediately, or during the maintenance window. | `bool` | `false` | no |
 | auto\_minor\_version\_upgrade | Determines whether minor engine upgrades will be performed automatically in the maintenance window. | `bool` | `true` | no |
 | auto\_pause | Whether to enable automatic pause. A DB cluster can be paused only when it's idle (it has no connections). | `bool` | `false` | no |
