@@ -6,7 +6,7 @@ provider "aws" {
 
 module "vpc" {
   source  = "clouddrove/vpc/aws"
-  version = "0.15.0"
+  version = "0.15.1"
 
   name        = "vpc"
   environment = "test"
@@ -17,7 +17,7 @@ module "vpc" {
 
 module "subnets" {
   source  = "clouddrove/subnet/aws"
-  version = "0.15.0"
+  version = "0.15.3"
 
   name        = "public-subnet"
   environment = "test"
@@ -35,7 +35,7 @@ module "subnets" {
 
 module "security_group" {
   source  = "clouddrove/security-group/aws"
-  version = "0.15.0"
+  version = "1.0.1"
   name    = "aurora-mysql-sg"
 
   environment = "test"
@@ -48,7 +48,7 @@ module "security_group" {
 
 module "kms_key" {
   source      = "clouddrove/kms/aws"
-  version     = "0.15.0"
+  version     = "1.0.1"
   name        = "kms"
   environment = "test"
   label_order = ["name", "environment"]
