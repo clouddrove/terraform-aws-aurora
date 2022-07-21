@@ -211,7 +211,7 @@ Here are some examples of how you can use this module in your inventory structur
 | max\_capacity | The maximum capacity. Valid capacity values are 1, 2, 4, 8, 16, 32, 64, 128, and 256. | `number` | `4` | no |
 | min\_capacity | The minimum capacity. Valid capacity values are 1, 2, 4, 8, 16, 32, 64, 128, and 256. | `number` | `2` | no |
 | monitoring\_interval | The interval (seconds) between points when Enhanced Monitoring metrics are collected. | `number` | `5` | no |
-| mysql\_family | The family of the DB parameter group. | `string` | `"aurora-mysql5.7"` | no |
+| mysql\_family | The family of the DB parameter group. | `string` | `"aurora-mysql8.0"` | no |
 | mysql\_family\_serverless | The family of the DB parameter group. | `string` | `"aurora5.6"` | no |
 | name | Name  (e.g. `app` or `cluster`). | `string` | n/a | yes |
 | password | Master DB password. | `string` | `""` | no |
