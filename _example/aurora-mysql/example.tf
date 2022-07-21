@@ -53,11 +53,11 @@ module "aurora" {
   username                            = "root"
   database_name                       = "test_db"
   engine                              = "aurora-mysql"
-  engine_version                      = "5.7.12"
+  engine_version                      = "8.0.mysql_aurora.3.02.0"
   subnets                             = tolist(module.public_subnets.public_subnet_id)
   aws_security_group                  = [module.security-group.security_group_ids]
   replica_count                       = 1
-  instance_type                       = "db.t2.small"
+  instance_type                       = "db.t4g.medium"
   apply_immediately                   = true
   publicly_accessible                 = false
   enabled_cloudwatch_logs_exports     = ["audit", "error", "general", "slowquery"]

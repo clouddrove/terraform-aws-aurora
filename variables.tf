@@ -286,7 +286,7 @@ variable "postgresql_family" {
 
 variable "mysql_family" {
   type        = string
-  default     = "aurora-mysql5.7"
+  default     = "aurora-mysql8.0"
   description = "The family of the DB parameter group."
 }
 
