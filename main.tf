@@ -1,11 +1,6 @@
-# Managed By  : CloudDrove
-# Description : This Script is used to create DB Subnet, Rendom Password, RDS cluster and Parameter Groups.
-# Copyright @ CloudDrove. All Right Reserved.
-
-#Module      : Label
-#Description : This terraform module is designed to generate consistent label names and
-#              tags for resources. You can use terraform-labels to implement a strict
-#              naming convention.
+##-----------------------------------------------------------------------------
+## Labels module callled that will be used for naming and tags.
+##-----------------------------------------------------------------------------
 module "labels" {
   source  = "clouddrove/labels/aws"
   version = "1.3.0"
@@ -27,8 +22,9 @@ resource "random_id" "master_password" {
   byte_length = 20
 }
 
-#Module      : DB SUBNET GROUP
-#Description : Provides an RDS DB subnet group resource.
+##-----------------------------------------------------------------------------
+## Provides an RDS DB subnet group resource.
+##-----------------------------------------------------------------------------
 resource "aws_db_subnet_group" "default" {
   count = var.enable == true && var.enabled_subnet_group == true ? 1 : 0
 
@@ -38,10 +34,9 @@ resource "aws_db_subnet_group" "default" {
   tags        = module.labels.tags
 }
 
-#Module      : RDS AURORA CLUSTER
-#Description : Terraform module which creates RDS Aurora database resources on AWS and can
-#              create different type of databases. Currently it supports Postgres and MySQL.
-#tfsec:ignore:aws-rds-encrypt-cluster-storage-data
+##-----------------------------------------------------------------------------
+## Provides an RDS Cluster Resource. A Cluster Resource defines attributes that are applied to the entire cluster of RDS Cluster Instances.
+##-----------------------------------------------------------------------------
 resource "aws_rds_cluster" "default" {
   count = var.enable == true && var.enabled_rds_cluster == true && var.serverless_enabled == false ? 1 : 0
 
@@ -96,9 +91,9 @@ resource "aws_rds_cluster" "default" {
   tags = module.labels.tags
 }
 
-#Module      : RDS CLUSTER INSTANCE
-#Description : Terraform module which creates RDS Aurora database resources on AWS and can
-#              create different type of databases. Currently it supports Postgres and MySQL.
+##-----------------------------------------------------------------------------
+## aws_rds_cluster_instance. Provides an RDS Cluster Instance Resource.
+##-----------------------------------------------------------------------------
 resource "aws_rds_cluster_instance" "default" {
   count = var.enable == true && var.serverless_enabled == false ? (var.replica_scale_enabled ? var.replica_scale_min : var.replica_count) : 0
 

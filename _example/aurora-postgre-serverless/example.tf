@@ -1,12 +1,16 @@
-# Valid values for scaling config of postgresql are - [2, 4, 8, 16, 32, 64, 192, 384]
-
+##---------------------------------------------------------------------------------------------------------------------------
+## Provider block added, Use the Amazon Web Services (AWS) provider to interact with the many resources supported by AWS.
+##--------------------------------------------------------------------------------------------------------------------------
 provider "aws" {
   region = "eu-west-1"
 }
 
+##---------------------------------------------------------------------------------------------------------------------------
+## A VPC is a virtual network that closely resembles a traditional network that you'd operate in your own data center.
+##---------------------------------------------------------------------------------------------------------------------------
 module "vpc" {
   source  = "clouddrove/vpc/aws"
-  version = "1.3.0"
+  version = "1.3.1"
 
   name        = "vpc"
   environment = "test"
@@ -15,6 +19,9 @@ module "vpc" {
   cidr_block = "172.16.0.0/16"
 }
 
+##-----------------------------------------------------
+## A subnet is a range of IP addresses in your VPC.
+##-----------------------------------------------------
 module "subnets" {
   source  = "clouddrove/subnet/aws"
   version = "1.3.0"
@@ -32,6 +39,9 @@ module "subnets" {
   igw_id              = module.vpc.igw_id
 }
 
+##-----------------------------------------------------
+## An AWS security group acts as a virtual firewall for incoming and outgoing traffic.
+##-----------------------------------------------------
 module "security_group" {
   source  = "clouddrove/security-group/aws"
   version = "1.3.0"
@@ -45,6 +55,9 @@ module "security_group" {
   allowed_ports = [5432]
 }
 
+##-----------------------------------------------------
+## AWS Key Management Service (KMS) gives you centralized control over the cryptographic keys used to protect your data.
+##-----------------------------------------------------
 module "kms_key" {
   source  = "clouddrove/kms/aws"
   version = "1.3.0"
@@ -78,6 +91,9 @@ data "aws_iam_policy_document" "default" {
   }
 }
 
+##-----------------------------------------------------------------------------
+## aurora_postgresql module call.
+##-----------------------------------------------------------------------------
 module "aurora_postgresql" {
   source = "./../../"
 
