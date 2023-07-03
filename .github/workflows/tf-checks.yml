@@ -5,27 +5,19 @@ on:
   pull_request:
   workflow_dispatch:
 jobs:
-  tf-checks-MariaDb-example:
+  tf-checks-aurora-mysql-serverless-example:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
-      working_directory: './_example/MariaDb/'
-  tf-checks-PostgreSQL:
+      working_directory: './_example/aurora-mysql/'
+  tf-checks-aurora-postgre-serverless-example:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
-      working_directory: './_example/PostgreSQL/'
-  tf-checks-complete-mssql-example:
+      working_directory: './_example/aurora-mysql-serverless/'
+  tf-checks-aurora-postgre-example:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
-      working_directory: './_example/complete-mssql/'
-  tf-checks-complete-mysql-example:
+      working_directory: './_example/aurora-postgre/'
+  tf-checks-aaurora-postgre-serverless-example:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
-      working_directory: './_example/complete-mysql/'
-  tf-checks-oracle_db-example:
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
-    with:
-      working_directory: './_example/oracle_db/'
-  tf-checks-replica-mysql-example:
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
-    with:
-      working_directory: './_example/replica-mysql/'
+      working_directory: './_example/aurora-postgre-serverless/'
