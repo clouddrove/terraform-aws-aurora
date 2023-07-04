@@ -15,7 +15,7 @@ module "labels" {
 locals {
   port            = var.port == "" ? var.engine == "aurora-postgresql" ? "5432" : "3306" : var.port
   master_password = var.password == "" ? random_id.master_password.b64_url : var.password
-  is_serverless = var.engine_mode == "serverless"
+  is_serverless   = var.engine_mode == "serverless"
 }
 
 # Random string to use as master password unless one is specified
