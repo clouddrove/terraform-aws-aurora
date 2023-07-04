@@ -1,6 +1,6 @@
-##-----------------------------------------------------------------------------
+##------------------------------------------------------------------------------
 ## Labels module callled that will be used for naming and tags.
-##-----------------------------------------------------------------------------
+##------------------------------------------------------------------------------
 module "labels" {
   source  = "clouddrove/labels/aws"
   version = "1.3.0"
@@ -15,6 +15,7 @@ module "labels" {
 locals {
   port            = var.port == "" ? var.engine == "aurora-postgresql" ? "5432" : "3306" : var.port
   master_password = var.password == "" ? random_id.master_password.b64_url : var.password
+  is_serverless = var.engine_mode == "serverless"
 }
 
 # Random string to use as master password unless one is specified
@@ -22,9 +23,9 @@ resource "random_id" "master_password" {
   byte_length = 20
 }
 
-##-----------------------------------------------------------------------------
+##------------------------------------------------------------------------------
 ## Provides an RDS DB subnet group resource.
-##-----------------------------------------------------------------------------
+##------------------------------------------------------------------------------
 resource "aws_db_subnet_group" "default" {
   count = var.enable == true && var.enabled_subnet_group == true ? 1 : 0
 
@@ -34,16 +35,128 @@ resource "aws_db_subnet_group" "default" {
   tags        = module.labels.tags
 }
 
-##-----------------------------------------------------------------------------
+
+##------------------------------------------------------------------------------
+## Below resources will create SECURITY-GROUP and its components.
+##------------------------------------------------------------------------------
+resource "aws_security_group" "default" {
+  count = var.enable_security_group && length(var.sg_ids) < 1 ? 1 : 0
+
+  name        = format("%s-sg", module.labels.id)
+  vpc_id      = var.vpc_id
+  description = var.sg_description
+  tags        = module.labels.tags
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+data "aws_security_group" "existing" {
+  count  = var.is_external ? 1 : 0
+  id     = var.existing_sg_id
+  vpc_id = var.vpc_id
+}
+
+##------------------------------------------------------------------------------
+## Below resources will create SECURITY-GROUP-RULE and its components.
+##------------------------------------------------------------------------------
+#tfsec:ignore:aws-ec2-no-public-egress-sgr
+resource "aws_security_group_rule" "egress" {
+  count = (var.enable_security_group == true && length(var.sg_ids) < 1 && var.is_external == false && var.egress_rule == true) ? 1 : 0
+
+  description       = var.sg_egress_description
+  type              = "egress"
+  from_port         = 0
+  to_port           = 65535
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = join("", aws_security_group.default.*.id)
+}
+#tfsec:ignore:aws-ec2-no-public-egress-sgr
+resource "aws_security_group_rule" "egress_ipv6" {
+  count = (var.enable_security_group == true && length(var.sg_ids) < 1 && var.is_external == false) && var.egress_rule == true ? 1 : 0
+
+  description       = var.sg_egress_ipv6_description
+  type              = "egress"
+  from_port         = 0
+  to_port           = 65535
+  protocol          = "-1"
+  ipv6_cidr_blocks  = ["::/0"]
+  security_group_id = join("", aws_security_group.default.*.id)
+}
+
+resource "aws_security_group_rule" "ingress" {
+  count = length(var.allowed_ip) > 0 == true && length(var.sg_ids) < 1 ? length(compact(var.allowed_ports)) : 0
+
+  description       = var.sg_ingress_description
+  type              = "ingress"
+  from_port         = element(var.allowed_ports, count.index)
+  to_port           = element(var.allowed_ports, count.index)
+  protocol          = var.protocol
+  cidr_blocks       = var.allowed_ip
+  security_group_id = join("", aws_security_group.default.*.id)
+}
+
+##------------------------------------------------------------------------------
+## Below resources will create KMS-KEY and its components.
+##------------------------------------------------------------------------------
+resource "aws_kms_key" "default" {
+  count = var.kms_key_enabled && var.kms_key_id == "" ? 1 : 0
+
+  description              = var.kms_description
+  key_usage                = var.key_usage
+  deletion_window_in_days  = var.deletion_window_in_days
+  is_enabled               = var.is_enabled
+  enable_key_rotation      = var.enable_key_rotation
+  customer_master_key_spec = var.customer_master_key_spec
+  policy                   = data.aws_iam_policy_document.default.json
+  multi_region             = var.kms_multi_region
+  tags                     = module.labels.tags
+}
+
+resource "aws_kms_alias" "default" {
+  count = var.kms_key_enabled && var.kms_key_id == "" ? 1 : 0
+
+  name          = coalesce(var.alias, format("alias/%v", module.labels.id))
+  target_key_id = var.kms_key_id == "" ? join("", aws_kms_key.default.*.id) : var.kms_key_id
+}
+
+##------------------------------------------------------------------------------
+## Data block called to get Permissions that will be used in creating policy.
+##------------------------------------------------------------------------------
+data "aws_partition" "current" {}
+data "aws_caller_identity" "current" {}
+data "aws_iam_policy_document" "default" {
+  version = "2012-10-17"
+  statement {
+    sid    = "Enable IAM User Permissions"
+    effect = "Allow"
+    principals {
+      type = "AWS"
+      identifiers = [
+        format(
+          "arn:%s:iam::%s:root",
+          join("", data.aws_partition.current.*.partition),
+          data.aws_caller_identity.current.account_id
+        )
+      ]
+    }
+    actions   = ["kms:*"]
+    resources = ["*"]
+  }
+}
+
+
+##------------------------------------------------------------------------------
 ## Provides an RDS Cluster Resource. A Cluster Resource defines attributes that are applied to the entire cluster of RDS Cluster Instances.
-##-----------------------------------------------------------------------------
+##------------------------------------------------------------------------------
 resource "aws_rds_cluster" "default" {
   count = var.enable == true && var.enabled_rds_cluster == true && var.serverless_enabled == false ? 1 : 0
 
   cluster_identifier                  = module.labels.id
   engine                              = var.engine
   engine_version                      = var.engine_version
-  kms_key_id                          = var.kms_key_id
+  kms_key_id                          = var.kms_key_id == "" ? join("", aws_kms_key.default.*.arn) : var.kms_key_id
   database_name                       = var.database_name
   master_username                     = var.username
   master_password                     = local.master_password
@@ -56,7 +169,7 @@ resource "aws_rds_cluster" "default" {
   preferred_maintenance_window        = var.preferred_maintenance_window
   port                                = local.port
   db_subnet_group_name                = join("", aws_db_subnet_group.default.*.name)
-  vpc_security_group_ids              = var.aws_security_group
+  vpc_security_group_ids              = length(var.sg_ids) < 1 ? aws_security_group.default.*.id : var.sg_ids
   snapshot_identifier                 = var.snapshot_identifier
   storage_encrypted                   = var.storage_encrypted
   apply_immediately                   = var.apply_immediately
@@ -91,9 +204,9 @@ resource "aws_rds_cluster" "default" {
   tags = module.labels.tags
 }
 
-##-----------------------------------------------------------------------------
+##------------------------------------------------------------------------------
 ## aws_rds_cluster_instance. Provides an RDS Cluster Instance Resource.
-##-----------------------------------------------------------------------------
+##------------------------------------------------------------------------------
 resource "aws_rds_cluster_instance" "default" {
   count = var.enable == true && var.serverless_enabled == false ? (var.replica_scale_enabled ? var.replica_scale_min : var.replica_count) : 0
 
@@ -116,6 +229,9 @@ resource "aws_rds_cluster_instance" "default" {
   tags = module.labels.tags
 }
 
+####----------------------------------------------------------------------------
+## The resource random_id generates random numbers that are intended to be used as unique identifiers for other resources.
+####----------------------------------------------------------------------------
 resource "random_id" "snapshot_identifier" {
   keepers = {
     id = module.labels.id
@@ -123,6 +239,9 @@ resource "random_id" "snapshot_identifier" {
   byte_length = 4
 }
 
+####----------------------------------------------------------------------------
+### Provides an RDS DB parameter group resource.
+####----------------------------------------------------------------------------
 resource "aws_db_parameter_group" "postgresql" {
   count = var.enable == true && var.engine == "aurora-postgresql" && var.serverless_enabled == false ? 1 : 0
 
@@ -132,21 +251,24 @@ resource "aws_db_parameter_group" "postgresql" {
   tags        = module.labels.tags
 }
 
-resource "aws_rds_cluster_parameter_group" "postgresql" {
-  count = var.enable == true && var.engine == "aurora-postgresql" && var.serverless_enabled == false ? 1 : 0
-
-  name        = format("%s-cluster", module.labels.id)
-  family      = var.postgresql_family
-  description = format("Cluster parameter group for %s", module.labels.id)
-  tags        = module.labels.tags
-}
-
 resource "aws_db_parameter_group" "aurora" {
   count = var.enable == true && var.engine == "aurora-mysql" && var.serverless_enabled == false ? 1 : 0
 
   name        = module.labels.id
   family      = var.mysql_family
   description = format("Parameter group for %s", module.labels.id)
+  tags        = module.labels.tags
+}
+
+##------------------------------------------------------------------------------
+# Provides an RDS DB cluster parameter group resource.
+##------------------------------------------------------------------------------
+resource "aws_rds_cluster_parameter_group" "postgresql" {
+  count = var.enable == true && var.engine == "aurora-postgresql" && var.serverless_enabled == false ? 1 : 0
+
+  name        = format("%s-cluster", module.labels.id)
+  family      = var.postgresql_family
+  description = format("Cluster parameter group for %s", module.labels.id)
   tags        = module.labels.tags
 }
 
@@ -175,4 +297,30 @@ resource "aws_rds_cluster_parameter_group" "aurora_serverless" {
   family      = var.mysql_family_serverless
   description = format("Cluster parameter group for %s MySQL ", module.labels.id)
   tags        = module.labels.tags
+}
+
+##------------------------------------------------------------------------------
+## Below resource will create ssm-parameter resource for mysql with endpoint.
+##------------------------------------------------------------------------------
+resource "aws_ssm_parameter" "secret-endpoint" {
+  count = var.enable && var.ssm_parameter_endpoint_enabled ? 1 : 0
+
+  name        = format("/%s/%s/endpoint", var.environment, var.name)
+  description = var.ssm_parameter_description
+  type        = var.ssm_parameter_type
+  value       = join("", aws_rds_cluster.default.*.endpoint)
+  key_id      = var.kms_key_id == "" ? join("", aws_kms_key.default.*.arn) : var.kms_key_id
+}
+
+##------------------------------------------------------------------------------
+# Manages an RDS Aurora Cluster Endpoint.
+##------------------------------------------------------------------------------
+resource "aws_rds_cluster_endpoint" "this" {
+  count = var.enable && local.is_serverless ? 1 : 0
+
+  cluster_endpoint_identifier = "static"
+  cluster_identifier          = aws_rds_cluster.default[0].id
+  custom_endpoint_type        = "READER"
+  excluded_members            = aws_rds_cluster_instance.default.*.id
+  tags                        = module.labels.tags
 }

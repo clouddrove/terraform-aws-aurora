@@ -18,9 +18,9 @@ module "vpc" {
   cidr_block  = "172.16.0.0/16"
 }
 
-##-----------------------------------------------------
+##------------------------------------------------------------------------------
 ## A subnet is a range of IP addresses in your VPC.
-##-----------------------------------------------------
+##------------------------------------------------------------------------------
 module "public_subnets" {
   source      = "clouddrove/subnet/aws"
   version     = "1.3.0"
@@ -36,24 +36,9 @@ module "public_subnets" {
   igw_id             = module.vpc.igw_id
 }
 
-##-----------------------------------------------------
-## An AWS security group acts as a virtual firewall for incoming and outgoing traffic.
-##-----------------------------------------------------
-module "security-group" {
-  source  = "clouddrove/security-group/aws"
-  version = "1.3.0"
-  name    = "aurora-sg"
-
-  environment   = "test"
-  label_order   = ["name", "environment"]
-  vpc_id        = module.vpc.vpc_id
-  allowed_ip    = ["172.16.0.0/16", "10.0.0.0/16", "115.160.246.74/32"]
-  allowed_ports = [3306]
-}
-
-##-----------------------------------------------------------------------------
+##------------------------------------------------------------------------------
 ## aurora module call.
-##-----------------------------------------------------------------------------
+##------------------------------------------------------------------------------
 module "aurora" {
   source = "./../../"
 
@@ -61,13 +46,19 @@ module "aurora" {
   environment = "test"
   label_order = ["name", "environment"]
 
+  ####------------------------------------------------------------------------
+  ## Below A security group controls the traffic that is allowed to reach and leave the resources that it is associated with.
+  ####------------------------------------------------------------------------
+  vpc_id        = module.vpc.vpc_id
+  allowed_ip    = [module.vpc.vpc_cidr_block]
+  allowed_ports = [3306]
+
   enable                              = true
   username                            = "root"
   database_name                       = "test_db"
   engine                              = "aurora-mysql"
   engine_version                      = "8.0.mysql_aurora.3.02.0"
   subnets                             = tolist(module.public_subnets.public_subnet_id)
-  aws_security_group                  = [module.security-group.security_group_ids]
   replica_count                       = 1
   instance_type                       = "db.t4g.medium"
   apply_immediately                   = true
@@ -75,4 +66,7 @@ module "aurora" {
   enabled_cloudwatch_logs_exports     = ["audit", "error", "general", "slowquery"]
   iam_database_authentication_enabled = false
   monitoring_interval                 = "0"
+
+  ###ssm parameter
+  ssm_parameter_endpoint_enabled = true
 }
