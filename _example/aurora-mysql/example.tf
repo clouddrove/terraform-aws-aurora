@@ -65,7 +65,7 @@ module "aurora" {
   publicly_accessible                 = false
   enabled_cloudwatch_logs_exports     = ["audit", "error", "general", "slowquery"]
   iam_database_authentication_enabled = false
-  monitoring_interval                 = "0"
+  monitoring_interval                 = "5"
 
   ###ssm parameter
   ssm_parameter_endpoint_enabled = true

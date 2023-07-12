@@ -40,68 +40,15 @@ module "subnets" {
   igw_id              = module.vpc.igw_id
 }
 
-##-----------------------------------------------------
-## An AWS security group acts as a virtual firewall for incoming and outgoing traffic.
-##-----------------------------------------------------
-module "security_group" {
-  source  = "clouddrove/security-group/aws"
-  version = "1.3.0"
-  name    = "aurora-mysql-sg"
-
-  environment = "test"
-  label_order = ["name", "environment"]
-
-  vpc_id        = module.vpc.vpc_id
-  allowed_ip    = ["172.16.0.0/16"]
-  allowed_ports = [3306]
-}
-
-##-----------------------------------------------------
-## AWS Key Management Service (KMS) gives you centralized control over the cryptographic keys used to protect your data.
-##-----------------------------------------------------
-module "kms_key" {
-  source      = "clouddrove/kms/aws"
-  version     = "1.3.0"
-  name        = "kms"
-  environment = "test"
-  label_order = ["name", "environment"]
-
-  enabled = true
-
-  description              = "KMS key for aurora"
-  alias                    = "alias/aurora"
-  key_usage                = "ENCRYPT_DECRYPT"
-  customer_master_key_spec = "SYMMETRIC_DEFAULT"
-  deletion_window_in_days  = 7
-  is_enabled               = true
-  policy                   = data.aws_iam_policy_document.default.json
-}
-
-data "aws_iam_policy_document" "default" {
-  version = "2012-10-17"
-
-  statement {
-    sid    = "Enable IAM User Permissions"
-    effect = "Allow"
-    principals {
-      type        = "AWS"
-      identifiers = ["*"]
-    }
-    actions   = ["kms:*"]
-    resources = ["*"]
-  }
-}
-
 ##-----------------------------------------------------------------------------
 ## aurora module call.
 ##-----------------------------------------------------------------------------
 module "aurora_mysql" {
   source = "./../../"
 
-  name        = "aurora-mysql-serverless"
+  name        = "mysql-serverless"
   environment = "test"
   label_order = ["name", "environment"]
-
 
   enable                              = true
   serverless_enabled                  = true
@@ -111,13 +58,23 @@ module "aurora_mysql" {
   database_name                       = "test_db"
   engine                              = "aurora"
   engine_version                      = "5.6.10a"
-  kms_key_id                          = module.kms_key.key_arn
+  kms_key_id                          = ""
   subnets                             = module.subnets.private_subnet_id
-  aws_security_group                  = [module.security_group.security_group_ids]
+  sg_ids                              = []
   enabled_cloudwatch_logs_exports     = ["audit", "error", "general", "slowquery"]
   apply_immediately                   = true
   skip_final_snapshot                 = true
   availability_zones                  = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
   iam_database_authentication_enabled = false
   monitoring_interval                 = "0"
+
+  ####------------------------------------------------------------------------
+  ## Below A security group controls the traffic that is allowed to reach and leave the resources that it is associated with.
+  ####------------------------------------------------------------------------
+  vpc_id        = module.vpc.vpc_id
+  allowed_ip    = [module.vpc.vpc_cidr_block]
+  allowed_ports = [3306]
+
+  ###ssm parameter
+  ssm_parameter_endpoint_enabled = false
 }

@@ -168,7 +168,6 @@ variable "snapshot_identifier" {
   description = "DB snapshot to create this database from."
 }
 
-
 variable "kms_key_id" {
   type        = string
   default     = ""
@@ -255,7 +254,7 @@ variable "aws_security_group" {
 
 variable "enabled_cloudwatch_logs_exports" {
   type        = list(string)
-  default     = []
+  default     = ["audit", "general"]
   description = "List of log types to export to cloudwatch. If omitted, no logs will be exported. The following log types are supported: audit, error, general, slowquery, postgresql (PostgreSQL)."
 }
 
@@ -264,7 +263,6 @@ variable "availability_zone" {
   default     = ""
   description = "The Availability Zone of the RDS instance."
 }
-
 
 variable "enabled_subnet_group" {
   type        = bool
@@ -381,15 +379,15 @@ variable "timeout_action" {
 }
 
 variable "scaling_configuration" {
-  description = "Map of nested attributes with scaling properties. Only valid when engine_mode is set to `serverless`"
   type        = map(string)
   default     = {}
+  description = "Map of nested attributes with scaling properties. Only valid when engine_mode is set to `serverless`"
 }
 
 variable "s3_import" {
-  description = "Configuration map used to restore from a Percona Xtrabackup in S3 (only MySQL is supported)"
   type        = map(string)
   default     = null
+  description = "Configuration map used to restore from a Percona Xtrabackup in S3 (only MySQL is supported)"
 }
 
 variable "storage_encrypted" {
@@ -405,9 +403,9 @@ variable "copy_tags_to_snapshot" {
 }
 
 variable "allow_major_version_upgrade" {
-  description = "Enable to allow major engine version upgrades when changing engine versions. Defaults to `false`"
   type        = bool
   default     = false
+  description = "Enable to allow major engine version upgrades when changing engine versions. Defaults to `false`"
 }
 
 variable "enable_security_group" {
@@ -567,4 +565,40 @@ variable "endpoints" {
   type        = any
   default     = {}
   description = "Map of additional cluster endpoints and their attributes to be created"
+}
+
+variable "use_identifier_prefix" {
+  type        = bool
+  default     = true
+  description = "Determines whether to use `identifier` as is or create a unique identifier beginning with `identifier` as the specified prefix"
+}
+
+variable "enabled_monitoring_role" {
+  type        = bool
+  default     = true
+  description = "Create IAM role with a defined name that permits RDS to send enhanced monitoring metrics to CloudWatch Logs."
+}
+
+variable "monitoring_role_description" {
+  type        = string
+  default     = null
+  description = "Description of the monitoring IAM role"
+}
+
+variable "monitoring_role_permissions_boundary" {
+  type        = string
+  default     = null
+  description = "ARN of the policy that is used to set the permissions boundary for the monitoring IAM role"
+}
+
+variable "monitoring_role_name" {
+  type        = string
+  default     = "rds-monitoring-role"
+  description = "Name of the IAM role which will be created when create_monitoring_role is enabled."
+}
+
+variable "mysql_iam_role_tags" {
+  type        = map(any)
+  default     = {}
+  description = "Additional tags for the mysql iam role"
 }

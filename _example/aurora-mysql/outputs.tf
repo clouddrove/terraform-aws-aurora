@@ -16,5 +16,4 @@ output "tags" {
 output "cluster_endpoint" {
   value       = module.aurora.rds_cluster_endpoint
   description = "Writer endpoint for the cluster"
-
 }

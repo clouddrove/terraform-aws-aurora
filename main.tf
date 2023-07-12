@@ -146,6 +146,50 @@ data "aws_iam_policy_document" "default" {
   }
 }
 
+##-----------------------------------------------------------------------------------
+### Generates an IAM policy document in JSON format for use with resources that expect policy documents such as aws_iam_policy.
+##-----------------------------------------------------------------------------------
+
+data "aws_iam_policy_document" "enhanced_monitoring" {
+  statement {
+    actions = [
+      "sts:AssumeRole",
+    ]
+
+    principals {
+      type        = "Service"
+      identifiers = ["monitoring.rds.amazonaws.com"]
+    }
+  }
+}
+
+####----------------------------------------------------------------------------------
+### IAM - Manage Roles
+### AWS Identity and Access Management (IAM) roles are entities you create and assign specific permissions to that allow trusted identities such as workforce identities and applications to perform actions in AWS
+####----------------------------------------------------------------------------------
+resource "aws_iam_role" "enhanced_monitoring" {
+  count = var.enabled_monitoring_role ? 1 : 0
+
+  name                 = module.labels.id
+  assume_role_policy   = data.aws_iam_policy_document.enhanced_monitoring.json
+  description          = var.monitoring_role_description
+  permissions_boundary = var.monitoring_role_permissions_boundary
+
+  tags = merge(
+    {
+      "Name" = format("%s", var.monitoring_role_name)
+    },
+    module.labels.tags,
+    var.mysql_iam_role_tags
+  )
+}
+
+resource "aws_iam_role_policy_attachment" "enhanced_monitoring" {
+  count = var.enabled_monitoring_role ? 1 : 0
+
+  role       = aws_iam_role.enhanced_monitoring[0].name
+  policy_arn = "arn:${data.aws_partition.current.partition}:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole"
+}
 
 ##------------------------------------------------------------------------------
 ## Provides an RDS Cluster Resource. A Cluster Resource defines attributes that are applied to the entire cluster of RDS Cluster Instances.
@@ -219,6 +263,7 @@ resource "aws_rds_cluster_instance" "default" {
   db_subnet_group_name            = join("", aws_db_subnet_group.default.*.name)
   db_parameter_group_name         = var.enable == true && var.engine == "aurora-postgresql" ? aws_db_parameter_group.postgresql.*.id[0] : aws_db_parameter_group.aurora.*.id[0]
   preferred_maintenance_window    = var.preferred_maintenance_window
+  monitoring_role_arn             = join("", aws_iam_role.enhanced_monitoring.*.arn)
   apply_immediately               = var.apply_immediately
   monitoring_interval             = var.monitoring_interval
   auto_minor_version_upgrade      = var.auto_minor_version_upgrade
@@ -300,8 +345,22 @@ resource "aws_rds_cluster_parameter_group" "aurora_serverless" {
 }
 
 ##------------------------------------------------------------------------------
-## Below resource will create ssm-parameter resource for mysql with endpoint.
+# Manages an RDS Aurora Cluster Endpoint.
+###------------------------------------------------------------------------------
+resource "aws_rds_cluster_endpoint" "this" {
+  for_each = { for k, v in var.endpoints : k => v if var.enable && !local.is_serverless }
+
+  cluster_endpoint_identifier = each.value.identifier
+  cluster_identifier          = aws_rds_cluster.default[0].id
+  custom_endpoint_type        = each.value.type
+  excluded_members            = try(each.value.excluded_members, null)
+  static_members              = try(each.value.static_members, null)
+  tags                        = module.labels.tags
+}
+
 ##------------------------------------------------------------------------------
+# Below resource will create ssm-parameter resource for mysql with endpoint.
+#------------------------------------------------------------------------------
 resource "aws_ssm_parameter" "secret-endpoint" {
   count = var.enable && var.ssm_parameter_endpoint_enabled ? 1 : 0
 
@@ -310,17 +369,4 @@ resource "aws_ssm_parameter" "secret-endpoint" {
   type        = var.ssm_parameter_type
   value       = join("", aws_rds_cluster.default.*.endpoint)
   key_id      = var.kms_key_id == "" ? join("", aws_kms_key.default.*.arn) : var.kms_key_id
-}
-
-##------------------------------------------------------------------------------
-# Manages an RDS Aurora Cluster Endpoint.
-##------------------------------------------------------------------------------
-resource "aws_rds_cluster_endpoint" "this" {
-  count = var.enable && local.is_serverless ? 1 : 0
-
-  cluster_endpoint_identifier = "static"
-  cluster_identifier          = aws_rds_cluster.default[0].id
-  custom_endpoint_type        = "READER"
-  excluded_members            = aws_rds_cluster_instance.default.*.id
-  tags                        = module.labels.tags
 }
