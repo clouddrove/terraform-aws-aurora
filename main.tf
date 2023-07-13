@@ -269,7 +269,7 @@ resource "aws_rds_cluster_instance" "default" {
   auto_minor_version_upgrade      = var.auto_minor_version_upgrade
   promotion_tier                  = count.index + 1
   performance_insights_enabled    = var.performance_insights_enabled
-  performance_insights_kms_key_id = var.performance_insights_kms_key_id
+  performance_insights_kms_key_id = join("", aws_kms_key.default.*.arn)
 
   tags = module.labels.tags
 }

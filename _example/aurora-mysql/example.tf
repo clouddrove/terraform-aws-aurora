@@ -61,6 +61,7 @@ module "aurora" {
   subnets                             = tolist(module.public_subnets.public_subnet_id)
   replica_count                       = 1
   instance_type                       = "db.t4g.medium"
+  performance_insights_enabled        = true
   apply_immediately                   = true
   publicly_accessible                 = false
   enabled_cloudwatch_logs_exports     = ["audit", "error", "general", "slowquery"]

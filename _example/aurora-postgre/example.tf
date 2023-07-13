@@ -59,6 +59,7 @@ module "postgres" {
   instance_type                       = "db.r5.large"
   apply_immediately                   = true
   skip_final_snapshot                 = true
+  performance_insights_enabled        = true
   publicly_accessible                 = false
   iam_database_authentication_enabled = false
   monitoring_interval                 = "5"
