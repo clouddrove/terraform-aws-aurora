@@ -1,0 +1,23 @@
+name: tf-checks
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+  workflow_dispatch:
+jobs:
+  tf-checks-aurora-mysql-serverless-example:
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
+    with:
+      working_directory: './_example/aurora-mysql/'
+  tf-checks-aurora-postgre-serverless-example:
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
+    with:
+      working_directory: './_example/aurora-mysql-serverless/'
+  tf-checks-aurora-postgre-example:
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
+    with:
+      working_directory: './_example/aurora-postgre/'
+  tf-checks-aaurora-postgre-serverless-example:
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
+    with:
+      working_directory: './_example/aurora-postgre-serverless/'
