@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2023-07-18
+### :sparkles: New Features
+- [`84949a9`](https://github.com/clouddrove/terraform-aws-aurora/commit/84949a9c5c6ddffc49b1d8b2c902d2aa706889e9) - auto changelog action added *(commit by [@mamrajyadav](https://github.com/mamrajyadav))*
+- [`736437d`](https://github.com/clouddrove/terraform-aws-aurora/commit/736437d214a9f2cc6396ee948ec8f14f7d83f47f) - added dependabot.yml file *(commit by [@mamrajyadav](https://github.com/mamrajyadav))*
+- [`98c68d7`](https://github.com/clouddrove/terraform-aws-aurora/commit/98c68d71eb948d99614c721836fbf7eb2de1dad9) - add deepsource & added assignees,reviewer in dependabot *(commit by [@Tanveer143s](https://github.com/Tanveer143s))*
+- [`47813c4`](https://github.com/clouddrove/terraform-aws-aurora/commit/47813c4bbb15c8c4b6380d11ea9d3504b35a536e) - added new resources *(commit by [@mamrajyadav](https://github.com/mamrajyadav))*
+- [`921d6c2`](https://github.com/clouddrove/terraform-aws-aurora/commit/921d6c2daf95cd2fa029c02536736d3396c42de8) - added new resources *(commit by [@mamrajyadav](https://github.com/mamrajyadav))*
+
+### :bug: Bug Fixes
+- [`7135d78`](https://github.com/clouddrove/terraform-aws-aurora/commit/7135d780eac61408d7620d046a54e29438607299) - added versions.tf and updated vpc tag *(commit by [@mamrajyadav](https://github.com/mamrajyadav))*
+
+
 ## [1.3.0] - 2023-02-20
 
 ## [1.0.3] - 2022-07-21
@@ -96,3 +108,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.0.2]: https://github.com/clouddrove/terraform-aws-aurora/compare/1.0.2...master
 [1.0.3]: https://github.com/clouddrove/terraform-aws-aurora/compare/1.0.3...master
 [1.3.0]: https://github.com/clouddrove/terraform-aws-aurora/releases/tag/1.3.0
+[1.4.0]: https://github.com/clouddrove/terraform-aws-aurora/compare/1.3.0...1.4.0
