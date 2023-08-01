@@ -51,12 +51,6 @@ resource "aws_security_group" "default" {
   }
 }
 
-data "aws_security_group" "existing" {
-  count  = var.is_external ? 1 : 0
-  id     = var.existing_sg_id
-  vpc_id = var.vpc_id
-}
-
 ##------------------------------------------------------------------------------
 ## Below resources will create SECURITY-GROUP-RULE and its components.
 ##------------------------------------------------------------------------------
@@ -70,7 +64,7 @@ resource "aws_security_group_rule" "egress" {
   to_port           = 65535
   protocol          = "-1"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = join("", aws_security_group.default.*.id)
+  security_group_id = join("", aws_security_group.default[*].id)
 }
 #tfsec:ignore:aws-ec2-no-public-egress-sgr
 resource "aws_security_group_rule" "egress_ipv6" {
@@ -82,7 +76,7 @@ resource "aws_security_group_rule" "egress_ipv6" {
   to_port           = 65535
   protocol          = "-1"
   ipv6_cidr_blocks  = ["::/0"]
-  security_group_id = join("", aws_security_group.default.*.id)
+  security_group_id = join("", aws_security_group.default[*].id)
 }
 
 resource "aws_security_group_rule" "ingress" {
@@ -94,7 +88,7 @@ resource "aws_security_group_rule" "ingress" {
   to_port           = element(var.allowed_ports, count.index)
   protocol          = var.protocol
   cidr_blocks       = var.allowed_ip
-  security_group_id = join("", aws_security_group.default.*.id)
+  security_group_id = join("", aws_security_group.default[*].id)
 }
 
 ##------------------------------------------------------------------------------
@@ -118,7 +112,7 @@ resource "aws_kms_alias" "default" {
   count = var.kms_key_enabled && var.kms_key_id == "" ? 1 : 0
 
   name          = coalesce(var.alias, format("alias/%v", module.labels.id))
-  target_key_id = var.kms_key_id == "" ? join("", aws_kms_key.default.*.id) : var.kms_key_id
+  target_key_id = var.kms_key_id == "" ? join("", aws_kms_key.default[*].id) : var.kms_key_id
 }
 
 ##------------------------------------------------------------------------------
@@ -136,7 +130,7 @@ data "aws_iam_policy_document" "default" {
       identifiers = [
         format(
           "arn:%s:iam::%s:root",
-          join("", data.aws_partition.current.*.partition),
+          join("", data.aws_partition.current[*].partition),
           data.aws_caller_identity.current.account_id
         )
       ]
@@ -200,7 +194,7 @@ resource "aws_rds_cluster" "default" {
   cluster_identifier                  = module.labels.id
   engine                              = var.engine
   engine_version                      = var.engine_version
-  kms_key_id                          = var.kms_key_id == "" ? join("", aws_kms_key.default.*.arn) : var.kms_key_id
+  kms_key_id                          = var.kms_key_id == "" ? join("", aws_kms_key.default[*].arn) : var.kms_key_id
   database_name                       = var.database_name
   master_username                     = var.username
   master_password                     = local.master_password
@@ -212,8 +206,8 @@ resource "aws_rds_cluster" "default" {
   preferred_backup_window             = var.preferred_backup_window
   preferred_maintenance_window        = var.preferred_maintenance_window
   port                                = local.port
-  db_subnet_group_name                = join("", aws_db_subnet_group.default.*.name)
-  vpc_security_group_ids              = length(var.sg_ids) < 1 ? aws_security_group.default.*.id : var.sg_ids
+  db_subnet_group_name                = join("", aws_db_subnet_group.default[*].name)
+  vpc_security_group_ids              = length(var.sg_ids) < 1 ? aws_security_group.default[*].id : var.sg_ids
   snapshot_identifier                 = var.snapshot_identifier
   storage_encrypted                   = var.storage_encrypted
   apply_immediately                   = var.apply_immediately
@@ -255,21 +249,21 @@ resource "aws_rds_cluster_instance" "default" {
   count = var.enable == true && var.serverless_enabled == false ? (var.replica_scale_enabled ? var.replica_scale_min : var.replica_count) : 0
 
   identifier                      = var.enable == true ? format("%s-%s", module.labels.id, (count.index + 1)) : ""
-  cluster_identifier              = element(aws_rds_cluster.default.*.id, count.index)
+  cluster_identifier              = element(aws_rds_cluster.default[*].id, count.index)
   engine                          = var.engine
   engine_version                  = var.engine_version
   instance_class                  = var.instance_type
   publicly_accessible             = var.publicly_accessible
-  db_subnet_group_name            = join("", aws_db_subnet_group.default.*.name)
+  db_subnet_group_name            = join("", aws_db_subnet_group.default[*].name)
   db_parameter_group_name         = var.enable == true && var.engine == "aurora-postgresql" ? aws_db_parameter_group.postgresql.*.id[0] : aws_db_parameter_group.aurora.*.id[0]
   preferred_maintenance_window    = var.preferred_maintenance_window
-  monitoring_role_arn             = join("", aws_iam_role.enhanced_monitoring.*.arn)
+  monitoring_role_arn             = join("", aws_iam_role.enhanced_monitoring[*].arn)
   apply_immediately               = var.apply_immediately
   monitoring_interval             = var.monitoring_interval
   auto_minor_version_upgrade      = var.auto_minor_version_upgrade
   promotion_tier                  = count.index + 1
   performance_insights_enabled    = var.performance_insights_enabled
-  performance_insights_kms_key_id = join("", aws_kms_key.default.*.arn)
+  performance_insights_kms_key_id = join("", aws_kms_key.default[*].arn)
 
   tags = module.labels.tags
 }
@@ -367,6 +361,6 @@ resource "aws_ssm_parameter" "secret-endpoint" {
   name        = format("/%s/%s/endpoint", var.environment, var.name)
   description = var.ssm_parameter_description
   type        = var.ssm_parameter_type
-  value       = join("", aws_rds_cluster.default.*.endpoint)
-  key_id      = var.kms_key_id == "" ? join("", aws_kms_key.default.*.arn) : var.kms_key_id
+  value       = join("", aws_rds_cluster.default[*].endpoint)
+  key_id      = var.kms_key_id == "" ? join("", aws_kms_key.default[*].arn) : var.kms_key_id
 }

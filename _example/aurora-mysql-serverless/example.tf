@@ -24,7 +24,7 @@ module "vpc" {
 ##-----------------------------------------------------
 module "subnets" {
   source  = "clouddrove/subnet/aws"
-  version = "1.3.0"
+  version = "2.0.0"
 
   name        = "subnets"
   environment = "test"
@@ -52,8 +52,6 @@ module "aurora_mysql" {
 
   enable                              = true
   serverless_enabled                  = true
-  min_capacity                        = 1
-  max_capacity                        = 4
   username                            = "root"
   database_name                       = "test_db"
   engine                              = "aurora"
@@ -64,7 +62,6 @@ module "aurora_mysql" {
   enabled_cloudwatch_logs_exports     = ["audit", "error", "general", "slowquery"]
   apply_immediately                   = true
   skip_final_snapshot                 = true
-  availability_zones                  = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
   iam_database_authentication_enabled = false
   monitoring_interval                 = "0"
 

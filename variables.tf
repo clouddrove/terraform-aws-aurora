@@ -49,12 +49,6 @@ variable "replica_count" {
   description = "Number of reader nodes to create.  If `replica_scale_enable` is `true`, the value of `replica_scale_min` is used instead."
 }
 
-variable "identifier_prefix" {
-  type        = string
-  default     = ""
-  description = "Prefix for cluster and instance identifier."
-}
-
 variable "instance_type" {
   type        = string
   default     = ""
@@ -148,20 +142,6 @@ variable "auto_minor_version_upgrade" {
   description = "Determines whether minor engine upgrades will be performed automatically in the maintenance window."
 }
 
-variable "db_parameter_group_name" {
-  type        = string
-  default     = "default.aurora5.6"
-  description = "The name of a DB parameter group to use."
-  sensitive   = true
-}
-
-variable "db_cluster_parameter_group_name" {
-  type        = string
-  default     = "default.aurora5.6"
-  description = "The name of a DB Cluster parameter group to use."
-  sensitive   = true
-}
-
 variable "snapshot_identifier" {
   type        = string
   default     = ""
@@ -198,34 +178,10 @@ variable "replica_scale_enabled" {
   description = "Whether to enable autoscaling for RDS Aurora (MySQL) read replicas."
 }
 
-variable "replica_scale_max" {
-  type        = number
-  default     = 0
-  description = "Maximum number of replicas to allow scaling."
-}
-
 variable "replica_scale_min" {
   type        = number
   default     = 2
   description = "Minimum number of replicas to allow scaling."
-}
-
-variable "replica_scale_cpu" {
-  type        = number
-  default     = 70
-  description = "CPU usage to trigger autoscaling."
-}
-
-variable "replica_scale_in_cooldown" {
-  type        = number
-  default     = 300
-  description = "Cooldown in seconds before allowing further scaling operations after a scale in."
-}
-
-variable "replica_scale_out_cooldown" {
-  type        = number
-  default     = 300
-  description = "Cooldown in seconds before allowing further scaling operations after a scale out."
 }
 
 variable "performance_insights_enabled" {
@@ -234,21 +190,9 @@ variable "performance_insights_enabled" {
   description = "Specifies whether Performance Insights is enabled or not."
 }
 
-variable "performance_insights_kms_key_id" {
-  type        = string
-  default     = ""
-  description = "The ARN for the KMS key to encrypt Performance Insights data."
-}
-
 variable "iam_database_authentication_enabled" {
   type        = bool
   default     = true
-  description = "Specifies whether IAM Database authentication should be enabled or not. Not all versions and instances are supported. Refer to the AWS documentation to see which versions are supported."
-}
-
-variable "aws_security_group" {
-  type        = list(string)
-  default     = []
   description = "Specifies whether IAM Database authentication should be enabled or not. Not all versions and instances are supported. Refer to the AWS documentation to see which versions are supported."
 }
 
@@ -256,12 +200,6 @@ variable "enabled_cloudwatch_logs_exports" {
   type        = list(string)
   default     = ["audit", "general"]
   description = "List of log types to export to cloudwatch. If omitted, no logs will be exported. The following log types are supported: audit, error, general, slowquery, postgresql (PostgreSQL)."
-}
-
-variable "availability_zone" {
-  type        = string
-  default     = ""
-  description = "The Availability Zone of the RDS instance."
 }
 
 variable "enabled_subnet_group" {
@@ -318,66 +256,6 @@ variable "backtrack_window" {
   description = "The target backtrack window, in seconds. Only available for aurora engine currently.Must be between 0 and 259200 (72 hours)"
 }
 
-variable "replication_source_identifier" {
-  type        = string
-  default     = ""
-  description = "ARN of a source DB cluster or DB instance if this DB cluster is to be created as a Read Replica."
-}
-
-variable "iam_roles" {
-  type        = list(string)
-  default     = []
-  description = "A List of ARNs for the IAM roles to associate to the RDS Cluster."
-}
-
-variable "source_region" {
-  type        = string
-  default     = ""
-  description = "The source region for an encrypted replica DB cluster."
-}
-
-variable "availability_zones" {
-  type        = list(any)
-  default     = []
-  description = "The Availability Zone of the RDS cluster."
-}
-
-variable "enable_http_endpoint" {
-  type        = bool
-  default     = true
-  description = "Enable HTTP endpoint (data API). Only valid when engine_mode is set to serverless."
-}
-
-variable "auto_pause" {
-  type        = bool
-  default     = false
-  description = "Whether to enable automatic pause. A DB cluster can be paused only when it's idle (it has no connections)."
-}
-
-variable "max_capacity" {
-  type        = number
-  default     = 4
-  description = "The maximum capacity. Valid capacity values are 1, 2, 4, 8, 16, 32, 64, 128, and 256."
-}
-
-variable "min_capacity" {
-  type        = number
-  default     = 2
-  description = "The minimum capacity. Valid capacity values are 1, 2, 4, 8, 16, 32, 64, 128, and 256."
-}
-
-variable "seconds_until_auto_pause" {
-  type        = number
-  default     = 300
-  description = "The time, in seconds, before an Aurora DB cluster in serverless mode is paused. Valid values are 300 through 86400."
-}
-
-variable "timeout_action" {
-  type        = string
-  default     = "RollbackCapacityChange"
-  description = "The action to take when the timeout is reached. Valid values: ForceApplyCapacityChange, RollbackCapacityChange."
-}
-
 variable "scaling_configuration" {
   type        = map(string)
   default     = {}
@@ -400,12 +278,6 @@ variable "copy_tags_to_snapshot" {
   type        = bool
   default     = true
   description = "Copy all Cluster tags to snapshots."
-}
-
-variable "allow_major_version_upgrade" {
-  type        = bool
-  default     = false
-  description = "Enable to allow major engine version upgrades when changing engine versions. Defaults to `false`"
 }
 
 variable "enable_security_group" {
@@ -437,12 +309,6 @@ variable "is_external" {
   type        = bool
   default     = false
   description = "enable to udated existing security Group"
-}
-
-variable "existing_sg_id" {
-  type        = string
-  default     = null
-  description = "Provide existing security group id for updating existing rule"
 }
 
 variable "egress_rule" {
@@ -565,12 +431,6 @@ variable "endpoints" {
   type        = any
   default     = {}
   description = "Map of additional cluster endpoints and their attributes to be created"
-}
-
-variable "use_identifier_prefix" {
-  type        = bool
-  default     = true
-  description = "Determines whether to use `identifier` as is or create a unique identifier beginning with `identifier` as the specified prefix"
 }
 
 variable "enabled_monitoring_role" {
