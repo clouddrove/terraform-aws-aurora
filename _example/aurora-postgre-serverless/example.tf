@@ -51,8 +51,6 @@ module "aurora_postgresql" {
 
   enable                              = true
   serverless_enabled                  = true
-  min_capacity                        = 2
-  max_capacity                        = 4
   username                            = "root"
   database_name                       = "test_db"
   engine                              = "aurora-postgresql"
@@ -63,7 +61,6 @@ module "aurora_postgresql" {
   sg_ids                              = []
   apply_immediately                   = true
   skip_final_snapshot                 = true
-  availability_zones                  = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
   enabled_cloudwatch_logs_exports     = ["postgresql", "upgrade", "general", "audit"]
   iam_database_authentication_enabled = false
   monitoring_interval                 = "0"
