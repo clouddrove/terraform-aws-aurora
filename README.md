@@ -169,27 +169,19 @@ Here are some examples of how you can use this module in your inventory structur
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | alias | The display name of the alias. The name must start with the word `alias` followed by a forward slash. | `string` | `"alias/aurora"` | no |
-| allow\_major\_version\_upgrade | Enable to allow major engine version upgrades when changing engine versions. Defaults to `false` | `bool` | `false` | no |
 | allowed\_ip | List of allowed ip. | `list(any)` | `[]` | no |
 | allowed\_ports | List of allowed ingress ports | `list(any)` | `[]` | no |
 | apply\_immediately | Determines whether or not any DB modifications are applied immediately, or during the maintenance window. | `bool` | `false` | no |
 | auto\_minor\_version\_upgrade | Determines whether minor engine upgrades will be performed automatically in the maintenance window. | `bool` | `true` | no |
-| auto\_pause | Whether to enable automatic pause. A DB cluster can be paused only when it's idle (it has no connections). | `bool` | `false` | no |
-| availability\_zone | The Availability Zone of the RDS instance. | `string` | `""` | no |
-| availability\_zones | The Availability Zone of the RDS cluster. | `list(any)` | `[]` | no |
-| aws\_security\_group | Specifies whether IAM Database authentication should be enabled or not. Not all versions and instances are supported. Refer to the AWS documentation to see which versions are supported. | `list(string)` | `[]` | no |
 | backtrack\_window | The target backtrack window, in seconds. Only available for aurora engine currently.Must be between 0 and 259200 (72 hours) | `number` | `0` | no |
 | backup\_retention\_period | How long to keep backups for (in days). | `number` | `7` | no |
 | copy\_tags\_to\_snapshot | Copy all Cluster tags to snapshots. | `bool` | `true` | no |
 | customer\_master\_key\_spec | Specifies whether the key contains a symmetric key or an asymmetric key pair and the encryption algorithms or signing algorithms that the key supports. Valid values: SYMMETRIC\_DEFAULT, RSA\_2048, RSA\_3072, RSA\_4096, ECC\_NIST\_P256, ECC\_NIST\_P384, ECC\_NIST\_P521, or ECC\_SECG\_P256K1. Defaults to SYMMETRIC\_DEFAULT. | `string` | `"SYMMETRIC_DEFAULT"` | no |
 | database\_name | Name for an automatically created database on cluster creation. | `string` | `""` | no |
-| db\_cluster\_parameter\_group\_name | The name of a DB Cluster parameter group to use. | `string` | `"default.aurora5.6"` | no |
-| db\_parameter\_group\_name | The name of a DB parameter group to use. | `string` | `"default.aurora5.6"` | no |
 | deletion\_protection | If the DB instance should have deletion protection enabled. | `bool` | `false` | no |
 | deletion\_window\_in\_days | Duration in days after which the key is deleted after destruction of the resource. | `number` | `7` | no |
 | egress\_rule | Enable to create egress rule | `bool` | `true` | no |
 | enable | Set to false to prevent the module from creating any resources. | `bool` | `true` | no |
-| enable\_http\_endpoint | Enable HTTP endpoint (data API). Only valid when engine\_mode is set to serverless. | `bool` | `true` | no |
 | enable\_key\_rotation | Specifies whether key rotation is enabled. | `string` | `true` | no |
 | enable\_security\_group | Enable default Security Group with only Egress traffic allowed. | `bool` | `true` | no |
 | enabled\_cloudwatch\_logs\_exports | List of log types to export to cloudwatch. If omitted, no logs will be exported. The following log types are supported: audit, error, general, slowquery, postgresql (PostgreSQL). | `list(string)` | <pre>[<br>  "audit",<br>  "general"<br>]</pre> | no |
@@ -201,11 +193,8 @@ Here are some examples of how you can use this module in your inventory structur
 | engine\_mode | The database engine mode. | `string` | `"serverless"` | no |
 | engine\_version | Aurora database engine version. | `string` | `"5.6.10a"` | no |
 | environment | Environment (e.g. `prod`, `dev`, `staging`). | `string` | `""` | no |
-| existing\_sg\_id | Provide existing security group id for updating existing rule | `string` | `null` | no |
 | final\_snapshot\_identifier\_prefix | The prefix name to use when creating a final snapshot on cluster destroy, appends a random 8 digits to name to ensure it's unique too. | `string` | `"final"` | no |
 | iam\_database\_authentication\_enabled | Specifies whether IAM Database authentication should be enabled or not. Not all versions and instances are supported. Refer to the AWS documentation to see which versions are supported. | `bool` | `true` | no |
-| iam\_roles | A List of ARNs for the IAM roles to associate to the RDS Cluster. | `list(string)` | `[]` | no |
-| identifier\_prefix | Prefix for cluster and instance identifier. | `string` | `""` | no |
 | instance\_type | Instance type to use. | `string` | `""` | no |
 | is\_enabled | Specifies whether the key is enabled. | `bool` | `true` | no |
 | is\_external | enable to udated existing security Group | `bool` | `false` | no |
@@ -216,8 +205,6 @@ Here are some examples of how you can use this module in your inventory structur
 | kms\_multi\_region | Indicates whether the KMS key is a multi-Region (true) or regional (false) key. | `bool` | `false` | no |
 | label\_order | Label order, e.g. `name`,`application`. | `list(any)` | `[]` | no |
 | managedby | ManagedBy, eg 'CloudDrove'. | `string` | `"hello@clouddrove.com"` | no |
-| max\_capacity | The maximum capacity. Valid capacity values are 1, 2, 4, 8, 16, 32, 64, 128, and 256. | `number` | `4` | no |
-| min\_capacity | The minimum capacity. Valid capacity values are 1, 2, 4, 8, 16, 32, 64, 128, and 256. | `number` | `2` | no |
 | monitoring\_interval | The interval (seconds) between points when Enhanced Monitoring metrics are collected. | `number` | `5` | no |
 | monitoring\_role\_description | Description of the monitoring IAM role | `string` | `null` | no |
 | monitoring\_role\_name | Name of the IAM role which will be created when create\_monitoring\_role is enabled. | `string` | `"rds-monitoring-role"` | no |
@@ -228,7 +215,6 @@ Here are some examples of how you can use this module in your inventory structur
 | name | Name  (e.g. `app` or `cluster`). | `string` | n/a | yes |
 | password | Master DB password. | `string` | `""` | no |
 | performance\_insights\_enabled | Specifies whether Performance Insights is enabled or not. | `bool` | `true` | no |
-| performance\_insights\_kms\_key\_id | The ARN for the KMS key to encrypt Performance Insights data. | `string` | `""` | no |
 | port | The port on which to accept connections. | `string` | `""` | no |
 | postgresql\_family | The family of the DB parameter group. | `string` | `"aurora-postgresql13"` | no |
 | postgresql\_family\_serverless | The family of the DB parameter group. | `string` | `"aurora-postgresql10"` | no |
@@ -237,17 +223,11 @@ Here are some examples of how you can use this module in your inventory structur
 | protocol | The protocol. If not icmp, tcp, udp, or all use the. | `string` | `"tcp"` | no |
 | publicly\_accessible | Whether the DB should have a public IP address. | `bool` | `false` | no |
 | replica\_count | Number of reader nodes to create.  If `replica_scale_enable` is `true`, the value of `replica_scale_min` is used instead. | `number` | `1` | no |
-| replica\_scale\_cpu | CPU usage to trigger autoscaling. | `number` | `70` | no |
 | replica\_scale\_enabled | Whether to enable autoscaling for RDS Aurora (MySQL) read replicas. | `bool` | `false` | no |
-| replica\_scale\_in\_cooldown | Cooldown in seconds before allowing further scaling operations after a scale in. | `number` | `300` | no |
-| replica\_scale\_max | Maximum number of replicas to allow scaling. | `number` | `0` | no |
 | replica\_scale\_min | Minimum number of replicas to allow scaling. | `number` | `2` | no |
-| replica\_scale\_out\_cooldown | Cooldown in seconds before allowing further scaling operations after a scale out. | `number` | `300` | no |
-| replication\_source\_identifier | ARN of a source DB cluster or DB instance if this DB cluster is to be created as a Read Replica. | `string` | `""` | no |
 | repository | Terraform current module repo | `string` | `"https://github.com/clouddrove/terraform-aws-aurora"` | no |
 | s3\_import | Configuration map used to restore from a Percona Xtrabackup in S3 (only MySQL is supported) | `map(string)` | `null` | no |
 | scaling\_configuration | Map of nested attributes with scaling properties. Only valid when engine\_mode is set to `serverless` | `map(string)` | `{}` | no |
-| seconds\_until\_auto\_pause | The time, in seconds, before an Aurora DB cluster in serverless mode is paused. Valid values are 300 through 86400. | `number` | `300` | no |
 | serverless\_enabled | Whether serverless is enabled or not. | `bool` | `false` | no |
 | sg\_description | The security group description. | `string` | `"Instance default security group (only egress access is allowed)."` | no |
 | sg\_egress\_description | Description of the egress and ingress rule | `string` | `"Description of the rule."` | no |
@@ -256,14 +236,11 @@ Here are some examples of how you can use this module in your inventory structur
 | sg\_ingress\_description | Description of the ingress rule | `string` | `"Description of the ingress rule use elasticache."` | no |
 | skip\_final\_snapshot | Should a final snapshot be created on cluster destroy. | `bool` | `false` | no |
 | snapshot\_identifier | DB snapshot to create this database from. | `string` | `""` | no |
-| source\_region | The source region for an encrypted replica DB cluster. | `string` | `""` | no |
 | ssm\_parameter\_description | SSM Parameters can be imported using. | `string` | `"Description of the parameter."` | no |
 | ssm\_parameter\_endpoint\_enabled | Name of the parameter. | `bool` | `false` | no |
 | ssm\_parameter\_type | Type of the parameter. | `string` | `"SecureString"` | no |
 | storage\_encrypted | Specifies whether the underlying storage layer should be encrypted. | `bool` | `true` | no |
 | subnets | List of subnet IDs to use. | `list(string)` | `[]` | no |
-| timeout\_action | The action to take when the timeout is reached. Valid values: ForceApplyCapacityChange, RollbackCapacityChange. | `string` | `"RollbackCapacityChange"` | no |
-| use\_identifier\_prefix | Determines whether to use `identifier` as is or create a unique identifier beginning with `identifier` as the specified prefix | `bool` | `true` | no |
 | username | Master DB username. | `string` | `""` | no |
 | vpc\_id | The ID of the VPC that the instance security group belongs to. | `string` | `""` | no |
 
