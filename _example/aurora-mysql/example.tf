@@ -1,9 +1,7 @@
 ##---------------------------------------------------------------------------------------------------------------------------
 ## Provider block added, Use the Amazon Web Services (AWS) provider to interact with the many resources supported by AWS.
 ##--------------------------------------------------------------------------------------------------------------------------
-provider "aws" {
-  region = "eu-west-1"
-}
+
 
 ##---------------------------------------------------------------------------------------------------------------------------
 ## A VPC is a virtual network that closely resembles a traditional network that you'd operate in your own data center.
@@ -23,7 +21,7 @@ module "vpc" {
 ##------------------------------------------------------------------------------
 module "public_subnets" {
   source      = "clouddrove/subnet/aws"
-  version     = "1.3.0"
+  version     = "2.0.0"
   name        = "public-subnet"
   environment = "test"
   label_order = ["name", "environment"]
