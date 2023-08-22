@@ -13,6 +13,11 @@ license: "APACHE"
 # Canonical GitHub repo
 github_repo: clouddrove/terraform-aws-aurora
 
+
+prerequesties:
+  - name: Terraform 1.5.0
+    url: https://learn.hashicorp.com/terraform/getting-started/install.html
+
 # Badges to display
 badges:
   - name: "Latest Release"
