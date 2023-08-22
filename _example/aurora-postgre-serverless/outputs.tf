@@ -1,9 +1,34 @@
-output "rds_cluster_master_password" {
-  value       = module.aurora_postgresql.serverless_rds_cluster_master_password
-  description = "The password of the rds cluster."
+################################################################################
+# Cluster
+################################################################################
+
+output "cluster_arn" {
+  description = "Amazon Resource Name (ARN) of cluster"
+  value       = module.aurora_postgresql.cluster_arn
 }
 
-output "tags" {
-  value       = module.aurora_postgresql.tags
-  description = "A mapping of tags to assign to the Aurora."
+output "cluster_id" {
+  description = "The RDS Cluster Identifier"
+  value       = module.aurora_postgresql.cluster_id
 }
+
+output "cluster_resource_id" {
+  description = "The RDS Cluster Resource ID"
+  value       = module.aurora_postgresql.cluster_resource_id
+}
+
+output "cluster_members" {
+  description = "List of RDS Instances that are a part of this cluster"
+  value       = module.aurora_postgresql.cluster_members
+}
+
+output "cluster_endpoint" {
+  description = "Writer endpoint for the cluster"
+  value       = module.aurora_postgresql.cluster_endpoint
+}
+
+output "cluster_reader_endpoint" {
+  description = "A read-only endpoint for the cluster, automatically load-balanced across replicas"
+  value       = module.aurora_postgresql.cluster_reader_endpoint
+}
+
