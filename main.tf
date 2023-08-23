@@ -44,6 +44,11 @@ resource "aws_db_subnet_group" "default" {
 }
 
 
+resource "random_id" "password" {
+  count       = var.manage_master_user_password == false ? 1 : 0
+  byte_length = 20
+}
+
 ##-----------------------------------------------------------------------------
 ## Manages a RDS Aurora Cluster. To manage cluster instances that inherit configuration from the cluster (when not running the cluster in serverless engine mode), see the aws_rds_cluster_instance resource. To manage non-Aurora databases (e.g. MySQL, PostgreSQL, SQL Server, etc.), see the aws_db_instance resource.
 ##-----------------------------------------------------------------------------
@@ -79,7 +84,7 @@ resource "aws_rds_cluster" "this" {
   kms_key_id                          = var.kms_key_id
   manage_master_user_password         = var.global_cluster_identifier == null && var.manage_master_user_password ? var.manage_master_user_password : null
   master_user_secret_kms_key_id       = var.global_cluster_identifier == null && var.manage_master_user_password ? var.master_user_secret_kms_key_id : null
-  master_password                     = var.is_primary_cluster && !var.manage_master_user_password ? var.master_password : null
+  master_password                     = var.is_primary_cluster && !var.manage_master_user_password ? join("", random_id.password.*.b64_url) : null
   master_username                     = var.is_primary_cluster ? var.master_username : null
   network_type                        = var.network_type
   port                                = local.port

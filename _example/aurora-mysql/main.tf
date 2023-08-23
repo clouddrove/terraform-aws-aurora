@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "eu-west-1"
+  region = "eu-north-1"
 }
 
 ##---------------------------------------------------------------------------------------------------------------------------
@@ -23,7 +23,7 @@ module "subnets" {
   name        = "public-subnet"
   environment = "test"
 
-  availability_zones = ["eu-west-1b", "eu-west-1c"]
+  availability_zones = ["eu-north-1b", "eu-north-1c"]
   vpc_id             = module.vpc.vpc_id
   cidr_block         = module.vpc.vpc_cidr_block
   ipv6_cidr_block    = module.vpc.ipv6_cidr_block
@@ -40,11 +40,11 @@ module "aurora" {
   source = "../../"
 
   name            = "mysql"
-  environment     = "test"
+  environment     = "testing"
   engine          = "aurora-mysql"
   engine_version  = "8.0"
   master_username = "root"
-  database_name   = "test-db"
+  database_name   = "test"
   sg_ids          = []
   allowed_ports   = [3306]
   allowed_ip      = [module.vpc.vpc_cidr_block, "0.0.0.0/0"]
@@ -53,15 +53,15 @@ module "aurora" {
       instance_class      = "db.r5.large"
       publicly_accessible = true
     }
-    2 = {
-      identifier     = "mysql-static-1"
-      instance_class = "db.r5.2xlarge"
-    }
-    3 = {
-      identifier     = "mysql-excluded-1"
-      instance_class = "db.r5.xlarge"
-      promotion_tier = 15
-    }
+    //    2 = {
+    //      identifier     = "mysql-static-1"
+    //      instance_class = "db.r5.2xlarge"
+    //    }
+    //    3 = {
+    //      identifier     = "mysql-excluded-1"
+    //      instance_class = "db.r5.xlarge"
+    //      promotion_tier = 15
+    //    }
   }
 
   vpc_id               = module.vpc.vpc_id
