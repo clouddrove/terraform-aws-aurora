@@ -6,13 +6,12 @@ locals {
   environment = "test"
   name        = "aurora-postgres"
 }
-##---------------------------------------------------------------------------------------------------------------------------
+##-----------------------------------------------------------------------------
 ## A VPC is a virtual network that closely resembles a traditional network that you'd operate in your own data center.
-##--------------------------------------------------------------------------------------------------------------------------
+##-----------------------------------------------------------------------------
 module "vpc" {
   source  = "clouddrove/vpc/aws"
   version = "2.0.0"
-
   name        = local.name
   environment = local.environment
   cidr_block  = "172.16.0.0/16"
@@ -20,13 +19,14 @@ module "vpc" {
 
 ##------------------------------------------------------------------------------
 ## A subnet is a range of IP addresses in your VPC.
-##------------------------------------------------------------------------------
+##-----------------------------------------------------------------------------
+#tfsec:ignore:aws-ec2-no-excessive-port-access  # All ports are allowed by default but can be changed via variables.
+#tfsec:aws-ec2-no-public-ingress-acl # Public ingress is allowed from all network but can be restricted by using variables.
 module "subnets" {
   source      = "clouddrove/subnet/aws"
   version     = "2.0.0"
   name        = local.name
   environment = local.environment
-
   availability_zones = ["eu-north-1b", "eu-north-1c"]
   vpc_id             = module.vpc.vpc_id
   cidr_block         = module.vpc.vpc_cidr_block
@@ -35,13 +35,11 @@ module "subnets" {
   igw_id             = module.vpc.igw_id
 }
 
-################################################################################
-# RDS Aurora Module
-################################################################################
-
+##-----------------------------------------------------------------------------
+## RDS Aurora Module
+##-----------------------------------------------------------------------------
 module "aurora" {
   source = "../../"
-
   name            = local.name
   environment     = local.environment
   engine          = "aurora-postgresql"
