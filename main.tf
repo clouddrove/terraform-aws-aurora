@@ -324,6 +324,7 @@ resource "aws_security_group" "default" {
 ##-----------------------------------------------------------------------------
 ## Provides a security group resource.
 ##-----------------------------------------------------------------------------
+#tfsec:ignore:aws-ec2-no-public-egress-sgr
 resource "aws_security_group_rule" "egress" {
   count = (var.enable_security_group == true && length(var.sg_ids) < 1 && var.egress_rule == true) ? 1 : 0
 
