@@ -13,6 +13,11 @@ license: "APACHE"
 # Canonical GitHub repo
 github_repo: clouddrove/terraform-aws-aurora
 
+
+prerequesties:
+  - name: Terraform 1.5.0
+    url: https://learn.hashicorp.com/terraform/getting-started/install.html
+
 # Badges to display
 badges:
   - name: "Latest Release"
@@ -40,91 +45,312 @@ usage : |-
   ### Aurora MySQL
   ```hcl
     module "aurora" {
-      source                          = "clouddrove/aurora/aws"
-      version                         = "1.3.0"
+     source                          = "clouddrove/aurora/aws"
+     version                         = "1.3.0"
 
-      name                            = "backend"
-      environment                     = "test"
-      label_order                     = ["name", "environment"]
-      username                        = "admin"
-      database_name                   = "dt"
-      engine                          = "aurora-mysql"
-      engine_version                  = "5.7.12"
-      subnets                         = "subnet-xxxxxxxxx"
-      aws_security_group              = [sg-xxxxxxxxxxx]
-      replica_count                   = 1
-      instance_type                   = "db.t2.small"
-      apply_immediately               = true
-      skip_final_snapshot             = true
-      publicly_accessible             = false
+    name            = "mysql"
+    environment     = "test"
+    engine          = "aurora-mysql"
+    engine_version  = "8.0"
+    master_username = "root"
+    database_name   = "test-db"
+    sg_ids          = []
+    allowed_ports   = [3306]
+    allowed_ip      = [module.vpc.vpc_cidr_block, "0.0.0.0/0"]
+    instances = {
+    1 = {
+      instance_class      = "db.r5.large"
+      publicly_accessible = true
     }
+    2 = {
+      identifier     = "mysql-static-1"
+      instance_class = "db.r5.2xlarge"
+    }
+    3 = {
+      identifier     = "mysql-excluded-1"
+      instance_class = "db.r5.xlarge"
+      promotion_tier = 15
+    }
+  }
+
+    vpc_id               = module.vpc.vpc_id
+    db_subnet_group_name = "mysql-aurora"
+    security_group_rules = {
+      vpc_ingress = {
+        cidr_blocks = module.subnets.public_subnet_id
+    }
+  }
+
+    apply_immediately   = true
+    skip_final_snapshot = true
+    subnets             = module.subnets.public_subnet_id
+
+    create_db_cluster_parameter_group      = true
+    db_cluster_parameter_group_name        = "aurora-mysql"
+    db_cluster_parameter_group_family      = "aurora-mysql8.0"
+    db_cluster_parameter_group_description = "mysql aurora example cluster parameter group"
+    db_cluster_parameter_group_parameters = [
+    {
+      name         = "connect_timeout"
+      value        = 120
+      apply_method = "immediate"
+      }, {
+      name         = "innodb_lock_wait_timeout"
+      value        = 300
+      apply_method = "immediate"
+      }, {
+      name         = "log_output"
+      value        = "FILE"
+      apply_method = "immediate"
+      }, {
+      name         = "max_allowed_packet"
+      value        = "67108864"
+      apply_method = "immediate"
+      }, {
+      name         = "aurora_parallel_query"
+      value        = "OFF"
+      apply_method = "pending-reboot"
+      }, {
+      name         = "binlog_format"
+      value        = "ROW"
+      apply_method = "pending-reboot"
+      }, {
+      name         = "log_bin_trust_function_creators"
+      value        = 1
+      apply_method = "immediate"
+      }, {
+      name         = "require_secure_transport"
+      value        = "ON"
+      apply_method = "immediate"
+      }, {
+      name         = "tls_version"
+      value        = "TLSv1.2"
+      apply_method = "pending-reboot"
+    }
+  ]
+
+      create_db_parameter_group      = true
+      db_parameter_group_name        = "aurora-mysql"
+      db_parameter_group_family      = "aurora-mysql8.0"
+      db_parameter_group_description = "mysql aurora example DB parameter group"
+      db_parameter_group_parameters = [
+    {
+      name         = "connect_timeout"
+      value        = 60
+      apply_method = "immediate"
+      }, {
+      name         = "general_log"
+      value        = 0
+      apply_method = "immediate"
+      }, {
+      name         = "innodb_lock_wait_timeout"
+      value        = 300
+      apply_method = "immediate"
+      }, {
+      name         = "log_output"
+      value        = "FILE"
+      apply_method = "pending-reboot"
+      }, {
+      name         = "long_query_time"
+      value        = 5
+      apply_method = "immediate"
+      }, {
+      name         = "max_connections"
+      value        = 2000
+      apply_method = "immediate"
+      }, {
+      name         = "slow_query_log"
+      value        = 1
+      apply_method = "immediate"
+      }, {
+      name         = "log_bin_trust_function_creators"
+      value        = 1
+      apply_method = "immediate"
+    }
+  ]
+
+  enabled_cloudwatch_logs_exports = ["audit", "error", "general", "slowquery"]
+
+  }
+
   ```
   ### Aurora Postgres
   ```hcl
       module "postgres" {
-        source              = "clouddrove/aurora/aws"
-        version             = "1.3.0"
-        name                = "backend"
-        environment         = "test"
-        label_order         = ["name", "environment"]
+        source          = "clouddrove/aurora/aws"
+        name            = "postgresql"
+        environment     = "test"
+        engine          = "aurora-postgresql"
+        engine_version  = "14.7"
+        master_username = "root"
+        storage_type    = "aurora-iopt1"
+        sg_ids          = []
+        allowed_ports   = [5432]
+        subnets         = module.public_subnets.public_subnet_id
+        allowed_ip      = [module.vpc.vpc_cidr_block, "0.0.0.0/0"]
+        instances = {
+        1 = {
+        instance_class      = "db.r5.2xlarge"
+        publicly_accessible = true
+        }
+        2 = {
+        identifier     = "static-member-1"
+        instance_class = "db.r5.2xlarge"
+        }
+        3 = {
+        identifier     = "excluded-member-1"
+        instance_class = "db.r5.large"
+        promotion_tier = 15
+        }
+        }
 
-        username            = "root"
-        database_name       = "test_db"
-        engine              = "aurora-postgresql"
-        engine_version      = "9.6.9"
-        subnets             = "subnet-xxxxxxxxx"
-        aws_security_group  = [sg-xxxxxxxxxxx]
-        replica_count       = 1
-        instance_type       = "db.r4.large"
+        endpoints = {
+        static = {
+        identifier     = "static-custom-endpt"
+        type           = "ANY"
+        static_members = ["static-member-1"]
+        tags           = { Endpoint = "static-members" }
+        }
+        excluded = {
+        identifier       = "excluded-custom-endpt"
+        type             = "READER"
+        excluded_members = ["excluded-member-1"]
+        tags             = { Endpoint = "excluded-members" }
+        }
+        }
+
+        vpc_id               = module.vpc.vpc_id
+        db_subnet_group_name = "aurora-postgre"
+        database_name        = "postgres"
+        security_group_rules = {
+        vpc_ingress = {
+        cidr_blocks = module.public_subnets.public_subnet_id
+        }
+        egress_example = {
+        cidr_blocks = ["10.33.0.0/28"]
+        description = "Egress to corporate printer closet"
+        }
+        }
+
         apply_immediately   = true
         skip_final_snapshot = true
-        publicly_accessible = false
+
+        create_db_cluster_parameter_group      = true
+        db_cluster_parameter_group_name        = "aurora-postgre"
+        db_cluster_parameter_group_family      = "aurora-postgresql14"
+        db_cluster_parameter_group_description = "aurora postgres example cluster parameter group"
+        db_cluster_parameter_group_parameters = [
+        {
+        name         = "log_min_duration_statement"
+        value        = 4000
+        apply_method = "immediate"
+        }, {
+        name         = "rds.force_ssl"
+        value        = 1
+        apply_method = "immediate"
+        }
+        ]
+        create_db_parameter_group      = true
+        db_parameter_group_name        = "aurora-postgre"
+        db_parameter_group_family      = "aurora-postgresql14"
+        db_parameter_group_description = "postgres aurora example DB parameter group"
+        db_parameter_group_parameters = [
+        {
+        name         = "log_min_duration_statement"
+        value        = 4000
+        apply_method = "immediate"
+        }
+        ]
+
+        enabled_cloudwatch_logs_exports = ["postgresql"]
+        create_cloudwatch_log_group     = true
+
       }
   ```
   ### Aurora Serverless MySQL
   ```hcl
     module "aurora" {
-      source                          = "clouddrove/aurora/aws"
-      version                         = "1.3.0"
-      name                            = "aurora-mysql-serverless"
-      environment                     = "test"
-      label_order                     = ["name", "environment"]
-      serverless_enabled              = true
-      min_capacity                    = 1
-      max_capacity                    = 4
-      username                        = "root"
-      database_name                   = "test_db"
-      engine                          = "aurora"
-      engine_version                  = "5.6.10a"
-      kms_key_id                      = module.kms_key.key_arn
-      subnets                         = "subnet-xxxxxxxxx"
-      aws_security_group              = [sg-xxxxxxxxxxx]
-      apply_immediately               = true
-      skip_final_snapshot             = true
-      availability_zones              = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
-    }
+      source               = "clouddrove/aurora/aws"
+      version              = "1.3.0"
+      name                 = "mysql"
+      environment          = "test"
+      engine               = "aurora-mysql"
+      engine_mode          = "provisioned"
+      engine_version       = "8.0"
+      master_username      = "root"
+      database_name        = "test-db"
+      sg_ids               = []
+      allowed_ports        = [3306]
+      allowed_ip           = [module.vpc.vpc_cidr_block, "0.0.0.0/0"]
+      vpc_id               = module.vpc.vpc_id
+      db_subnet_group_name = "mysql-aurora-serverless"
+      subnets              = module.subnets.public_subnet_id
+      security_group_rules = {
+      vpc_ingress = {
+      cidr_blocks = module.subnets.public_subnet_id
+      }
+  }
+
+      monitoring_interval = 60
+
+      apply_immediately   = true
+      skip_final_snapshot = true
+
+      serverlessv2_scaling_configuration = {
+      min_capacity = 2
+      max_capacity = 10
+      }
+
+      instance_class = "db.serverless"
+      instances = {
+      one = {}
+      two = {}
+      }
+
+  }
+
   ```
   ### Aurora Serverless Postgres
   ```hcl
       module "postgres" {
-        source                          = "clouddrove/aurora/aws"
-        version                         = "1.3.0"
-        name                            = "aurora-Postgres"
-        environment                     = "test"
-        label_order                     = ["name", "environment"]
-        enable                          = true
-        serverless_enabled              = true
-        min_capacity                    = 2
-        max_capacity                    = 4
-        username                        = "root"
-        database_name                   = "test_db"
-        engine                          = "aurora-postgresql"
-        engine_version                  = "10.7"
-        kms_key_id                      = module.kms_key.key_arn
-        subnets                         = "subnet-xxxxxxxxx"
-        aws_security_group              = [sg-xxxxxxxxxxx]
-        apply_immediately               = true
-        skip_final_snapshot             = true
-        availability_zones              = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
+        source          = "clouddrove/aurora/aws"
+        version         = "1.3.0"
+        name            = "postgresql"
+        environment     = "test"
+        engine          = "aurora-postgresql"
+        engine_mode     = "provisioned"
+        engine_version  = "14.5"
+        master_username = "root"
+        database_name   = "postgres"
+
+
+        vpc_id               = module.vpc.vpc_id
+        subnets              = module.subnets.public_subnet_id
+        sg_ids               = []
+        allowed_ports        = [5432]
+        db_subnet_group_name = "auror-postgres-serverless"
+        allowed_ip           = [module.vpc.vpc_cidr_block, "0.0.0.0/0"]
+        security_group_rules = {
+        vpc_ingress = {
+        cidr_blocks = module.subnets.public_subnet_id
+        }
+        }
+
+        monitoring_interval = 60
+
+        apply_immediately   = true
+        skip_final_snapshot = true
+
+        serverlessv2_scaling_configuration = {
+        min_capacity = 2
+        max_capacity = 10
+        }
+
+        instance_class = "db.serverless"
+        instances = {
+        one = {}
+        two = {}
+        }
+
       }
   ```

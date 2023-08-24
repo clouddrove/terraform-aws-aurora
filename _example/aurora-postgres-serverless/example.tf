@@ -4,7 +4,7 @@ provider "aws" {
 
 locals {
   environment = "test"
-  name        = "aurora-mysql-serverless"
+  name        = "aurora-postgres-serverless"
 }
 ##-----------------------------------------------------------------------------
 ## A VPC is a virtual network that closely resembles a traditional network that you'd operate in your own data center.
@@ -35,24 +35,25 @@ module "subnets" {
   igw_id             = module.vpc.igw_id
 }
 
+
 ##-----------------------------------------------------------------------------
-## MySQL Serverless
+## PostgreSQL Serverless
 ##-----------------------------------------------------------------------------
-module "aurora_mysql" {
+module "aurora_postgresql" {
   source               = "../../"
   name                 = local.name
   environment          = local.environment
-  engine               = "aurora-mysql"
+  engine               = "aurora-postgresql"
   engine_mode          = "provisioned"
-  engine_version       = "8.0"
+  engine_version       = "14.5"
   master_username      = "root"
-  database_name        = "test"
-  sg_ids               = []
-  allowed_ports        = [3306]
-  allowed_ip           = [module.vpc.vpc_cidr_block]
+  database_name        = "postgres"
   vpc_id               = module.vpc.vpc_id
-  db_subnet_group_name = "mysql-aurora-serverless"
   subnets              = module.subnets.public_subnet_id
+  sg_ids               = []
+  allowed_ports        = [5432]
+  db_subnet_group_name = "aurora-postgres-serverless"
+  allowed_ip           = [module.vpc.vpc_cidr_block]
   security_group_rules = {
     vpc_ingress = {
       cidr_blocks = module.subnets.public_subnet_id
@@ -70,6 +71,4 @@ module "aurora_mysql" {
     one = {}
     two = {}
   }
-
 }
-

@@ -32,8 +32,4 @@ output "cluster_reader_endpoint" {
   value       = module.aurora.cluster_reader_endpoint
 }
 
-output "cluster_master_password" {
-  description = "The database master password"
-  value       = module.aurora.cluster_master_password
-  sensitive   = true
-}
+
