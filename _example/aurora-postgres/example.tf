@@ -89,8 +89,8 @@ module "aurora" {
       cidr_blocks = module.subnets.public_subnet_id
     }
   }
-  apply_immediately   = true
-  skip_final_snapshot = true
+  apply_immediately                      = true
+  skip_final_snapshot                    = true
   create_db_cluster_parameter_group      = true
   db_cluster_parameter_group_name        = "aurora-postgre"
   db_cluster_parameter_group_family      = "aurora-postgresql14"
