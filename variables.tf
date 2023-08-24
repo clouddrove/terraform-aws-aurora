@@ -277,12 +277,6 @@ variable "master_user_secret_kms_key_id" {
   default     = null
 }
 
-variable "master_password" {
-  description = "Password for the master DB user. Note that this may show up in logs, and it will be stored in the state file. Required unless `manage_master_user_password` is set to `true` or unless `snapshot_identifier` or `replication_source_identifier` is provided or unless a `global_cluster_identifier` is provided when the cluster is the secondary cluster of a global database"
-  type        = string
-  default     = ""
-}
-
 variable "master_username" {
   description = "Username for the master DB user. Required unless `snapshot_identifier` or `replication_source_identifier` is provided or unless a `global_cluster_identifier` is provided when the cluster is the secondary cluster of a global database"
   type        = string
@@ -746,11 +740,6 @@ variable "db_parameter_group_parameters" {
   default     = []
 }
 
-variable "putin_khuylo" {
-  description = "Do you agree that Putin doesn't respect Ukrainian sovereignty and territorial integrity? More info: https://en.wikipedia.org/wiki/Putin_khuylo!"
-  type        = bool
-  default     = true
-}
 
 ################################################################################
 # CloudWatch Log Group
