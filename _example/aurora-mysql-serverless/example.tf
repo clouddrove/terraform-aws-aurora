@@ -51,7 +51,7 @@ module "aurora_mysql" {
   database_name        = "test"
   sg_ids               = []
   allowed_ports        = [3306]
-  allowed_ip           = [module.vpc.vpc_cidr_block, "0.0.0.0/0"]
+  allowed_ip           = [module.vpc.vpc_cidr_block]
   vpc_id               = module.vpc.vpc_id
   db_subnet_group_name = "mysql-aurora-serverless"
   subnets              = module.subnets.public_subnet_id

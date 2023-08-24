@@ -458,7 +458,7 @@ variable "performance_insights_retention_period" {
 variable "publicly_accessible" {
   description = "Determines whether instances are publicly accessible. Default `false`"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "instance_timeouts" {

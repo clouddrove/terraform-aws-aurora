@@ -51,11 +51,11 @@ module "aurora" {
   database_name   = "test"
   sg_ids          = []
   allowed_ports   = [3306]
-  allowed_ip      = [module.vpc.vpc_cidr_block, "0.0.0.0/0"]
+  allowed_ip      = [module.vpc.vpc_cidr_block]
   instances = {
     1 = {
       instance_class      = "db.r5.large"
-      publicly_accessible = true
+      publicly_accessible = false
     }
     2 = {
       identifier     = "mysql-static-1"
