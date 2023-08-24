@@ -9,15 +9,15 @@ jobs:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './_example/aurora-mysql/'
-  tf-checks-aurora-postgre-serverless-example:
+  tf-checks-aurora-postgres-serverless-example:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './_example/aurora-mysql-serverless/'
-  tf-checks-aurora-postgre-example:
+  tf-checks-aurora-postgres-example:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
-      working_directory: './_example/aurora-postgre/'
-  tf-checks-aaurora-postgre-serverless-example:
+      working_directory: './_example/aurora-postgres/'
+  tf-checks-aaurora-postgres-serverless-example:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
-      working_directory: './_example/aurora-postgre-serverless/'
+      working_directory: './_example/aurora-postgres-serverless/'

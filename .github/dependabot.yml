@@ -56,7 +56,7 @@ updates:
     open-pull-requests-limit: 3
 
   - package-ecosystem: "terraform" # See documentation for possible values
-    directory: "/_example/aurora-postgre-serverless" # Location of package manifests
+    directory: "/_example/aurora-postgres-serverless" # Location of package manifests
     schedule:
       interval: "weekly"
     # Add assignees
@@ -69,7 +69,7 @@ updates:
     open-pull-requests-limit: 3
 
   - package-ecosystem: "terraform" # See documentation for possible values
-    directory: "/_example/aurora-postgre" # Location of package manifests
+    directory: "/_example/aurora-postgres" # Location of package manifests
     schedule:
       interval: "weekly"
     # Add assignees
