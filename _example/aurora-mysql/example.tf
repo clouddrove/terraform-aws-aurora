@@ -2,6 +2,10 @@ provider "aws" {
   region = "eu-north-1"
 }
 
+locals {
+  environment = "test"
+  name        = "aurora-mysql"
+}
 ##---------------------------------------------------------------------------------------------------------------------------
 ## A VPC is a virtual network that closely resembles a traditional network that you'd operate in your own data center.
 ##--------------------------------------------------------------------------------------------------------------------------
@@ -9,8 +13,8 @@ module "vpc" {
   source  = "clouddrove/vpc/aws"
   version = "2.0.0"
 
-  name        = "aurora-mysql"
-  environment = "test"
+  name        = local.name
+  environment = local.environment
   cidr_block  = "172.16.0.0/16"
 }
 
@@ -20,8 +24,8 @@ module "vpc" {
 module "subnets" {
   source      = "clouddrove/subnet/aws"
   version     = "2.0.0"
-  name        = "public-subnet"
-  environment = "test"
+  name        = local.name
+  environment = local.environment
 
   availability_zones = ["eu-north-1b", "eu-north-1c"]
   vpc_id             = module.vpc.vpc_id
@@ -39,8 +43,8 @@ module "subnets" {
 module "aurora" {
   source = "../../"
 
-  name            = "mysql"
-  environment     = "testing"
+  name            = local.name
+  environment     = local.environment
   engine          = "aurora-mysql"
   engine_version  = "8.0"
   master_username = "root"
@@ -53,15 +57,15 @@ module "aurora" {
       instance_class      = "db.r5.large"
       publicly_accessible = true
     }
-    //    2 = {
-    //      identifier     = "mysql-static-1"
-    //      instance_class = "db.r5.2xlarge"
-    //    }
-    //    3 = {
-    //      identifier     = "mysql-excluded-1"
-    //      instance_class = "db.r5.xlarge"
-    //      promotion_tier = 15
-    //    }
+        2 = {
+          identifier     = "mysql-static-1"
+          instance_class = "db.r5.2xlarge"
+        }
+        3 = {
+          identifier     = "mysql-excluded-1"
+          instance_class = "db.r5.xlarge"
+          promotion_tier = 15
+        }
   }
 
   vpc_id               = module.vpc.vpc_id
@@ -161,6 +165,6 @@ module "aurora" {
   ]
 
   enabled_cloudwatch_logs_exports = ["audit", "error", "general", "slowquery"]
-
+  create_cloudwatch_log_group     = false
 }
 
