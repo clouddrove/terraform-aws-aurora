@@ -80,10 +80,9 @@ module "aurora" {
   skip_final_snapshot = true
   subnets             = module.subnets.public_subnet_id
 
-  create_db_cluster_parameter_group      = true
-  db_cluster_parameter_group_name        = "aurora-mysql"
-  db_cluster_parameter_group_family      = "aurora-mysql8.0"
-  db_cluster_parameter_group_description = "mysql aurora example cluster parameter group"
+  create_db_cluster_parameter_group = true
+  db_cluster_parameter_group_name   = "aurora-mysql"
+  db_cluster_parameter_group_family = "aurora-mysql8.0"
   db_cluster_parameter_group_parameters = [
     {
       name         = "connect_timeout"

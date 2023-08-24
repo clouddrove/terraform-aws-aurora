@@ -67,7 +67,6 @@ module "aurora" {
       promotion_tier = 15
     }
   }
-
   endpoints = {
     static = {
       identifier     = "static-custom-endpt"
@@ -82,7 +81,6 @@ module "aurora" {
       tags             = { Endpoint = "excluded-members" }
     }
   }
-
   vpc_id               = module.vpc.vpc_id
   db_subnet_group_name = "aurora-postgre"
   database_name        = "postgres"
@@ -91,10 +89,8 @@ module "aurora" {
       cidr_blocks = module.subnets.public_subnet_id
     }
   }
-
   apply_immediately   = true
   skip_final_snapshot = true
-
   create_db_cluster_parameter_group      = true
   db_cluster_parameter_group_name        = "aurora-postgre"
   db_cluster_parameter_group_family      = "aurora-postgresql14"
@@ -121,7 +117,6 @@ module "aurora" {
       apply_method = "immediate"
     }
   ]
-
   enabled_cloudwatch_logs_exports = ["postgresql"]
   create_cloudwatch_log_group     = false
 

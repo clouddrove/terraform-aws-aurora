@@ -43,15 +43,13 @@ module "subnets" {
 module "aurora_postgresql" {
   source = "../../"
 
-  name            = local.name
-  environment     = local.environment
-  engine          = "aurora-postgresql"
-  engine_mode     = "provisioned"
-  engine_version  = "14.5"
-  master_username = "root"
-  database_name   = "postgres"
-
-
+  name                 = local.name
+  environment          = local.environment
+  engine               = "aurora-postgresql"
+  engine_mode          = "provisioned"
+  engine_version       = "14.5"
+  master_username      = "root"
+  database_name        = "postgres"
   vpc_id               = module.vpc.vpc_id
   subnets              = module.subnets.public_subnet_id
   sg_ids               = []
@@ -63,21 +61,16 @@ module "aurora_postgresql" {
       cidr_blocks = module.subnets.public_subnet_id
     }
   }
-
   monitoring_interval = 60
-
   apply_immediately   = true
   skip_final_snapshot = true
-
   serverlessv2_scaling_configuration = {
     min_capacity = 2
     max_capacity = 10
   }
-
   instance_class = "db.serverless"
   instances = {
     one = {}
     two = {}
   }
-
 }

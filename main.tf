@@ -14,26 +14,19 @@ module "labels" {
 
 data "aws_partition" "current" {}
 locals {
-  create = var.create
-
-  port = coalesce(var.port, (var.engine == "aurora-postgresql" || var.engine == "postgres" ? 5432 : 3306))
-
+  create                        = var.create
+  port                          = coalesce(var.port, (var.engine == "aurora-postgresql" || var.engine == "postgres" ? 5432 : 3306))
   internal_db_subnet_group_name = try(coalesce(var.db_subnet_group_name, var.name), "")
-
-  security_group_name = try(coalesce(var.security_group_name, var.name), "")
-
-  cluster_parameter_group_name = try(coalesce(var.db_cluster_parameter_group_name, var.name), null)
-  db_parameter_group_name      = try(coalesce(var.db_parameter_group_name, var.name), null)
-
-  backtrack_window = (var.engine == "aurora-mysql" || var.engine == "aurora") && var.engine_mode != "serverless" ? var.backtrack_window : 0
-
-  is_serverless = var.engine_mode == "serverless"
+  security_group_name           = try(coalesce(var.security_group_name, var.name), "")
+  cluster_parameter_group_name  = try(coalesce(var.db_cluster_parameter_group_name, var.name), null)
+  db_parameter_group_name       = try(coalesce(var.db_parameter_group_name, var.name), null)
+  backtrack_window              = (var.engine == "aurora-mysql" || var.engine == "aurora") && var.engine_mode != "serverless" ? var.backtrack_window : 0
+  is_serverless                 = var.engine_mode == "serverless"
 }
 
 ##-----------------------------------------------------------------------------
 ## Provides an RDS DB subnet group resource.
 ##-----------------------------------------------------------------------------
-
 resource "aws_db_subnet_group" "default" {
   count = var.enable == true && var.enabled_subnet_group == true ? 1 : 0
 
@@ -43,7 +36,6 @@ resource "aws_db_subnet_group" "default" {
   tags        = module.labels.tags
 }
 
-
 resource "random_id" "password" {
   count       = var.manage_master_user_password == false ? 1 : 0
   byte_length = 20
@@ -52,10 +44,8 @@ resource "random_id" "password" {
 ##-----------------------------------------------------------------------------
 ## Manages a RDS Aurora Cluster. To manage cluster instances that inherit configuration from the cluster (when not running the cluster in serverless engine mode), see the aws_rds_cluster_instance resource. To manage non-Aurora databases (e.g. MySQL, PostgreSQL, SQL Server, etc.), see the aws_db_instance resource.
 ##-----------------------------------------------------------------------------
-
 resource "aws_rds_cluster" "this" {
-  count = local.create ? 1 : 0
-
+  count                               = local.create ? 1 : 0
   allocated_storage                   = var.allocated_storage
   allow_major_version_upgrade         = var.allow_major_version_upgrade
   apply_immediately                   = var.apply_immediately
@@ -154,7 +144,6 @@ resource "aws_rds_cluster" "this" {
       # See https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/rds_cluster#replication_source_identifier
       # Since this is used either in read-replica clusters or global clusters, this should be acceptable to specify
       replication_source_identifier,
-      # See docs here https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/rds_global_cluster#new-global-cluster-from-existing-db-cluster
       global_cluster_identifier,
       snapshot_identifier,
     ]
@@ -168,10 +157,8 @@ resource "aws_rds_cluster" "this" {
 ##-----------------------------------------------------------------------------
 ## Provides an RDS Cluster Instance Resource. A Cluster Instance Resource defines attributes that are specific to a single instance in a RDS Cluster, specifically running Amazon Aurora.
 ##-----------------------------------------------------------------------------
-
 resource "aws_rds_cluster_instance" "this" {
-  for_each = { for k, v in var.instances : k => v if local.create && !local.is_serverless }
-
+  for_each                              = { for k, v in var.instances : k => v if local.create && !local.is_serverless }
   apply_immediately                     = try(each.value.apply_immediately, var.apply_immediately)
   auto_minor_version_upgrade            = try(each.value.auto_minor_version_upgrade, var.auto_minor_version_upgrade)
   availability_zone                     = try(each.value.availability_zone, null)
@@ -195,7 +182,6 @@ resource "aws_rds_cluster_instance" "this" {
   promotion_tier               = try(each.value.promotion_tier, null)
   publicly_accessible          = try(each.value.publicly_accessible, var.publicly_accessible)
   tags                         = merge(var.tags, var.cluster_tags)
-
   timeouts {
     create = try(var.instance_timeouts.create, null)
     update = try(var.instance_timeouts.update, null)
@@ -206,7 +192,6 @@ resource "aws_rds_cluster_instance" "this" {
 ##-----------------------------------------------------------------------------
 ## Manages an RDS Aurora Cluster Endpoint. You can refer to the User Guide.
 ##-----------------------------------------------------------------------------
-
 resource "aws_rds_cluster_endpoint" "this" {
   for_each = { for k, v in var.endpoints : k => v if local.create && !local.is_serverless }
 
@@ -216,7 +201,6 @@ resource "aws_rds_cluster_endpoint" "this" {
   excluded_members            = try(each.value.excluded_members, null)
   static_members              = try(each.value.static_members, null)
   tags                        = merge(var.tags, var.cluster_tags)
-
   depends_on = [
     aws_rds_cluster_instance.this
   ]
@@ -225,7 +209,6 @@ resource "aws_rds_cluster_endpoint" "this" {
 ##-----------------------------------------------------------------------------
 ## Manages an RDS DB Instance association with an IAM Role. Example use cases.
 ##-----------------------------------------------------------------------------
-
 resource "aws_rds_cluster_role_association" "this" {
   for_each = { for k, v in var.iam_roles : k => v if local.create }
 
@@ -233,7 +216,6 @@ resource "aws_rds_cluster_role_association" "this" {
   feature_name          = each.value.feature_name
   role_arn              = each.value.role_arn
 }
-
 
 locals {
   create_monitoring_role = local.create && var.create_monitoring_role && var.monitoring_interval > 0
@@ -256,8 +238,7 @@ data "aws_iam_policy_document" "monitoring_rds_assume_role" {
 ## This data source can be used to fetch information about a specific IAM role. By using this data source, you can reference IAM role properties without having to hard code ARNs as input.
 ##-----------------------------------------------------------------------------
 resource "aws_iam_role" "rds_enhanced_monitoring" {
-  count = local.create_monitoring_role ? 1 : 0
-
+  count       = local.create_monitoring_role ? 1 : 0
   name        = module.labels.id
   description = var.iam_role_description
   path        = var.iam_role_path
@@ -287,7 +268,6 @@ resource "aws_iam_role_policy_attachment" "rds_enhanced_monitoring" {
 ##-----------------------------------------------------------------------------
 ## Provides an AutoScaling Group resource.
 ##-----------------------------------------------------------------------------
-
 resource "aws_appautoscaling_target" "this" {
   count = local.create && var.autoscaling_enabled && !local.is_serverless ? 1 : 0
 
@@ -311,7 +291,6 @@ resource "aws_appautoscaling_policy" "this" {
   resource_id        = "cluster:${aws_rds_cluster.this[0].cluster_identifier}"
   scalable_dimension = "rds:cluster:ReadReplicaCount"
   service_namespace  = "rds"
-
   target_tracking_scaling_policy_configuration {
     predefined_metric_specification {
       predefined_metric_type = var.predefined_metric_type
@@ -330,7 +309,6 @@ resource "aws_appautoscaling_policy" "this" {
 ##-----------------------------------------------------------------------------
 ## Provides a security group resource.
 ##-----------------------------------------------------------------------------
-
 resource "aws_security_group" "default" {
   count = var.enable_security_group && length(var.sg_ids) < 1 ? 1 : 0
 

@@ -60,17 +60,13 @@ module "aurora_mysql" {
       cidr_blocks = module.subnets.public_subnet_id
     }
   }
-
   monitoring_interval = 60
-
   apply_immediately   = true
   skip_final_snapshot = true
-
   serverlessv2_scaling_configuration = {
     min_capacity = 2
     max_capacity = 10
   }
-
   instance_class = "db.serverless"
   instances = {
     one = {}
