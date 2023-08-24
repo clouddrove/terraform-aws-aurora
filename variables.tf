@@ -748,7 +748,7 @@ variable "db_parameter_group_parameters" {
 variable "create_cloudwatch_log_group" {
   description = "Determines whether a CloudWatch log group is created for each `enabled_cloudwatch_logs_exports`"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "cloudwatch_log_group_retention_in_days" {
