@@ -101,10 +101,6 @@ module "aurora" {
       value        = "67108864"
       apply_method = "immediate"
       }, {
-      name         = "aurora_parallel_query"
-      value        = "OFF"
-      apply_method = "pending-reboot"
-      }, {
       name         = "binlog_format"
       value        = "ROW"
       apply_method = "pending-reboot"
@@ -140,10 +136,6 @@ module "aurora" {
       name         = "innodb_lock_wait_timeout"
       value        = 300
       apply_method = "immediate"
-      }, {
-      name         = "log_output"
-      value        = "FILE"
-      apply_method = "pending-reboot"
       }, {
       name         = "long_query_time"
       value        = 5
