@@ -4,7 +4,7 @@ provider "aws" {
 
 locals {
   environment = "test"
-  name        = ""
+  name        = "aurora-postgres"
 }
 ##---------------------------------------------------------------------------------------------------------------------------
 ## A VPC is a virtual network that closely resembles a traditional network that you'd operate in your own data center.
@@ -88,11 +88,7 @@ module "aurora" {
   database_name        = "postgres"
   security_group_rules = {
     vpc_ingress = {
-      cidr_blocks = module.public_subnets.public_subnet_id
-    }
-    egress_example = {
-      cidr_blocks = ["10.33.0.0/28"]
-      description = "Egress to corporate printer closet"
+      cidr_blocks = module.subnets.public_subnet_id
     }
   }
 
@@ -127,6 +123,6 @@ module "aurora" {
   ]
 
   enabled_cloudwatch_logs_exports = ["postgresql"]
-  create_cloudwatch_log_group     = true
+  create_cloudwatch_log_group     = false
 
 }

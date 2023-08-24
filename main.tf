@@ -351,10 +351,10 @@ resource "aws_security_group_rule" "egress" {
 
   description       = var.sg_egress_description
   type              = "egress"
-  from_port         = 0
-  to_port           = 65535
-  protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"]
+  from_port         = var.from_port
+  to_port           = var.to_port
+  protocol          = var.egress_protocol
+  cidr_blocks       = var.cidr_blocks
   security_group_id = join("", aws_security_group.default[*].id)
 }
 #tfsec:ignore:aws-ec2-no-public-egress-sgr
@@ -363,10 +363,10 @@ resource "aws_security_group_rule" "egress_ipv6" {
 
   description       = var.sg_egress_ipv6_description
   type              = "egress"
-  from_port         = 0
-  to_port           = 65535
-  protocol          = "-1"
-  ipv6_cidr_blocks  = ["::/0"]
+  from_port         = var.from_port
+  to_port           = var.to_port
+  protocol          = var.egress_protocol
+  ipv6_cidr_blocks  = var.ipv6_cidr_blocks
   security_group_id = join("", aws_security_group.default[*].id)
 }
 

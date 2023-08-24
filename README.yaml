@@ -45,8 +45,8 @@ usage : |-
   ### Aurora MySQL
   ```hcl
     module "aurora" {
-      source                          = "clouddrove/aurora/aws"
-      version                         = "1.3.0"
+     source                          = "clouddrove/aurora/aws"
+     version                         = "1.3.0"
 
     name            = "mysql"
     environment     = "test"
@@ -171,13 +171,13 @@ usage : |-
 
   enabled_cloudwatch_logs_exports = ["audit", "error", "general", "slowquery"]
 
-}
+  }
 
   ```
   ### Aurora Postgres
   ```hcl
       module "postgres" {
-        source              = "clouddrove/aurora/aws"
+        source          = "clouddrove/aurora/aws"
         name            = "postgresql"
         environment     = "test"
         engine          = "aurora-postgresql"
@@ -270,8 +270,8 @@ usage : |-
   ### Aurora Serverless MySQL
   ```hcl
     module "aurora" {
-      source                          = "clouddrove/aurora/aws"
-      version                         = "1.3.0"
+      source               = "clouddrove/aurora/aws"
+      version              = "1.3.0"
       name                 = "mysql"
       environment          = "test"
       engine               = "aurora-mysql"
@@ -307,14 +307,14 @@ usage : |-
       two = {}
       }
 
- }
+  }
 
   ```
   ### Aurora Serverless Postgres
   ```hcl
       module "postgres" {
-        source                          = "clouddrove/aurora/aws"
-        version                         = "1.3.0"
+        source          = "clouddrove/aurora/aws"
+        version         = "1.3.0"
         name            = "postgresql"
         environment     = "test"
         engine          = "aurora-postgresql"

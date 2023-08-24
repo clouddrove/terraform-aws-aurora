@@ -637,9 +637,15 @@ variable "sg_ids" {
   default     = []
   description = "of the security group id."
 }
+
 variable "egress_rule" {
   type        = bool
   default     = true
+  description = "Enable to create egress rule"
+}
+variable "ipv6_cidr_blocks" {
+  type        = list(string)
+  default     = ["::/0"]
   description = "Enable to create egress rule"
 }
 
@@ -653,6 +659,29 @@ variable "security_group_rules" {
   description = "Map of security group rules to add to the cluster security group created"
   type        = any
   default     = {}
+}
+
+variable "from_port" {
+  description = " (Required) Start port (or ICMP type number if protocol is icmp or icmpv6)."
+  type        = number
+  default     = 0
+}
+
+variable "to_port" {
+  description = "equal to 0. The supported values are defined in the IpProtocol argument on the IpPermission API reference"
+  type        = number
+  default     = 65535
+}
+
+variable "egress_protocol" {
+  description = "equal to 0. The supported values are defined in the IpProtocol argument on the IpPermission API reference"
+  type        = number
+  default     = -1
+}
+variable "cidr_blocks" {
+  description = "equal to 0. The supported values are defined in the IpProtocol argument on the IpPermission API reference"
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
 }
 
 ################################################################################
