@@ -14,10 +14,10 @@ module "labels" {
 
 data "aws_partition" "current" {}
 locals {
-  create                        = var.create
-  port                          = coalesce(var.port, (var.engine == "aurora-postgresql" || var.engine == "postgres" ? 5432 : 3306))
-  backtrack_window              = (var.engine == "aurora-mysql" || var.engine == "aurora") && var.engine_mode != "serverless" ? var.backtrack_window : 0
-  is_serverless                 = var.engine_mode == "serverless"
+  create           = var.create
+  port             = coalesce(var.port, (var.engine == "aurora-postgresql" || var.engine == "postgres" ? 5432 : 3306))
+  backtrack_window = (var.engine == "aurora-mysql" || var.engine == "aurora") && var.engine_mode != "serverless" ? var.backtrack_window : 0
+  is_serverless    = var.engine_mode == "serverless"
 }
 
 ##-----------------------------------------------------------------------------

@@ -40,19 +40,19 @@ module "subnets" {
 ## PostgreSQL Serverless
 ##-----------------------------------------------------------------------------
 module "aurora_postgresql" {
-  source               = "../../"
-  name                 = local.name
-  environment          = local.environment
-  engine               = "aurora-postgresql"
-  engine_mode          = "provisioned"
-  engine_version       = "14.5"
-  master_username      = "root"
-  database_name        = "postgres"
-  vpc_id               = module.vpc.vpc_id
-  subnets              = module.subnets.public_subnet_id
-  sg_ids               = []
-  allowed_ports        = [5432]
-  allowed_ip           = [module.vpc.vpc_cidr_block]
+  source          = "../../"
+  name            = local.name
+  environment     = local.environment
+  engine          = "aurora-postgresql"
+  engine_mode     = "provisioned"
+  engine_version  = "14.5"
+  master_username = "root"
+  database_name   = "postgres"
+  vpc_id          = module.vpc.vpc_id
+  subnets         = module.subnets.public_subnet_id
+  sg_ids          = []
+  allowed_ports   = [5432]
+  allowed_ip      = [module.vpc.vpc_cidr_block]
 
   monitoring_interval = 60
   apply_immediately   = true

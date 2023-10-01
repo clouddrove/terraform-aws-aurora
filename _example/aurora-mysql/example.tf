@@ -65,7 +65,7 @@ module "aurora" {
     }
   }
 
-  vpc_id               = module.vpc.vpc_id
+  vpc_id = module.vpc.vpc_id
 
   apply_immediately   = true
   skip_final_snapshot = true

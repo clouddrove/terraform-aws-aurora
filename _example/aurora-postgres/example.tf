@@ -79,8 +79,8 @@ module "aurora" {
       tags             = { Endpoint = "excluded-members" }
     }
   }
-  vpc_id               = module.vpc.vpc_id
-  database_name        = "postgres"
+  vpc_id        = module.vpc.vpc_id
+  database_name = "postgres"
 
   apply_immediately                      = true
   skip_final_snapshot                    = true
