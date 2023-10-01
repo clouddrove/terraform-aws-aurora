@@ -16,10 +16,6 @@ data "aws_partition" "current" {}
 locals {
   create                        = var.create
   port                          = coalesce(var.port, (var.engine == "aurora-postgresql" || var.engine == "postgres" ? 5432 : 3306))
-  internal_db_subnet_group_name = try(coalesce(var.db_subnet_group_name, var.name), "")
-  security_group_name           = try(coalesce(var.security_group_name, var.name), "")
-  cluster_parameter_group_name  = try(coalesce(var.db_cluster_parameter_group_name, var.name), null)
-  db_parameter_group_name       = try(coalesce(var.db_parameter_group_name, var.name), null)
   backtrack_window              = (var.engine == "aurora-mysql" || var.engine == "aurora") && var.engine_mode != "serverless" ? var.backtrack_window : 0
   is_serverless                 = var.engine_mode == "serverless"
 }

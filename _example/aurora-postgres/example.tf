@@ -80,13 +80,8 @@ module "aurora" {
     }
   }
   vpc_id               = module.vpc.vpc_id
-  db_subnet_group_name = "aurora-postgre"
   database_name        = "postgres"
-  security_group_rules = {
-    vpc_ingress = {
-      cidr_blocks = module.subnets.public_subnet_id
-    }
-  }
+
   apply_immediately                      = true
   skip_final_snapshot                    = true
   create_db_cluster_parameter_group      = true

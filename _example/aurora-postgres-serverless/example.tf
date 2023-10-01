@@ -52,13 +52,8 @@ module "aurora_postgresql" {
   subnets              = module.subnets.public_subnet_id
   sg_ids               = []
   allowed_ports        = [5432]
-  db_subnet_group_name = "aurora-postgres-serverless"
   allowed_ip           = [module.vpc.vpc_cidr_block]
-  security_group_rules = {
-    vpc_ingress = {
-      cidr_blocks = module.subnets.public_subnet_id
-    }
-  }
+
   monitoring_interval = 60
   apply_immediately   = true
   skip_final_snapshot = true
