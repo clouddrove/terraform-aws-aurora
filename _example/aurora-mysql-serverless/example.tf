@@ -39,25 +39,20 @@ module "subnets" {
 ## MySQL Serverless
 ##-----------------------------------------------------------------------------
 module "aurora_mysql" {
-  source               = "../../"
-  name                 = local.name
-  environment          = local.environment
-  engine               = "aurora-mysql"
-  engine_mode          = "provisioned"
-  engine_version       = "8.0"
-  master_username      = "root"
-  database_name        = "test"
-  sg_ids               = []
-  allowed_ports        = [3306]
-  allowed_ip           = [module.vpc.vpc_cidr_block]
-  vpc_id               = module.vpc.vpc_id
-  db_subnet_group_name = "mysql-aurora-serverless"
-  subnets              = module.subnets.public_subnet_id
-  security_group_rules = {
-    vpc_ingress = {
-      cidr_blocks = module.subnets.public_subnet_id
-    }
-  }
+  source          = "../../"
+  name            = local.name
+  environment     = local.environment
+  engine          = "aurora-mysql"
+  engine_mode     = "provisioned"
+  engine_version  = "8.0"
+  master_username = "root"
+  database_name   = "test"
+  sg_ids          = []
+  allowed_ports   = [3306]
+  allowed_ip      = [module.vpc.vpc_cidr_block]
+  vpc_id          = module.vpc.vpc_id
+  subnets         = module.subnets.public_subnet_id
+
   monitoring_interval = 60
   apply_immediately   = true
   skip_final_snapshot = true

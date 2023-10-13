@@ -51,12 +51,6 @@ variable "tags" {
 # DB Subnet Group
 ################################################################################
 
-variable "db_subnet_group_name" {
-  description = "The name of the subnet group name (existing or created)"
-  type        = string
-  default     = ""
-}
-
 variable "subnets" {
   description = "List of subnet IDs used by database subnet group created"
   type        = list(string)
@@ -614,12 +608,6 @@ variable "autoscaling_target_connections" {
 # Security Group
 ################################################################################
 
-variable "security_group_name" {
-  description = "The security group name. Default value is (`var.name`)"
-  type        = string
-  default     = ""
-}
-
 variable "enable_security_group" {
   type        = bool
   default     = true
@@ -647,12 +635,6 @@ variable "vpc_id" {
   description = "ID of the VPC where to create security group"
   type        = string
   default     = ""
-}
-
-variable "security_group_rules" {
-  description = "Map of security group rules to add to the cluster security group created"
-  type        = any
-  default     = {}
 }
 
 variable "from_port" {

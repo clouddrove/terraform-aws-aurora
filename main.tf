@@ -14,14 +14,10 @@ module "labels" {
 
 data "aws_partition" "current" {}
 locals {
-  create                        = var.create
-  port                          = coalesce(var.port, (var.engine == "aurora-postgresql" || var.engine == "postgres" ? 5432 : 3306))
-  internal_db_subnet_group_name = try(coalesce(var.db_subnet_group_name, var.name), "")
-  security_group_name           = try(coalesce(var.security_group_name, var.name), "")
-  cluster_parameter_group_name  = try(coalesce(var.db_cluster_parameter_group_name, var.name), null)
-  db_parameter_group_name       = try(coalesce(var.db_parameter_group_name, var.name), null)
-  backtrack_window              = (var.engine == "aurora-mysql" || var.engine == "aurora") && var.engine_mode != "serverless" ? var.backtrack_window : 0
-  is_serverless                 = var.engine_mode == "serverless"
+  create           = var.create
+  port             = coalesce(var.port, (var.engine == "aurora-postgresql" || var.engine == "postgres" ? 5432 : 3306))
+  backtrack_window = (var.engine == "aurora-mysql" || var.engine == "aurora") && var.engine_mode != "serverless" ? var.backtrack_window : 0
+  is_serverless    = var.engine_mode == "serverless"
 }
 
 ##-----------------------------------------------------------------------------
@@ -74,7 +70,7 @@ resource "aws_rds_cluster" "this" {
   kms_key_id                          = var.kms_key_id
   manage_master_user_password         = var.global_cluster_identifier == null && var.manage_master_user_password ? var.manage_master_user_password : null
   master_user_secret_kms_key_id       = var.global_cluster_identifier == null && var.manage_master_user_password ? var.master_user_secret_kms_key_id : null
-  master_password                     = var.is_primary_cluster && !var.manage_master_user_password ? join("", random_id.password.*.b64_url) : null
+  master_password                     = var.is_primary_cluster && !var.manage_master_user_password ? random_id.password[0].b64_url : null
   master_username                     = var.is_primary_cluster ? var.master_username : null
   network_type                        = var.network_type
   port                                = local.port
