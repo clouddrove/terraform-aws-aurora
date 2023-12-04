@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   autoapprove:
-    name: Auto Approve a PR by dependabot
+    name: Auto Approve a PR by dependabot 
     runs-on: ubuntu-latest
     if: github.actor == 'dependabot[bot]'
     steps:
