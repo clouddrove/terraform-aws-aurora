@@ -24,18 +24,35 @@ module "vpc" {
 ##-----------------------------------------------------------------------------
 #tfsec:ignore:aws-ec2-no-excessive-port-access  # All ports are allowed by default but can be changed via variables.
 #tfsec:ignore:aws-ec2-no-public-ingress-acl  # Public ingress is allowed from all network but can be restricted by using variables.
-module "subnets" {
-  source             = "clouddrove/subnet/aws"
-  version            = "2.0.1"
-  name               = local.name
-  environment        = local.environment
-  availability_zones = ["${local.region}b", "${local.region}c"]
-  vpc_id             = module.vpc.vpc_id
-  cidr_block         = module.vpc.vpc_cidr_block
-  ipv6_cidr_block    = module.vpc.ipv6_cidr_block
-  type               = "public"
-  igw_id             = module.vpc.igw_id
+# module "subnets" {
+#   source             = "clouddrove/subnet/aws"
+#   version            = "2.0.1"
+#   name               = local.name
+#   environment        = local.environment
+#   availability_zones = ["${local.region}b", "${local.region}c"]
+#   vpc_id             = module.vpc.vpc_id
+#   cidr_block         = module.vpc.vpc_cidr_block
+#   ipv6_cidr_block    = module.vpc.ipv6_cidr_block
+#   type               = "private"
+#   igw_id             = module.vpc.igw_id
+# }
+
+
+module "private-subnets" {
+  source              = "clouddrove/subnet/aws"
+  name                = local.name
+  environment         = local.environment
+  nat_gateway_enabled = true
+  availability_zones  = ["us-east-1a", "us-east-1b", "us-east-1c"]
+  vpc_id              = module.vpc.vpc_id
+  type                = "private"
+  cidr_block          = module.vpc.vpc_cidr_block
+  ipv6_cidr_block     = module.vpc.ipv6_cidr_block
+  public_subnet_ids   = module.private-subnets.private_subnet_id
+
 }
+
+
 
 ##-----------------------------------------------------------------------------
 ## RDS Aurora Module
@@ -50,8 +67,9 @@ module "aurora" {
   storage_type    = "aurora-iopt1"
   sg_ids          = []
   allowed_ports   = [5432]
-  subnets         = module.subnets.public_subnet_id
-  allowed_ip      = [module.vpc.vpc_cidr_block]
+  # subnets         = module.private-subnets.public_subnet_id
+  subnets    = module.private-subnets.private_subnet_id #change
+  allowed_ip = [module.vpc.vpc_cidr_block]
   instances = {
     1 = {
       instance_class      = "db.t4g.medium"
@@ -110,9 +128,10 @@ module "aurora" {
   ##-------------------------------------
   ## RDS PROXY
   ##-------------------------------------
-  create_db_proxy  = false
-  engine_family    = "POSTGRESQL"
-  proxy_subnet_ids = module.subnets.public_subnet_id
+  create_db_proxy = true
+  engine_family   = "POSTGRESQL"
+  # proxy_subnet_ids = module.private-subnets.public_subnet_id
+  proxy_subnet_ids = module.private-subnets.private_subnet_id
   auth = [
     {
       auth_scheme = "SECRETS"
