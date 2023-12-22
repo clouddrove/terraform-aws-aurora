@@ -68,7 +68,7 @@ module "aurora" {
   sg_ids          = []
   allowed_ports   = [5432]
   # subnets         = module.private-subnets.public_subnet_id
-  subnets    = module.private-subnets.private_subnet_id #change
+  subnets    = module.private-subnets.private_subnet_id #changes
   allowed_ip = [module.vpc.vpc_cidr_block]
   instances = {
     1 = {
