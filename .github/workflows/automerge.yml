@@ -1,10 +1,12 @@
+---
 name: Auto merge
 on:
   pull_request:
 jobs:
   auto-merge:
-    uses: clouddrove/github-shared-workflows/.github/workflows/automerge.yml@feature/autoMergeTest
+    uses: clouddrove/github-shared-workflows/.github/workflows/auto_merge.yml@1.0.9
     secrets:
       GITHUB: ${{ secrets.GITHUB }}
     with:
       tfcheck: 'tf-checks-aaurora-postgres-serverless-example / Get min/max versions'
+...
