@@ -67,12 +67,6 @@ variable "is_primary_cluster" {
   default     = true
 }
 
-variable "cluster_use_name_prefix" {
-  description = "Whether to use `name` as a prefix for the cluster"
-  type        = bool
-  default     = false
-}
-
 variable "allocated_storage" {
   description = "The amount of storage in gibibytes (GiB) to allocate to each DB instance in the Multi-AZ DB cluster. (This setting is required to create a Multi-AZ DB cluster)"
   type        = number
@@ -723,28 +717,6 @@ variable "db_parameter_group_parameters" {
 }
 
 
-################################################################################
-# CloudWatch Log Group
-################################################################################
-
-variable "create_cloudwatch_log_group" {
-  description = "Determines whether a CloudWatch log group is created for each `enabled_cloudwatch_logs_exports`"
-  type        = bool
-  default     = true
-}
-
-variable "cloudwatch_log_group_retention_in_days" {
-  description = "The number of days to retain CloudWatch logs for the DB instance"
-  type        = number
-  default     = 7
-}
-
-variable "cloudwatch_log_group_kms_key_id" {
-  description = "The ARN of the KMS Key to use when encrypting log data"
-  type        = string
-  default     = null
-}
-
 ##--------------------------------------------------------------------------------------
 ## RDS PROXY
 ##--------------------------------------------------------------------------------------
@@ -844,12 +816,6 @@ variable "proxy_endpoints" {
   description = "Map of DB proxy endpoints to create and their attributes (see `aws_db_proxy_endpoint`)"
 }
 
-variable "proxy_iam_role_prefix" {
-  type        = string
-  default     = ""
-  description = "(OPTIONAL) Prefix for proxy IAM Role."
-}
-
 variable "proxy_iam_role_description" {
   description = "Description of the monitoring role"
   type        = string
@@ -861,11 +827,4 @@ variable "proxy_iam_role_path" {
   type        = string
   default     = null
 }
-
-variable "region" {
-  type        = string
-  default     = "us-east-1"
-  description = "Region where RDS is present."
-}
-
 
