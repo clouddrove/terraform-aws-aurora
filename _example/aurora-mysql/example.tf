@@ -147,6 +147,5 @@ module "aurora" {
   ]
 
   enabled_cloudwatch_logs_exports = ["audit", "error", "general", "slowquery"]
-  create_cloudwatch_log_group     = false
 }
 

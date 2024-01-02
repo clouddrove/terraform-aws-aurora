@@ -159,8 +159,6 @@ module "aurora" {
     }
   ]
   enabled_cloudwatch_logs_exports = ["postgresql"]
-  create_cloudwatch_log_group     = false
-
 
   ##-------------------------------------
   ## RDS PROXY
