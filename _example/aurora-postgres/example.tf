@@ -28,7 +28,8 @@ module "vpc" {
 #tfsec:ignore:aws-ec2-no-excessive-port-access  # All ports are allowed by default but can be changed via variables.
 #tfsec:ignore:aws-ec2-no-public-ingress-acl  # Public ingress is allowed from all network but can be restricted by using variables.
 module "subnets" {
-  source = "clouddrove/subnet/aws"
+  source  = "clouddrove/subnet/aws"
+  version = "2.0.1"
 
   name        = local.name
   environment = local.environment
@@ -70,6 +71,7 @@ module "proxy_sg" {
 
   name        = "${local.name}-proxy"
   environment = local.environment
+  label_order = local.label_order
 
   vpc_id = module.vpc.vpc_id
   new_sg_ingress_rules_with_cidr_blocks = [{
@@ -95,21 +97,33 @@ module "proxy_sg" {
 ## RDS Aurora Module
 ##-----------------------------------------------------------------------------
 module "aurora" {
-  source          = "../../"
-  name            = local.name
-  environment     = local.environment
+  source = "../../"
+
+  name        = local.name
+  environment = local.environment
+  label_order = local.label_order
+
   engine          = "aurora-postgresql"
   engine_version  = "14.7"
   master_username = "root"
   storage_type    = "aurora-iopt1"
   sg_ids          = []
   allowed_ports   = [5432]
-  subnets         = module.subnets.private_subnet_id
+  subnets         = module.subnets.public_subnet_id
   allowed_ip      = [module.vpc.vpc_cidr_block]
   instances = {
     1 = {
       instance_class      = "db.t4g.medium"
       publicly_accessible = false
+    }
+    2 = {
+      identifier     = "static-member-1"
+      instance_class = "db.r5.2xlarge"
+    }
+    3 = {
+      identifier     = "excluded-member-1"
+      instance_class = "db.r5.large"
+      promotion_tier = 15
     }
   }
   vpc_id        = module.vpc.vpc_id
@@ -152,7 +166,7 @@ module "aurora" {
   ##-------------------------------------
   create_db_proxy  = true
   engine_family    = "POSTGRESQL"
-  proxy_subnet_ids = module.subnets.private_subnet_id
+  proxy_subnet_ids = module.subnets.public_subnet_id
   proxy_sg_ids     = [module.proxy_sg.security_group_id]
   auth = [
     {
