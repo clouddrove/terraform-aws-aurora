@@ -65,6 +65,7 @@ module "subnets" {
 ##-----------------------------------------------------------------------------
 ## SECURITY GROUP: For RDS Proxy
 ##-----------------------------------------------------------------------------
+#tfsec:ignore:aws-ec2-no-public-egress-sgr # -- Allowing egress to anywhere, can we restricted to VPC CIDR only.
 module "proxy_sg" {
   source  = "clouddrove/security-group/aws"
   version = "2.0.0"
