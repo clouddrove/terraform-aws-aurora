@@ -145,9 +145,7 @@ resource "aws_rds_cluster" "this" {
     ]
   }
 
-  depends_on = [aws_cloudwatch_log_group.this]
-  tags       = module.labels.tags
-
+  tags = module.labels.tags
 }
 
 ##-----------------------------------------------------------------------------
@@ -411,27 +409,12 @@ resource "aws_db_parameter_group" "this" {
   tags = module.labels.tags
 }
 
-##-----------------------------------------------------------------------------
-## Provides a CloudWatch Log Group resource.
-##-----------------------------------------------------------------------------
-resource "aws_cloudwatch_log_group" "this" {
-  for_each = toset([for log in var.enabled_cloudwatch_logs_exports : log if local.create && var.create_cloudwatch_log_group && !var.cluster_use_name_prefix])
-
-  name              = "/aws/rds/cluster/${var.name}/${each.value}"
-  retention_in_days = var.cloudwatch_log_group_retention_in_days
-  kms_key_id        = var.cloudwatch_log_group_kms_key_id
-
-  tags = module.labels.tags
-}
-
-
-
 ##-----------------------------------------------------------------------------------------
 ## RDS PROXY
 ##-----------------------------------------------------------------------------------------
 data "aws_region" "current" {}
 
-resource "aws_db_proxy" "this" {
+resource "aws_db_proxy" "proxy" {
   count = local.create && var.create_db_proxy ? 1 : 0
 
   name                   = module.labels.id
@@ -439,7 +422,7 @@ resource "aws_db_proxy" "this" {
   engine_family          = var.engine_family
   idle_client_timeout    = var.idle_client_timeout
   require_tls            = var.require_tls
-  role_arn               = local.create && var.enable_default_proxy_iam_role ? join("", aws_iam_role.this[*].arn) : var.proxy_role_arn
+  role_arn               = local.create && var.enable_default_proxy_iam_role ? join("", aws_iam_role.proxy_iam_role[*].arn) : var.proxy_role_arn
   vpc_security_group_ids = var.proxy_sg_ids
   vpc_subnet_ids         = var.proxy_subnet_ids
 
@@ -455,13 +438,12 @@ resource "aws_db_proxy" "this" {
     }
   }
   tags = module.labels.tags
-  # depends_on = [aws_cloudwatch_log_group.this]
 }
 
-resource "aws_db_proxy_default_target_group" "this" {
+resource "aws_db_proxy_default_target_group" "proxy" {
   count = local.create && var.create_db_proxy ? 1 : 0
 
-  db_proxy_name = join("", aws_db_proxy.this[*].name)
+  db_proxy_name = join("", aws_db_proxy.proxy[*].name)
 
   connection_pool_config {
     connection_borrow_timeout    = var.connection_borrow_timeout
@@ -472,18 +454,18 @@ resource "aws_db_proxy_default_target_group" "this" {
   }
 }
 
-resource "aws_db_proxy_target" "db_cluster" {
+resource "aws_db_proxy_target" "proxy" {
   count = local.create && var.create_db_proxy ? 1 : 0
 
-  db_proxy_name         = aws_db_proxy.this[0].name
-  target_group_name     = aws_db_proxy_default_target_group.this[0].name
+  db_proxy_name         = aws_db_proxy.proxy[0].name
+  target_group_name     = aws_db_proxy_default_target_group.proxy[0].name
   db_cluster_identifier = aws_rds_cluster.this[0].id
 }
 
-resource "aws_db_proxy_endpoint" "this" {
+resource "aws_db_proxy_endpoint" "proxy" {
   for_each = { for k, v in var.proxy_endpoints : k => v if local.create && var.create_db_proxy }
 
-  db_proxy_name          = aws_db_proxy.this[0].name
+  db_proxy_name          = aws_db_proxy.proxy[0].name
   db_proxy_endpoint_name = each.value.name
   vpc_subnet_ids         = each.value.vpc_subnet_ids
   vpc_security_group_ids = lookup(each.value, "vpc_security_group_ids", null)
@@ -493,24 +475,10 @@ resource "aws_db_proxy_endpoint" "this" {
 }
 
 ################################################################################
-# CloudWatch Logs
-################################################################################
-
-# resource "aws_cloudwatch_log_group" "this" {
-#   count = var.create && var.manage_log_group ? 1 : 0
-
-#   name              = "/aws/rds/proxy/${var.name}"
-#   retention_in_days = var.log_group_retention_in_days
-#   kms_key_id        = var.log_group_kms_key_id
-
-#   tags = merge(var.tags, var.log_group_tags)
-# }
-
-################################################################################
 # IAM Role
 ################################################################################
 
-data "aws_iam_policy_document" "assume_role" {
+data "aws_iam_policy_document" "proxy_assume_role" {
   count = local.create && var.create_db_proxy && var.enable_default_proxy_iam_role ? 1 : 0
 
   statement {
@@ -525,14 +493,14 @@ data "aws_iam_policy_document" "assume_role" {
   }
 }
 
-resource "aws_iam_role" "this" {
+resource "aws_iam_role" "proxy_iam_role" {
   count = local.create && var.create_db_proxy && var.enable_default_proxy_iam_role ? 1 : 0
 
   name        = module.labels.id
   description = var.proxy_iam_role_description
   path        = var.proxy_iam_role_path
 
-  assume_role_policy    = data.aws_iam_policy_document.assume_role[0].json
+  assume_role_policy    = data.aws_iam_policy_document.proxy_assume_role[0].json
   force_detach_policies = var.iam_role_force_detach_policies
   max_session_duration  = var.iam_role_max_session_duration
   permissions_boundary  = var.iam_role_permissions_boundary
@@ -540,7 +508,7 @@ resource "aws_iam_role" "this" {
   tags = module.labels.tags
 }
 
-data "aws_iam_policy_document" "this" {
+data "aws_iam_policy_document" "proxy_iam_policy_permissions" {
   count = local.create && var.create_db_proxy && var.enable_default_proxy_iam_role ? 1 : 0
 
   statement {
@@ -582,10 +550,10 @@ data "aws_iam_policy_document" "this" {
   }
 }
 
-resource "aws_iam_role_policy" "this" {
+resource "aws_iam_role_policy" "proxy_iam_policy" {
   count = local.create && var.create_db_proxy && var.enable_default_proxy_iam_role ? 1 : 0
 
   name   = module.labels.id
-  policy = data.aws_iam_policy_document.this[0].json
-  role   = aws_iam_role.this[0].id
+  policy = data.aws_iam_policy_document.proxy_iam_policy_permissions[0].json
+  role   = aws_iam_role.proxy_iam_role[0].id
 }

@@ -158,13 +158,93 @@ output "db_parameter_group_id" {
   value       = try(aws_db_parameter_group.this[0].id, null)
 }
 
-################################################################################
-# CloudWatch Log Group
-################################################################################
-
-output "db_cluster_cloudwatch_log_groups" {
-  description = "Map of CloudWatch log groups created and their attributes"
-  value       = aws_cloudwatch_log_group.this
+#######################################################################################################################
+# RDS-PROXY: proxy output will show outputs other than empty string `""` , only when `create_db_proxy` is set to `true`
+#######################################################################################################################
+output "proxy_id" {
+  description = "The ID of the rds proxy"
+  value       = join("", try(aws_db_proxy.proxy[*].id, null))
 }
 
+output "proxy_arn" {
+  description = "The Amazon Resource Name (ARN) for the proxy"
+  value       = join("", try(aws_db_proxy.proxy[*].arn, null))
+}
 
+output "proxy_endpoint" {
+  description = "The endpoint that you can use to connect to the proxy"
+  value       = join("", try(aws_db_proxy.proxy[*].endpoint, null))
+}
+
+# Proxy Default Target Group
+output "proxy_default_target_group_id" {
+  description = "The ID for the default target group"
+  value       = join("", try(aws_db_proxy_default_target_group.proxy[*].id, null))
+}
+
+output "proxy_default_target_group_arn" {
+  description = "The Amazon Resource Name (ARN) for the default target group"
+  value       = join("", try(aws_db_proxy_default_target_group.proxy[*].arn, null))
+}
+
+output "proxy_default_target_group_name" {
+  description = "The name of the default target group"
+  value       = join("", try(aws_db_proxy_default_target_group.proxy[*].name, null))
+}
+
+# Proxy Target
+output "proxy_target_endpoint" {
+  description = "Hostname for the target RDS DB Instance. Only returned for `RDS_INSTANCE` type"
+  value       = join("", try(aws_db_proxy_target.proxy[*].endpoint, null))
+}
+
+output "proxy_target_id" {
+  description = "Identifier of `db_proxy_name`, `target_group_name`, target type (e.g. `RDS_INSTANCE` or `TRACKED_CLUSTER`), and resource identifier separated by forward slashes (/)"
+  value       = join("", try(aws_db_proxy_target.proxy[*].id, null))
+}
+
+output "proxy_target_port" {
+  description = "Port for the target RDS DB Instance or Aurora DB Cluster"
+  value       = join("", try(aws_db_proxy_target.proxy[*].port, null))
+}
+
+output "proxy_name" {
+  description = "Identifier representing the DB Instance or DB Cluster target"
+  value       = join("", try(aws_db_proxy_target.proxy[*].rds_resource_id, null))
+}
+
+output "proxy_target_target_arn" {
+  description = "Amazon Resource Name (ARN) for the DB instance or DB cluster. Currently not returned by the RDS API"
+  value       = join("", try(aws_db_proxy_target.proxy[*].target_arn, null))
+}
+
+output "proxy_target_tracked_cluster_id" {
+  description = "DB Cluster identifier for the DB Instance target. Not returned unless manually importing an RDS_INSTANCE target that is part of a DB Cluster"
+  value       = join("", try(aws_db_proxy_target.proxy[*].tracked_cluster_id, null))
+}
+
+output "proxy_target_type" {
+  description = "Type of target. e.g. `RDS_INSTANCE` or `TRACKED_CLUSTER`"
+  value       = join("", try(aws_db_proxy_target.proxy[*].type, null))
+}
+
+# Proxy IAM Role
+output "proxy_iam_role_name" {
+  description = "Name of the RDS Proxy IAM Role."
+  value       = join("", aws_iam_role.proxy_iam_role[*].name)
+}
+
+output "proxy_iam_role_arn" {
+  description = "Amazon Resource Name (ARN) specifying the RDS Proxy role."
+  value       = join("", aws_iam_role.proxy_iam_role[*].arn)
+}
+
+output "proxy_iam_role_unique_id" {
+  description = "Stable and unique string identifying the RDS Proxy role."
+  value       = join("", aws_iam_role.proxy_iam_role[*].unique_id)
+}
+
+output "proxy_iam_policy_name" {
+  description = "The name of the policy attached to RDS Proxy IAM Role."
+  value       = join("", aws_iam_role_policy.proxy_iam_policy[*].name)
+}
