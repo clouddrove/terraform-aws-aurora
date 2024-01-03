@@ -67,12 +67,6 @@ variable "is_primary_cluster" {
   default     = true
 }
 
-variable "cluster_use_name_prefix" {
-  description = "Whether to use `name` as a prefix for the cluster"
-  type        = bool
-  default     = false
-}
-
 variable "allocated_storage" {
   description = "The amount of storage in gibibytes (GiB) to allocate to each DB instance in the Multi-AZ DB cluster. (This setting is required to create a Multi-AZ DB cluster)"
   type        = number
@@ -723,24 +717,114 @@ variable "db_parameter_group_parameters" {
 }
 
 
-################################################################################
-# CloudWatch Log Group
-################################################################################
+##--------------------------------------------------------------------------------------
+## RDS PROXY
+##--------------------------------------------------------------------------------------
+variable "create_db_proxy" {
+  type        = bool
+  default     = false
+  description = "(Optional) Set this to true to create RDS Proxy."
+}
 
-variable "create_cloudwatch_log_group" {
-  description = "Determines whether a CloudWatch log group is created for each `enabled_cloudwatch_logs_exports`"
+variable "auth" {
+  type        = any
+  default     = {}
+  description = ""
+}
+
+variable "debug_logging" {
+  type        = bool
+  default     = false
+  description = "(Optional) Whether the proxy includes detailed information about SQL statements in its logs. This information helps you to debug issues involving SQL behavior or the performance and scalability of the proxy connections. The debug information includes the text of SQL statements that you submit through the proxy. Thus, only enable this setting when needed for debugging, and only when you have security measures in place to safeguard any sensitive information that appears in the logs."
+}
+
+variable "engine_family" {
+  type        = string
+  default     = "POSTGRESQL"
+  description = "(Required, Forces new resource) The kinds of databases that the proxy can connect to. This value determines which database network protocol the proxy recognizes when it interprets network traffic to and from the database. For Aurora MySQL, RDS for MariaDB, and RDS for MySQL databases, specify MYSQL. For Aurora PostgreSQL and RDS for PostgreSQL databases, specify POSTGRESQL. For RDS for Microsoft SQL Server, specify SQLSERVER. Valid values are MYSQL, POSTGRESQL, and SQLSERVER."
+}
+
+variable "idle_client_timeout" {
+  type        = number
+  default     = 1800
+  description = "(Optional) The number of seconds that a connection to the proxy can be inactive before the proxy disconnects it. You can set this value higher or lower than the connection timeout limit for the associated database."
+}
+
+variable "require_tls" {
+  type        = bool
+  default     = false
+  description = "(Optional) A Boolean parameter that specifies whether Transport Layer Security (TLS) encryption is required for connections to the proxy. By enabling this setting, you can enforce encrypted TLS connections to the proxy."
+}
+
+variable "proxy_sg_ids" {
+  type        = list(string)
+  default     = []
+  description = "(Optional) One or more VPC security group IDs to associate with the new proxy."
+}
+
+variable "proxy_subnet_ids" {
+  type        = list(string)
+  default     = []
+  description = "(Required) One or more VPC subnet IDs to associate with the new proxy."
+}
+
+variable "enable_default_proxy_iam_role" {
   type        = bool
   default     = true
+  description = "(OPTIONAL) Set this to false to pass your own IAM Role for RDS Proxy."
 }
 
-variable "cloudwatch_log_group_retention_in_days" {
-  description = "The number of days to retain CloudWatch logs for the DB instance"
+variable "proxy_role_arn" {
+  type        = string
+  default     = ""
+  description = "(OPTIONAL) ARN of RDS proxy IAM Role. Can only be set when `enable_default_proxy_iam_role` is set to `false`."
+}
+
+variable "connection_borrow_timeout" {
   type        = number
-  default     = 7
+  default     = null
+  description = "(Optional) The number of seconds for a proxy to wait for a connection to become available in the connection pool. Only applies when the proxy has opened its maximum number of connections and all connections are busy with client sessions."
 }
 
-variable "cloudwatch_log_group_kms_key_id" {
-  description = "The ARN of the KMS Key to use when encrypting log data"
+variable "init_query" {
+  type        = string
+  default     = ""
+  description = "(Optional) One or more SQL statements for the proxy to run when opening each new database connection. Typically used with SET statements to make sure that each connection has identical settings such as time zone and character set. This setting is empty by default. For multiple statements, use semicolons as the separator. You can also include multiple variables in a single SET statement, such as SET x=1, y=2."
+}
+
+variable "max_connections_percent" {
+  type        = number
+  default     = 100
+  description = "(Optional) The maximum size of the connection pool for each target in a target group. For Aurora MySQL, it is expressed as a percentage of the max_connections setting for the RDS DB instance or Aurora DB cluster used by the target group."
+}
+
+variable "max_idle_connections_percent" {
+  type        = number
+  default     = null
+  description = "(Optional) Controls how actively the proxy closes idle database connections in the connection pool. A high value enables the proxy to leave a high percentage of idle connections open. A low value causes the proxy to close idle client connections and return the underlying database connections to the connection pool. For Aurora MySQL, it is expressed as a percentage of the max_connections setting for the RDS DB instance or Aurora DB cluster used by the target group."
+}
+
+variable "session_pinning_filters" {
+  type        = list(string)
+  default     = []
+  description = "(Optional) Each item in the list represents a class of SQL operations that normally cause all later statements in a session using a proxy to be pinned to the same underlying database connection. Including an item in the list exempts that class of SQL operations from the pinning behavior. Currently, the only allowed value is EXCLUDE_VARIABLE_SETS."
+}
+
+variable "proxy_endpoints" {
+  type        = any
+  default     = {}
+  description = "Map of DB proxy endpoints to create and their attributes (see `aws_db_proxy_endpoint`)"
+}
+
+variable "proxy_iam_role_description" {
+  description = "Description of the monitoring role"
   type        = string
   default     = null
 }
+
+variable "proxy_iam_role_path" {
+  description = "Path for the monitoring role"
+  type        = string
+  default     = null
+}
+
