@@ -8,5 +8,5 @@ jobs:
     secrets:
       GITHUB: ${{ secrets.GITHUB }}
     with:
-      tfcheck: 'tf-checks-aaurora-postgres-serverless-example / Get min/max versions'
+      tfcheck: 'tf-checks-aaurora-postgres-serverless-example / Check code format'
 ...
