@@ -105,7 +105,7 @@ module "aurora" {
   label_order = local.label_order
 
   engine          = "aurora-postgresql"
-  engine_version  = "14.7"
+  engine_version  = "15.3"
   master_username = "root"
   storage_type    = "aurora-iopt1"
   sg_ids          = []
@@ -119,11 +119,11 @@ module "aurora" {
     }
     2 = {
       identifier     = "static-member-1"
-      instance_class = "db.r5.2xlarge"
+      instance_class = "db.t4g.large"
     }
     3 = {
       identifier     = "excluded-member-1"
-      instance_class = "db.r5.large"
+      instance_class = "db.t3.medium"
       promotion_tier = 15
     }
   }
@@ -133,15 +133,16 @@ module "aurora" {
   apply_immediately                      = true
   skip_final_snapshot                    = true
   create_db_cluster_parameter_group      = true
-  db_cluster_parameter_group_name        = "aurora-postgre"
-  db_cluster_parameter_group_family      = "aurora-postgresql14"
+  db_cluster_parameter_group_name        = "aurora-postgres"
+  db_cluster_parameter_group_family      = "aurora-postgresql15"
   db_cluster_parameter_group_description = "aurora postgres example cluster parameter group"
   db_cluster_parameter_group_parameters = [
     {
       name         = "log_min_duration_statement"
       value        = 4000
       apply_method = "immediate"
-      }, {
+    },
+    {
       name         = "rds.force_ssl"
       value        = 1
       apply_method = "immediate"
@@ -149,7 +150,7 @@ module "aurora" {
   ]
   create_db_parameter_group      = true
   db_parameter_group_name        = "aurora-postgre"
-  db_parameter_group_family      = "aurora-postgresql14"
+  db_parameter_group_family      = "aurora-postgresql15"
   db_parameter_group_description = "postgres aurora example DB parameter group"
   db_parameter_group_parameters = [
     {
