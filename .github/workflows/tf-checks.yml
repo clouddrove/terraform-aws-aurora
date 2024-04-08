@@ -6,18 +6,18 @@ on:
   workflow_dispatch:
 jobs:
   tf-checks-aurora-mysql-serverless-example:
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.2.2
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.2.4
     with:
       working_directory: './_example/aurora-mysql/'
   tf-checks-aurora-postgres-serverless-example:
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.2.2
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.2.4
     with:
       working_directory: './_example/aurora-mysql-serverless/'
   tf-checks-aurora-postgres-example:
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.2.2
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.2.4
     with:
       working_directory: './_example/aurora-postgres/'
   tf-checks-aaurora-postgres-serverless-example:
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.2.2
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.2.4
     with:
       working_directory: './_example/aurora-postgres-serverless/'
