@@ -827,4 +827,3 @@ variable "proxy_iam_role_path" {
   type        = string
   default     = null
 }
-
