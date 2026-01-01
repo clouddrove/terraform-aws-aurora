@@ -127,7 +127,7 @@ resource "aws_rds_cluster" "this" {
   source_region          = var.source_region
   storage_encrypted      = var.storage_encrypted
   storage_type           = var.storage_type
-  vpc_security_group_ids = compact(concat([try(aws_security_group.default[0].id, "")], var.vpc_security_group_ids))
+  vpc_security_group_ids = compact(concat([try(aws_security_group.default[0].id, "")], var.sg_ids))
 
   timeouts {
     create = try(var.cluster_timeouts.create, null)
@@ -328,7 +328,7 @@ resource "aws_security_group_rule" "egress" {
   to_port           = var.to_port
   protocol          = var.egress_protocol
   cidr_blocks       = var.cidr_blocks
-  security_group_id = join("", aws_security_group.default[*].id)
+  security_group_id = length(var.sg_ids) > 0 ? var.sg_ids[count.index].id : aws_security_group.default[0].id
 }
 #tfsec:ignore:aws-ec2-no-public-egress-sgr
 resource "aws_security_group_rule" "egress_ipv6" {
@@ -340,7 +340,7 @@ resource "aws_security_group_rule" "egress_ipv6" {
   to_port           = var.to_port
   protocol          = var.egress_protocol
   ipv6_cidr_blocks  = var.ipv6_cidr_blocks
-  security_group_id = join("", aws_security_group.default[*].id)
+  security_group_id = length(var.sg_ids) > 0 ? var.sg_ids[count.index].id : aws_security_group.default[0].id
 }
 
 resource "aws_security_group_rule" "ingress" {
@@ -352,7 +352,7 @@ resource "aws_security_group_rule" "ingress" {
   to_port           = element(var.allowed_ports, count.index)
   protocol          = var.protocol
   cidr_blocks       = var.allowed_ip
-  security_group_id = join("", aws_security_group.default[*].id)
+  security_group_id = length(var.sg_ids) > 0 ? var.sg_ids[count.index].id : aws_security_group.default[0].id
 }
 
 ##-----------------------------------------------------------------------------
