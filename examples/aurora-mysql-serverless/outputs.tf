@@ -31,4 +31,3 @@ output "cluster_reader_endpoint" {
   description = "A read-only endpoint for the cluster, automatically load-balanced across replicas"
   value       = module.aurora_mysql.cluster_reader_endpoint
 }
-

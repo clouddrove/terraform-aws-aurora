@@ -67,4 +67,3 @@ module "aurora_mysql" {
   }
 
 }
-
