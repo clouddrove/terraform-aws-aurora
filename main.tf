@@ -10,6 +10,7 @@ module "labels" {
   environment = var.environment
   managedby   = var.managedby
   label_order = var.label_order
+  extra_tags  = var.extra_tags
 }
 
 data "aws_partition" "current" {}
