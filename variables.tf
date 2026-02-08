@@ -124,7 +124,7 @@ variable "cluster_members" {
 variable "copy_tags_to_snapshot" {
   description = "Copy all Cluster `tags` to snapshots"
   type        = bool
-  default     = null
+  default     = true
 }
 
 variable "database_name" {
@@ -146,9 +146,9 @@ variable "db_cluster_db_instance_parameter_group_name" {
 }
 
 variable "deletion_protection" {
-  description = "If the DB instance should have deletion protection enabled. The database can't be deleted when this value is set to `true`. The default is `false`"
+  description = "If the DB instance should have deletion protection enabled."
   type        = bool
-  default     = null
+  default     = true
 }
 
 variable "sg_ingress_description" {
@@ -344,7 +344,7 @@ variable "source_region" {
 }
 
 variable "storage_encrypted" {
-  description = "Specifies whether the DB cluster is encrypted. The default is `true`"
+  description = "Specifies whether the DB cluster is encrypted."
   type        = bool
   default     = true
 }
