@@ -176,7 +176,7 @@ resource "aws_rds_cluster_instance" "this" {
   preferred_maintenance_window = try(each.value.preferred_maintenance_window, var.preferred_maintenance_window)
   promotion_tier               = try(each.value.promotion_tier, null)
   publicly_accessible          = try(each.value.publicly_accessible, var.publicly_accessible)
-  tags                         = merge(var.tags, var.cluster_tags)
+  tags                         = merge(module.labels.tags, var.cluster_tags)
   timeouts {
     create = try(var.instance_timeouts.create, null)
     update = try(var.instance_timeouts.update, null)
@@ -195,7 +195,7 @@ resource "aws_rds_cluster_endpoint" "this" {
   custom_endpoint_type        = each.value.type
   excluded_members            = try(each.value.excluded_members, null)
   static_members              = try(each.value.static_members, null)
-  tags                        = merge(var.tags, var.cluster_tags)
+  tags                        = merge(module.labels.tags, var.cluster_tags)
   depends_on = [
     aws_rds_cluster_instance.this
   ]
