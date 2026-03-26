@@ -1,27 +1,34 @@
 name: tf-checks
+permissions:
+  id-token: write
 on:
-  push:
-    branches: [ master ]
   pull_request:
-  workflow_dispatch:
 jobs:
   tf-checks-aurora-mysql-serverless-example:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './examples/aurora-mysql/'
-      provider: none
+      provider: aws
+    secrets:
+      BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
   tf-checks-aurora-postgres-serverless-example:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './examples/aurora-mysql-serverless/'
-      provider: none
+      provider: aws
+    secrets:
+      BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
   tf-checks-aurora-postgres-example:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './examples/aurora-postgres/'
-      provider: none
+      provider: aws
+    secrets:
+      BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
   tf-checks-aaurora-postgres-serverless-example:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './examples/aurora-postgres-serverless/'
-      provider: none
+      provider: aws
+    secrets:
+      BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
