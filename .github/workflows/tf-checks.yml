@@ -3,32 +3,47 @@ permissions:
   id-token: write
 on:
   pull_request:
+    paths:
+      - '**/*.tf'
+      - '*.tf'
 jobs:
   tf-checks-aurora-mysql-serverless-example:
+    if: github.actor != 'dependabot[bot]'
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './examples/aurora-mysql/'
       provider: aws
+      enable_plan: true
+      show_plan: false
     secrets:
       BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
   tf-checks-aurora-postgres-serverless-example:
+    if: github.actor != 'dependabot[bot]'
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './examples/aurora-mysql-serverless/'
       provider: aws
+      enable_plan: true
+      show_plan: false
     secrets:
       BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
   tf-checks-aurora-postgres-example:
+    if: github.actor != 'dependabot[bot]'
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './examples/aurora-postgres/'
       provider: aws
+      enable_plan: true
+      show_plan: false
     secrets:
       BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
   tf-checks-aaurora-postgres-serverless-example:
+    if: github.actor != 'dependabot[bot]'
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './examples/aurora-postgres-serverless/'
       provider: aws
+      enable_plan: true
+      show_plan: false
     secrets:
       BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
