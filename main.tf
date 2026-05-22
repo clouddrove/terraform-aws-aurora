@@ -3,7 +3,7 @@
 ##------------------------------------------------------------------------------
 module "labels" {
   source  = "clouddrove/labels/aws"
-  version = "1.3.0"
+  version = "1.3.1"
 
   name        = var.name
   repository  = var.repository
@@ -27,7 +27,7 @@ locals {
 resource "aws_db_subnet_group" "default" {
   count = var.enable == true && var.enabled_subnet_group == true ? 1 : 0
 
-  name        = module.labels.id
+  name        = format("%s-subnet-group", module.labels.id)
   description = format("For Aurora cluster %s", module.labels.id)
   subnet_ids  = var.subnets
   tags        = module.labels.tags
@@ -362,7 +362,7 @@ resource "aws_security_group_rule" "ingress" {
 resource "aws_rds_cluster_parameter_group" "this" {
   count = local.create && var.create_db_cluster_parameter_group ? 1 : 0
 
-  name        = module.labels.id
+  name        = format("%s-cluster-pg", module.labels.id)
   description = var.db_cluster_parameter_group_description
   family      = var.db_cluster_parameter_group_family
 
@@ -389,7 +389,7 @@ resource "aws_rds_cluster_parameter_group" "this" {
 resource "aws_db_parameter_group" "this" {
   count = local.create && var.create_db_parameter_group ? 1 : 0
 
-  name        = module.labels.id
+  name        = format("%s-db-pg", module.labels.id)
   description = var.db_parameter_group_description
   family      = var.db_parameter_group_family
 

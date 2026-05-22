@@ -13,7 +13,7 @@ locals {
 ##-----------------------------------------------------------------------------
 module "vpc" {
   source  = "clouddrove/vpc/aws"
-  version = "2.0.0"
+  version = "2.0.3"
 
   name        = local.name
   environment = local.environment
@@ -29,7 +29,7 @@ module "vpc" {
 #tfsec:ignore:aws-ec2-no-public-ingress-acl  # Public ingress is allowed from all network but can be restricted by using variables.
 module "subnets" {
   source  = "clouddrove/subnet/aws"
-  version = "2.0.1"
+  version = "2.0.2"
 
   name        = local.name
   environment = local.environment
@@ -68,7 +68,7 @@ module "subnets" {
 #tfsec:ignore:aws-ec2-no-public-egress-sgr # -- Allowing egress to anywhere, can we restricted to VPC CIDR only.
 module "proxy_sg" {
   source  = "clouddrove/security-group/aws"
-  version = "2.0.0"
+  version = "2.0.2"
 
   name        = "${local.name}-proxy"
   environment = local.environment
