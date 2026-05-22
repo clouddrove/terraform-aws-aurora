@@ -13,7 +13,7 @@ terraform {
     }
   }
 
-  provider_meta "aws-module" {
-    module_name = "clouddrove/terraform-aws-aurora"
+  provider_meta "aws" {
+    user_agent = ["github.com/clouddrove/terraform-aws-aurora"]
   }
 }
