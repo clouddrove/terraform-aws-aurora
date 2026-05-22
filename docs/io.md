@@ -26,7 +26,7 @@
 | cluster\_tags | A map of tags to add to only the cluster. Used for AWS Instance Scheduler tagging | `map(string)` | `{}` | no |
 | cluster\_timeouts | Create, update, and delete timeout configurations for the cluster | `map(string)` | `{}` | no |
 | connection\_borrow\_timeout | (Optional) The number of seconds for a proxy to wait for a connection to become available in the connection pool. Only applies when the proxy has opened its maximum number of connections and all connections are busy with client sessions. | `number` | `null` | no |
-| copy\_tags\_to\_snapshot | Copy all Cluster `tags` to snapshots | `bool` | `null` | no |
+| copy\_tags\_to\_snapshot | Copy all Cluster `tags` to snapshots | `bool` | `true` | no |
 | create | Whether cluster should be created (affects nearly all resources) | `bool` | `true` | no |
 | create\_db\_cluster\_parameter\_group | Determines whether a cluster parameter should be created or use existing | `bool` | `false` | no |
 | create\_db\_parameter\_group | Determines whether a DB parameter should be created or use existing | `bool` | `false` | no |
@@ -44,7 +44,7 @@
 | db\_parameter\_group\_name | The name of the DB parameter group | `string` | `null` | no |
 | db\_parameter\_group\_parameters | A list of DB parameters to apply. Note that parameters may differ from a family to an other | `list(map(string))` | `[]` | no |
 | debug\_logging | (Optional) Whether the proxy includes detailed information about SQL statements in its logs. This information helps you to debug issues involving SQL behavior or the performance and scalability of the proxy connections. The debug information includes the text of SQL statements that you submit through the proxy. Thus, only enable this setting when needed for debugging, and only when you have security measures in place to safeguard any sensitive information that appears in the logs. | `bool` | `false` | no |
-| deletion\_protection | If the DB instance should have deletion protection enabled. The database can't be deleted when this value is set to `true`. The default is `false` | `bool` | `null` | no |
+| deletion\_protection | If the DB instance should have deletion protection enabled. The database can't be deleted when this value is set to `true`. The default is `true` | `bool` | `true` | no |
 | egress\_protocol | equal to 0. The supported values are defined in the IpProtocol argument on the IpPermission API reference | `number` | `-1` | no |
 | egress\_rule | Enable to create egress rule | `bool` | `true` | no |
 | enable | Set to false to prevent the module from creating any resources. | `bool` | `true` | no |
@@ -111,7 +111,7 @@
 | publicly\_accessible | Determines whether instances are publicly accessible. Default `false` | `bool` | `false` | no |
 | replication\_source\_identifier | ARN of a source DB cluster or DB instance if this DB cluster is to be created as a Read Replica | `string` | `null` | no |
 | repository | Terraform current module repo | `string` | `"https://github.com/clouddrove/terraform-aws-aurora"` | no |
-| require\_tls | (Optional) A Boolean parameter that specifies whether Transport Layer Security (TLS) encryption is required for connections to the proxy. By enabling this setting, you can enforce encrypted TLS connections to the proxy. | `bool` | `false` | no |
+| require\_tls | (Optional) A Boolean parameter that specifies whether Transport Layer Security (TLS) encryption is required for connections to the proxy. By enabling this setting, you can enforce encrypted TLS connections to the proxy. | `bool` | `true` | no |
 | restore\_to\_point\_in\_time | Map of nested attributes for cloning Aurora cluster | `map(string)` | `{}` | no |
 | s3\_import | Configuration map used to restore from a Percona Xtrabackup in S3 (only MySQL is supported) | `map(string)` | `{}` | no |
 | scaling\_configuration | Map of nested attributes with scaling properties. Only valid when `engine_mode` is set to `serverless` | `map(string)` | `{}` | no |
@@ -178,3 +178,4 @@
 | proxy\_target\_tracked\_cluster\_id | DB Cluster identifier for the DB Instance target. Not returned unless manually importing an RDS\_INSTANCE target that is part of a DB Cluster |
 | proxy\_target\_type | Type of target. e.g. `RDS_INSTANCE` or `TRACKED_CLUSTER` |
 | security\_group\_id | The security group ID of the cluster |
+
