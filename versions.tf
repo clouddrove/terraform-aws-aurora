@@ -9,11 +9,11 @@ terraform {
     }
     random = {
       source  = "hashicorp/random"
-      version = ">= 5.80.0"
+      version = ">= 3.0"
     }
   }
 
   provider_meta "aws" {
-    module_name = "clouddrove/terraform-aws-aurora"
+    user_agent = ["github.com/clouddrove/terraform-aws-aurora"]
   }
 }
