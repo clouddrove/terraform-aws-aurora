@@ -1,3 +1,4 @@
+---
 name: 🔍 PR Checks
 
 on:
@@ -6,4 +7,8 @@ on:
 
 jobs:
   pr-validation:
-    uses: clouddrove/github-shared-workflows/.github/workflows/pr-checks.yml@master
+    if: github.actor != 'dependabot[bot]'
+    uses: clouddrove/github-shared-workflows/.github/workflows/pr-checks.yml@v2
+    with:
+      commitlintConfig: commitlint.config.cjs
+...
