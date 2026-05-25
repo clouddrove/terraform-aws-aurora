@@ -123,12 +123,13 @@ resource "aws_rds_cluster" "this" {
     }
   }
 
-  skip_final_snapshot    = var.skip_final_snapshot
-  snapshot_identifier    = var.snapshot_identifier
-  source_region          = var.source_region
-  storage_encrypted      = var.storage_encrypted
-  storage_type           = var.storage_type
-  vpc_security_group_ids = compact(concat([try(aws_security_group.default[0].id, "")], var.sg_ids))
+  skip_final_snapshot      = var.skip_final_snapshot
+  snapshot_identifier      = var.snapshot_identifier
+  source_region            = var.source_region
+  storage_encrypted        = var.storage_encrypted
+  storage_type             = var.storage_type
+  engine_lifecycle_support = var.engine_lifecycle_support
+  vpc_security_group_ids   = compact(concat([try(aws_security_group.default[0].id, "")], var.sg_ids))
 
   timeouts {
     create = try(var.cluster_timeouts.create, null)

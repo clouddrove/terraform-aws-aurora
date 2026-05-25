@@ -827,3 +827,13 @@ variable "proxy_iam_role_path" {
   type        = string
   default     = null
 }
+
+variable "engine_lifecycle_support" {
+  description = "Extended support lifecycle for Aurora. Values: open-source-rds-extended-support, open-source-rds-extended-support-disabled."
+  type        = string
+  default     = "open-source-rds-extended-support-disabled"
+  validation {
+    condition     = contains(["open-source-rds-extended-support", "open-source-rds-extended-support-disabled"], var.engine_lifecycle_support)
+    error_message = "engine_lifecycle_support must be open-source-rds-extended-support or open-source-rds-extended-support-disabled."
+  }
+}
