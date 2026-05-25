@@ -57,6 +57,7 @@
 | endpoints | Map of additional cluster endpoints and their attributes to be created | `any` | `{}` | no |
 | engine | The name of the database engine to be used for this DB cluster. Defaults to `aurora`. Valid Values: `aurora`, `aurora-mysql`, `aurora-postgresql` | `string` | `null` | no |
 | engine\_family | (Required, Forces new resource) The kinds of databases that the proxy can connect to. This value determines which database network protocol the proxy recognizes when it interprets network traffic to and from the database. For Aurora MySQL, RDS for MariaDB, and RDS for MySQL databases, specify MYSQL. For Aurora PostgreSQL and RDS for PostgreSQL databases, specify POSTGRESQL. For RDS for Microsoft SQL Server, specify SQLSERVER. Valid values are MYSQL, POSTGRESQL, and SQLSERVER. | `string` | `"POSTGRESQL"` | no |
+| engine\_lifecycle\_support | Extended support lifecycle for Aurora. Values: open-source-rds-extended-support, open-source-rds-extended-support-disabled. | `string` | `"open-source-rds-extended-support-disabled"` | no |
 | engine\_mode | The database engine mode. Valid values: `global`, `multimaster`, `parallelquery`, `provisioned`, `serverless`. Defaults to: `provisioned` | `string` | `"provisioned"` | no |
 | engine\_version | The database engine version. Updating this argument results in an outage | `string` | `null` | no |
 | environment | Environment (e.g. `prod`, `dev`, `staging`). | `string` | `""` | no |
