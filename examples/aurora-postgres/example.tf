@@ -29,7 +29,7 @@ module "vpc" {
 #tfsec:ignore:aws-ec2-no-public-ingress-acl  # Public ingress is allowed from all network but can be restricted by using variables.
 module "subnets" {
   source  = "clouddrove/subnet/aws"
-  version = "2.0.2"
+  version = "2.0.3"
 
   name        = local.name
   environment = local.environment
